@@ -323,7 +323,9 @@ const QUESTS = [
 
 // REGISTRE DES QUÊTES DYNAMIQUES & COMPTES
 const generatedQuests = new Map();
-const USERS_FILE = path.join(__dirname, 'data_users.json');
+const USERS_FILE = (process.env.VERCEL || process.env.TMPDIR)
+  ? path.join('/tmp', 'data_users.json')
+  : path.join(__dirname, 'data_users.json');
 
 function loadUsersData() {
   try {
@@ -748,13 +750,17 @@ app.get('*', (req, res, next) => {
   next();
 });
 
-// Lancement du serveur
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n==================================================`);
-  console.log(`⚗️  QUANTUM RUN — SERVEUR BACKEND ACTIF`);
-  console.log(`🚀 Port d'écoute : http://localhost:${PORT}`);
-  console.log(`🧠 Modèle IA : Google Gemini (${GEMINI_MODEL})`);
-  console.log(`🔑 Clé API Gemini configurée : ${Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GMI_API_KEY) ? 'OUI' : 'NON'}`);
-  console.log(`📡 Prêt pour déploiement gratuit sur Render`);
-  console.log(`==================================================\n`);
-});
+// Lancement du serveur (Si exécuté directement, ex: Node/Render)
+if (require.main === module) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n==================================================`);
+    console.log(`⚗️  QUANTUM RUN — SERVEUR BACKEND ACTIF`);
+    console.log(`🚀 Port d'écoute : http://localhost:${PORT}`);
+    console.log(`🧠 Modèle IA : Google Gemini (${GEMINI_MODEL})`);
+    console.log(`🔑 Clé API Gemini configurée : ${Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GMI_API_KEY) ? 'OUI' : 'NON'}`);
+    console.log(`📡 Prêt pour déploiement sur Vercel & Render`);
+    console.log(`==================================================\n`);
+  });
+}
+
+module.exports = app;
