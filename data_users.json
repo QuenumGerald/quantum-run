@@ -9,5 +9,12 @@
     "gold": 48,
     "createdAt": "2026-09-04T11:45:01.204Z",
     "updatedAt": "2026-09-04T11:45:02.870Z"
+  },
+  "Alchimiste-1": {
+    "username": "Alchimiste-1",
+    "clearedQuests": [],
+    "gold": 0,
+    "createdAt": "2026-09-04T12:28:15.828Z",
+    "updatedAt": "2026-09-04T12:28:15.828Z"
   }
 }

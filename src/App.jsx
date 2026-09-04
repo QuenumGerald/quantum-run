@@ -9,10 +9,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Button,
   IconButton,
-  Tooltip,
-  Chip,
   Avatar,
   CircularProgress,
   TextField,
@@ -25,10 +22,15 @@ import {
   DialogContent,
   DialogActions,
   Snackbar,
-  Alert,
+  Alert as MuiAlert,
   Paper,
   Divider,
 } from '@mui/material';
+
+// Composants officiels OpenAI Apps SDK UI
+import { Badge as OpenAIBadge } from '@openai/apps-sdk-ui/components/Badge';
+import { Button as OpenAIButton } from '@openai/apps-sdk-ui/components/Button';
+import { ShimmerText } from '@openai/apps-sdk-ui/components/ShimmerText';
 
 import {
   AutoAwesome,
@@ -44,8 +46,6 @@ import {
   Science,
   Bolt,
   Person,
-  PersonAdd,
-  EmojiEvents,
   NavigateNext,
   NavigateBefore,
 } from '@mui/icons-material';
@@ -107,12 +107,20 @@ const DEFAULT_PHASES = [
   { id: 6, name: "Grand Œuvre", symbol: "🝤" }
 ];
 
+const getRankTitle = (xp) => {
+  if (xp >= 300) return "Grand Alchimiste 🝤";
+  if (xp >= 200) return "Maître Alchimiste 🜃";
+  if (xp >= 100) return "Adepte 🜛";
+  if (xp >= 50) return "Apprenti 🜔";
+  return "Initié 🜍";
+};
+
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
   title: "Transmutation du Plomb",
   difficulty: "FACILE",
-  lore: "Transmutez le plomb en or pur.",
+  lore: "Bienvenue dans l'athanor. Votre premier rituel alchimique consiste à élever la vibration du métal le plus lourd : le plomb. Transformez-le en or pur pour éveiller le creuset.",
   objective: "Changez la valeur de <code>metal</code> pour <code>\"gold\"</code>.",
   initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
   solutionCode: `let metal = "gold";\n\nreturn metal;`,
@@ -128,7 +136,7 @@ export default function App() {
   const [clearedQuests, setClearedQuests] = useState([]);
   const [gold, setGold] = useState(0);
 
-  // Gestion Compte & Parcours
+  // Compte et parcours alchimiste
   const [currentUser, setCurrentUser] = useState(null);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
@@ -138,7 +146,7 @@ export default function App() {
   const [modelName, setModelName] = useState('GEMINI 3.6 FLASH');
   const [hasApiKey, setHasApiKey] = useState(false);
   const [terminalLogs, setTerminalLogs] = useState([
-    { type: 'sys', text: 'Console initialisée.' }
+    { type: 'sys', text: 'Console initialisée avec OpenAI Apps SDK UI.' }
   ]);
   const [execTime, setExecTime] = useState('');
 
@@ -159,7 +167,6 @@ export default function App() {
     if (gutterRef.current) gutterRef.current.scrollTop = e.target.scrollTop;
   };
 
-  // Restauration ou création instantanée de compte
   useEffect(() => {
     const savedName = localStorage.getItem('quantum_run_username') || 'Alchimiste-1';
     setUsernameInput(savedName);
@@ -242,7 +249,6 @@ export default function App() {
     setCode(q.initialCode);
     addTerminal('sys', `Quête #${q.id} active : ${q.title}`);
     
-    // Autofocus et défilement fluide vers l'éditeur
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
@@ -371,63 +377,54 @@ export default function App() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', pb: 6, bgcolor: 'background.default' }}>
+    <Box sx={{ minHeight: '100vh', pb: 6, bgcolor: '#0D0D0D' }}>
       
-      {/* APP BAR HEADER SOMBRE & ÉPURÉ */}
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: '#0B0D13', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+      {/* HEADER AVEC DESIGN TOKENS ET OPENAI APPS SDK UI */}
+      <AppBar position="sticky" elevation={0} sx={{ bgcolor: '#171717', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
         <Container maxWidth="xl">
           <Toolbar sx={{ justifyContent: 'space-between', py: 0.5, minHeight: 56 }}>
             
-            {/* Branding Minimaliste */}
+            {/* Branding OpenAI Apps Compatible */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Avatar sx={{ bgcolor: 'transparent', color: 'primary.main', border: '1px solid rgba(212, 175, 55, 0.3)', width: 32, height: 32, fontSize: 16 }}>
+              <Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: 32, height: 32, fontSize: 16 }}>
                 🜔
               </Avatar>
-              <Typography variant="subtitle1" sx={{ fontWeight: 700, letterSpacing: '0.05em', color: '#fff', fontSize: 15 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, letterSpacing: '0.05em', color: '#ECECEC', fontSize: 15 }}>
                 QUANTUM RUN
               </Typography>
 
-              <Chip
-                icon={<Bolt sx={{ fontSize: 14 }} />}
-                label={serverOnline ? `${latency}ms` : "OFFLINE"}
-                color={serverOnline ? "secondary" : "default"}
-                size="small"
-                variant="outlined"
-                sx={{ ml: 1, height: 24, fontSize: 11 }}
-              />
+              {/* Badges de statut OpenAI Apps SDK */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+                <OpenAIBadge color={serverOnline ? "success" : "secondary"}>
+                  {serverOnline ? `${latency}ms` : "OFFLINE"}
+                </OpenAIBadge>
+              </Box>
 
-              <Tooltip title={hasApiKey ? "Clé API Gemini configurée" : "Mode autonome actif"}>
-                <Chip
-                  icon={<AutoAwesome sx={{ fontSize: 14 }} />}
-                  label={modelName}
-                  color="primary"
-                  size="small"
-                  variant="outlined"
-                  sx={{ height: 24, fontSize: 11, display: { xs: 'none', md: 'inline-flex' } }}
-                />
-              </Tooltip>
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <OpenAIBadge color="primary">
+                  {modelName}
+                </OpenAIBadge>
+              </Box>
             </Box>
 
-            {/* Profil Alchimiste & Stats */}
+            {/* Statistiques & Profil avec OpenAI UI Button */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Chip
-                avatar={<Avatar sx={{ bgcolor: 'transparent' }}>🪙</Avatar>}
-                label={`${gold} XP`}
-                variant="outlined"
-                size="small"
-                sx={{ height: 28, fontSize: 12, borderColor: 'rgba(255, 255, 255, 0.1)' }}
-              />
+              <OpenAIBadge color="warning">
+                🪙 {gold} XP
+              </OpenAIBadge>
+              <OpenAIBadge color="secondary">
+                {getRankTitle(gold)}
+              </OpenAIBadge>
 
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                startIcon={<Person sx={{ fontSize: 16 }} />}
+              <OpenAIButton
+                variant="soft"
+                color="secondary"
+                size="sm"
                 onClick={() => setAccountModalOpen(true)}
-                sx={{ height: 28, fontSize: 11, borderRadius: 1 }}
               >
+                <Person style={{ width: 14, height: 14 }} />
                 {currentUser?.username || "Compte"}
-              </Button>
+              </OpenAIButton>
             </Box>
 
           </Toolbar>
@@ -436,7 +433,7 @@ export default function App() {
 
       <Container maxWidth="xl" sx={{ mt: 2.5 }}>
         
-        {/* GRILLE DES PHASES ÉPURÉE */}
+        {/* GRILLE DES PHASES ALCHIMIQUES */}
         <Grid container spacing={1} sx={{ mb: 2.5 }}>
           {phases.map((ph) => {
             const isCurrent = activeQuest.phase === ph.id;
@@ -449,15 +446,15 @@ export default function App() {
                   }}
                   sx={{
                     cursor: 'pointer',
-                    borderColor: isCurrent ? 'primary.main' : 'rgba(255, 255, 255, 0.06)',
-                    bgcolor: isCurrent ? 'rgba(212, 175, 55, 0.08)' : '#0D0E15',
+                    borderColor: isCurrent ? '#10A37F' : 'rgba(255, 255, 255, 0.12)',
+                    bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.18)' : '#171717',
                     p: 1,
                     textAlign: 'center',
                     transition: 'all 0.15s ease',
-                    '&:hover': { borderColor: 'primary.light' },
+                    '&:hover': { borderColor: '#10A37F' },
                   }}
                 >
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: isCurrent ? 'primary.light' : 'text.primary', fontSize: 12 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 12 }}>
                     {ph.symbol} {ph.name}
                   </Typography>
                 </Card>
@@ -472,30 +469,31 @@ export default function App() {
           {/* COLONNE GAUCHE : QUÊTE & ÉDITEUR */}
           <Grid item xs={12} lg={8}>
             
-            {/* CARTE DE QUÊTE ÉPURÉE */}
-            <Card sx={{ mb: 2, bgcolor: '#0D0E15' }}>
+            {/* CARTE DE QUÊTE */}
+            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                 
-                {/* En-tête Quête */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', fontSize: 17 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#ECECEC', fontSize: 17 }}>
                       #{activeQuest.id} {activeQuest.title}
                     </Typography>
-                    <Chip label={`+${activeQuest.rewardXP || 16} XP`} size="small" sx={{ height: 20, fontSize: 10, bgcolor: 'rgba(212, 175, 55, 0.1)', color: 'primary.light' }} />
+                    <OpenAIBadge color="primary">
+                      +{activeQuest.rewardXP || 16} XP
+                    </OpenAIBadge>
                   </Box>
 
-                  <Box sx={{ display: 'flex', gap: 0.5 }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      startIcon={isForging ? <CircularProgress size={12} /> : <AutoAwesome />}
+                  <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                    <OpenAIButton
+                      variant="soft"
+                      color="primary"
+                      size="sm"
                       onClick={handleManualForge}
                       disabled={isForging}
-                      sx={{ height: 28, fontSize: 11 }}
                     >
-                      Forger (IA)
-                    </Button>
+                      {isForging ? <CircularProgress size={12} /> : <AutoAwesome style={{ width: 14, height: 14 }} />}
+                      {isForging ? "Forge..." : "Forger (IA)"}
+                    </OpenAIButton>
                     <IconButton
                       size="small"
                       disabled={activeQuest.id <= 1}
@@ -519,40 +517,52 @@ export default function App() {
                   </Box>
                 </Box>
 
+                {/* Récit Lore */}
+                {activeQuest.lore && (
+                  <Box sx={{ mb: 1.5, p: 1.2, bgcolor: 'rgba(16, 163, 127, 0.08)', borderRadius: 1, border: '1px solid rgba(16, 163, 127, 0.2)' }}>
+                    <Typography variant="body2" sx={{ color: '#B4B4B4', fontStyle: 'italic', fontSize: 13, lineHeight: 1.5 }}>
+                      📜 {activeQuest.lore}
+                    </Typography>
+                  </Box>
+                )}
+
                 {/* Objectif Direct */}
-                <Paper elevation={0} sx={{ p: 1.2, bgcolor: '#12151F', borderLeft: '3px solid #D4AF37', borderRadius: 1 }}>
-                  <Typography variant="body2" sx={{ color: '#F1F5F9', fontWeight: 500, fontSize: 13 }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
+                <Paper elevation={0} sx={{ p: 1.2, bgcolor: '#212121', borderLeft: '3px solid #10A37F', borderRadius: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#10A37F', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', mb: 0.3 }}>
+                    Objectif du Rituel
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#ECECEC', fontWeight: 500, fontSize: 13 }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
                 </Paper>
 
               </CardContent>
             </Card>
 
-            {/* ÉDITEUR DE CODE SOBRE */}
-            <Card sx={{ mb: 2, overflow: 'hidden', bgcolor: '#0D0E15' }}>
+            {/* ÉDITEUR DE CODE */}
+            <Card sx={{ mb: 2, overflow: 'hidden', bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: '#090A0F', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Science sx={{ fontSize: 14, color: 'primary.main' }} />
-                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: 'text.secondary', fontSize: 11 }}>
+                  <Science sx={{ fontSize: 14, color: '#10A37F' }} />
+                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#B4B4B4', fontSize: 11 }}>
                     creuset.js
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
-                  <Button size="small" variant="text" startIcon={<Refresh sx={{ fontSize: 14 }} />} onClick={() => setCode(activeQuest.initialCode)} sx={{ fontSize: 11, color: 'text.secondary' }}>
-                    Reset
-                  </Button>
-                  <Button size="small" variant="text" startIcon={<Lightbulb sx={{ fontSize: 14 }} />} onClick={() => addTerminal('sys', `💡 Indice : ${activeQuest.hint}`)} sx={{ fontSize: 11, color: 'text.secondary' }}>
-                    Indice
-                  </Button>
-                  <Button size="small" variant="text" startIcon={<VpnKey sx={{ fontSize: 14 }} />} onClick={() => setCode(activeQuest.solutionCode)} sx={{ fontSize: 11, color: 'text.secondary' }}>
-                    Solution
-                  </Button>
+                  <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.initialCode)}>
+                    <Refresh style={{ width: 12, height: 12 }} /> Reset
+                  </OpenAIButton>
+                  <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => addTerminal('sys', `💡 Indice : ${activeQuest.hint}`)}>
+                    <Lightbulb style={{ width: 12, height: 12 }} /> Indice
+                  </OpenAIButton>
+                  <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.solutionCode)}>
+                    <VpnKey style={{ width: 12, height: 12 }} /> Solution
+                  </OpenAIButton>
                 </Box>
               </Box>
 
-              {/* Zone d'édition */}
-              <Box sx={{ display: 'flex', minHeight: 180, maxHeight: 300, bgcolor: '#060709' }}>
+              {/* Workspace Code */}
+              <Box sx={{ display: 'flex', minHeight: 180, maxHeight: 300, bgcolor: '#0D0D0D' }}>
                 <Box
                   ref={gutterRef}
                   sx={{
@@ -560,12 +570,12 @@ export default function App() {
                     py: 1.5,
                     px: 1,
                     textAlign: 'right',
-                    color: '#334155',
+                    color: '#676767',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
                     lineHeight: 1.6,
                     userSelect: 'none',
-                    borderRight: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
                     overflowY: 'hidden',
                   }}
                 >
@@ -590,7 +600,7 @@ export default function App() {
                     outline: 'none',
                     resize: 'none',
                     padding: '12px 14px',
-                    color: '#F1F5F9',
+                    color: '#ECECEC',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
                     lineHeight: 1.6,
@@ -601,34 +611,31 @@ export default function App() {
                 />
               </Box>
 
-              {/* Action Bar */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.2, bgcolor: '#090A0F', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
+              {/* Action Bar avec OpenAIButton */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.2, bgcolor: '#212121', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
+                <Typography variant="caption" sx={{ color: '#B4B4B4', fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
                   Ctrl + Entrée
                 </Typography>
-                <Button
-                  variant="contained"
+                <OpenAIButton
                   color="primary"
-                  size="medium"
-                  endIcon={<PlayArrow />}
+                  size="md"
                   onClick={handleTransmute}
-                  sx={{ px: 2.5, fontWeight: 700 }}
                 >
-                  TRANSMUTER
-                </Button>
+                  TRANSMUTER <PlayArrow style={{ width: 16, height: 16 }} />
+                </OpenAIButton>
               </Box>
             </Card>
 
-            {/* TERMINAL ATHANOR */}
-            <Paper elevation={0} sx={{ bgcolor: '#060709', borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.05)', overflow: 'hidden' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.6, bgcolor: '#0D0E15', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+            {/* TERMINAL CONSOLE */}
+            <Paper elevation={0} sx={{ bgcolor: '#0D0D0D', borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.12)', overflow: 'hidden' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.6, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <TerminalIcon sx={{ fontSize: 14, color: 'primary.main' }} />
-                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, color: 'text.secondary', fontSize: 11 }}>
+                  <TerminalIcon sx={{ fontSize: 14, color: '#10A37F' }} />
+                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, color: '#B4B4B4', fontSize: 11 }}>
                     CONSOLE
                   </Typography>
                 </Box>
-                <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: 'text.secondary', fontSize: 11 }}>
+                <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#B4B4B4', fontSize: 11 }}>
                   {execTime}
                 </Typography>
               </Box>
@@ -638,7 +645,7 @@ export default function App() {
                   <Box
                     key={idx}
                     sx={{
-                      color: log.type === 'ok' ? '#10B981' : log.type === 'fail' ? '#F43F5E' : 'text.secondary',
+                      color: log.type === 'ok' ? '#10A37F' : log.type === 'fail' ? '#EF4444' : '#B4B4B4',
                     }}
                   >
                     {log.text}
@@ -649,14 +656,14 @@ export default function App() {
 
           </Grid>
 
-          {/* COLONNE DROITE : SIDEBAR QUÊTES & ASSISTANT */}
+          {/* COLONNE DROITE : SIDEBAR & ORBIT */}
           <Grid item xs={12} lg={4}>
             
             {/* GRIMOIRE DES QUÊTES */}
-            <Card sx={{ mb: 2, bgcolor: '#0D0E15' }}>
+            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13 }}>Grimoire des Quêtes ({clearedQuests.length}/{quests.length})</Typography>}
-                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}
+                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>Grimoire des Quêtes ({clearedQuests.length}/{quests.length})</Typography>}
+                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
                 {quests.map((q) => {
@@ -672,16 +679,16 @@ export default function App() {
                         py: 0.6,
                         px: 1,
                         mb: 0.3,
-                        bgcolor: isCurrent ? 'rgba(212, 175, 55, 0.1)' : 'transparent',
-                        '&.Mui-selected': { bgcolor: 'rgba(212, 175, 55, 0.12)' }
+                        bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.15)' : 'transparent',
+                        '&.Mui-selected': { bgcolor: 'rgba(16, 163, 127, 0.2)' }
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 26 }}>
-                        {isCleared ? <CheckCircle color="secondary" sx={{ fontSize: 16 }} /> : <RadioButtonUnchecked sx={{ fontSize: 16, color: 'text.secondary' }} />}
+                        {isCleared ? <CheckCircle color="primary" sx={{ fontSize: 16 }} /> : <RadioButtonUnchecked sx={{ fontSize: 16, color: '#676767' }} />}
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? 'primary.light' : 'text.primary', fontSize: 12 }}>
+                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 12 }}>
                             #{q.id} {q.title}
                           </Typography>
                         }
@@ -693,11 +700,11 @@ export default function App() {
             </Card>
 
             {/* ASSISTANT ORBIT */}
-            <Card sx={{ bgcolor: '#0D0E15' }}>
+            <Card sx={{ bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               <CardHeader
-                avatar={<Avatar sx={{ bgcolor: 'transparent', color: 'info.main', border: '1px solid rgba(56, 189, 248, 0.3)', width: 26, height: 26 }}><SmartToy sx={{ fontSize: 16 }} /></Avatar>}
-                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13 }}>ORBIT</Typography>}
-                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}
+                avatar={<Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: 26, height: 26 }}><SmartToy sx={{ fontSize: 16 }} /></Avatar>}
+                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>ORBIT (ChatGPT Apps SDK)</Typography>}
+                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
               />
               <CardContent sx={{ p: 1.5 }}>
                 <Box ref={chatScrollRef} sx={{ maxHeight: 150, minHeight: 80, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 0.8, mb: 1 }}>
@@ -709,12 +716,12 @@ export default function App() {
                         p: 1,
                         maxWidth: '92%',
                         alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
-                        bgcolor: m.sender === 'user' ? 'rgba(16, 185, 129, 0.1)' : '#12151F',
-                        border: '1px solid rgba(255, 255, 255, 0.04)',
+                        bgcolor: m.sender === 'user' ? 'rgba(16, 163, 127, 0.2)' : '#212121',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: 1,
                       }}
                     >
-                      <Typography variant="body2" sx={{ fontSize: 12 }} dangerouslySetInnerHTML={{ __html: m.text }} />
+                      <Typography variant="body2" sx={{ fontSize: 12, color: '#ECECEC' }} dangerouslySetInnerHTML={{ __html: m.text }} />
                     </Paper>
                   ))}
                 </Box>
@@ -726,7 +733,7 @@ export default function App() {
                     placeholder="Question…"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    sx={{ bgcolor: '#060709', borderRadius: 1, '& input': { fontSize: 12, py: 0.8 } }}
+                    sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 12, py: 0.8, color: '#ECECEC' } }}
                   />
                   <IconButton color="primary" type="submit" size="small">
                     <Send sx={{ fontSize: 16 }} />
@@ -741,10 +748,10 @@ export default function App() {
 
       </Container>
 
-      {/* MODAL COMPTE & PARCOURS ALCHIMISTE */}
+      {/* MODAL PARCOURS ALCHIMISTE */}
       <Dialog open={accountModalOpen} onClose={() => setAccountModalOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 2.5 }}>
-          <Avatar sx={{ bgcolor: 'primary.main', color: '#000', width: 32, height: 32 }}>🧙‍♂️</Avatar>
+          <Avatar sx={{ bgcolor: '#D4AF37', color: '#000', width: 32, height: 32 }}>🧙‍♂️</Avatar>
           <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 16 }}>
             Parcours de l'Alchimiste
           </Typography>
@@ -752,8 +759,8 @@ export default function App() {
         <DialogContent sx={{ pt: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block' }}>
-                Nom d'alchimiste (sauvegarde automatique sur le serveur) :
+              <Typography variant="caption" sx={{ color: '#94A3B8', mb: 0.5, display: 'block' }}>
+                Nom d'alchimiste (sauvegarde automatique Cloud) :
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <TextField
@@ -763,65 +770,65 @@ export default function App() {
                   onChange={(e) => setUsernameInput(e.target.value)}
                   placeholder="Ex: Paracelse, Flamel..."
                 />
-                <Button
-                  variant="contained"
+                <OpenAIButton
                   color="primary"
-                  size="small"
+                  size="sm"
                   onClick={() => {
                     loginUser(usernameInput);
                     setAccountModalOpen(false);
                   }}
                 >
                   Changer
-                </Button>
+                </OpenAIButton>
               </Box>
             </Box>
 
             <Divider sx={{ my: 0.5 }} />
 
-            {/* Statistiques du Parcours */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>Rang Alchimique :</Typography>
-                <Chip label={getRank()} color="primary" size="small" sx={{ fontWeight: 700 }} />
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Rang Alchimique :</Typography>
+                <OpenAIBadge color="primary">{getRank()}</OpenAIBadge>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>Quêtes Complétées :</Typography>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Quêtes Complétées :</Typography>
                 <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace" }}>
                   {clearedQuests.length} / {quests.length}
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>Pépites d'Or Récoltées :</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, color: 'primary.light', fontFamily: "'JetBrains Mono', monospace" }}>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Pépites d'Or :</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#E6C665', fontFamily: "'JetBrains Mono', monospace" }}>
                   {gold} XP
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>Sauvegarde Serveur :</Typography>
-                <Chip label="Synchronisé ☁️" color="secondary" size="small" variant="outlined" />
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Serveur :</Typography>
+                <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
               </Box>
             </Box>
           </Box>
         </DialogContent>
         <DialogActions sx={{ pb: 2, px: 3 }}>
-          <Button onClick={() => setAccountModalOpen(false)}>Fermer</Button>
+          <OpenAIButton variant="ghost" color="secondary" onClick={() => setAccountModalOpen(false)}>
+            Fermer
+          </OpenAIButton>
         </DialogActions>
       </Dialog>
 
-      {/* SNACKBAR ALERT */}
+      {/* SNACKBAR */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ fontSize: 12 }}>
+        <MuiAlert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })} sx={{ fontSize: 12 }}>
           {snackbar.message}
-        </Alert>
+        </MuiAlert>
       </Snackbar>
 
     </Box>

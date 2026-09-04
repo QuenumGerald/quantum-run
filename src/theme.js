@@ -1,22 +1,23 @@
 import { createTheme } from '@mui/material/styles';
 
+// Palette officielle inspirée du Design System d'OpenAI (ChatGPT & Canvas UI)
 export const alchemicalTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#D4AF37', // Or noble mat
-      light: '#E6C665',
-      dark: '#AA8822',
-      contrastText: '#08090C',
+      main: '#10A37F', // Vert Émeraude Signature OpenAI
+      light: '#1ADA9D',
+      dark: '#0B7A5F',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#10B981', // Émeraude discret
-      light: '#34D399',
-      dark: '#059669',
-      contrastText: '#041810',
+      main: '#D4AF37', // Or Alchimique pour la progression et l'XP
+      light: '#E6C665',
+      dark: '#AA8822',
+      contrastText: '#0D0D0D',
     },
     info: {
-      main: '#38BDF8',
+      main: '#38BDF8', // Cyan ChatGPT Apps
       light: '#7DD3FC',
       dark: '#0284C7',
     },
@@ -24,17 +25,17 @@ export const alchemicalTheme = createTheme({
       main: '#F59E0B',
     },
     error: {
-      main: '#F43F5E',
+      main: '#EF4444',
     },
     background: {
-      default: '#08090D', // Ardoise noire très sombre
-      paper: '#0F1118',   // Surface carte très épurée
+      default: '#0D0D0D', // Fond ChatGPT ultra-épuré
+      paper: '#171717',   // Cartes & Surfaces OpenAI
     },
     text: {
-      primary: '#F1F5F9',
-      secondary: '#94A3B8',
+      primary: '#ECECEC',   // Texte principal OpenAI
+      secondary: '#B4B4B4', // Texte secondaire OpenAI
     },
-    divider: 'rgba(255, 255, 255, 0.06)',
+    divider: 'rgba(255, 255, 255, 0.12)',
   },
   typography: {
     fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -52,14 +53,14 @@ export const alchemicalTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 8, // Arrondis modernes & épurés
+    borderRadius: 8, // Standard OpenAI Apps SDK
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#08090D',
-          color: '#F1F5F9',
+          backgroundColor: '#0D0D0D',
+          color: '#ECECEC',
         },
       },
     },
@@ -67,16 +68,25 @@ export const alchemicalTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: '#0F1118',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
+          backgroundColor: '#171717',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#171717',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: 'none',
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 6,
+          borderRadius: 8,
           padding: '6px 14px',
           boxShadow: 'none',
           '&:hover': {
@@ -84,25 +94,25 @@ export const alchemicalTheme = createTheme({
           },
         },
         containedPrimary: {
+          background: '#10A37F',
+          color: '#FFFFFF',
+          '&:hover': {
+            background: '#1ADA9D',
+          },
+        },
+        containedSecondary: {
           background: '#D4AF37',
-          color: '#08090C',
+          color: '#0D0D0D',
           '&:hover': {
             background: '#E6C665',
           },
         },
-        containedSecondary: {
-          background: '#10B981',
-          color: '#041810',
-          '&:hover': {
-            background: '#34D399',
-          },
-        },
         outlinedPrimary: {
-          borderColor: 'rgba(212, 175, 55, 0.3)',
-          color: '#E6C665',
+          borderColor: 'rgba(16, 163, 127, 0.4)',
+          color: '#10A37F',
           '&:hover': {
-            borderColor: '#D4AF37',
-            backgroundColor: 'rgba(212, 175, 55, 0.05)',
+            borderColor: '#10A37F',
+            backgroundColor: 'rgba(16, 163, 127, 0.08)',
           },
         },
       },
@@ -119,9 +129,9 @@ export const alchemicalTheme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: 10,
-          background: '#0F1118',
+          background: '#171717',
         },
       },
     },
