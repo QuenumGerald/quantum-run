@@ -1,29 +1,74 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quantum Run — entraînement technique actif</title>
+  <title>Quantum Run — Opus Magnum · Quête Alchimique du Code</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #05070a;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    /* Ambient glow background accents */
+    .bg-glow-top {
+      position: fixed;
+      top: -150px;
+      left: 20%;
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow-bottom {
+      position: fixed;
+      bottom: -150px;
+      right: 15%;
+      width: 650px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, rgba(16, 185, 129, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #root {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080c14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 158, 11, 0.4);
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-DFakW0M0.js"></script>
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar"><div class="brand"><span class="pulse"></span><span>QUANTUM RUN</span></div><div class="day">MODE LIBRE <span>progression persistante</span></div></header>
-    <section class="hero"><div><p class="eyebrow">ENTRAÎNEMENT TECHNIQUE ACTIF</p><h1>Apprendre en faisant.<br><em>Retenir en revenant.</em></h1><p class="intro">Des sessions courtes, des erreurs mémorisées et des défis concrets pour progresser en TypeScript, Docker, backend et architecture.</p></div><div class="streak"><span>🔥</span><strong id="streak">3</strong><small>jours de série</small></div></section>
-    <section class="progress-card"><div class="progress-head"><div><span class="label">PROGRESSION GLOBALE</span><strong id="progressText">24%</strong></div><span class="muted"><span id="mastered">12</span> / 50 cartes maîtrisées</span></div><div class="bar"><i id="progressBar"></i></div><div class="tracks"><button class="track active" data-filter="all">Tout <b>●</b></button><button class="track" data-filter="typescript">TypeScript <b>○</b></button><button class="track" data-filter="docker">Docker <b>○</b></button><button class="track" data-filter="backend">Backend/API <b>○</b></button><button class="track" data-filter="team">Réflexes équipe <b>○</b></button></div></section>
-    <section class="game-panel"><div class="game-hud"><span>SECTEUR 01 · TYPESCRIPT</span><span>⚡ <b id="energy">3</b> énergie</span><span>✦ <b id="xp">240</b> XP</span></div><div class="game-layout"><div class="map"><div class="map-title"><span>LE NŒUD CENTRAL</span><small>Choisis ta prochaine salle</small></div><div class="rooms"><button class="room cleared"><i>✓</i><b>Spawn</b><small>briefing</small></button><button class="room current" id="roomCode"><i>⌘</i><b>Type Lab</b><small>défi de code</small></button><button class="room locked"><i>?</i><b>Docker Bay</b><small>verrouillée</small></button><button class="room locked"><i>?</i><b>Boss Room</b><small>verrouillée</small></button></div><div class="game-objective"><span class="tag green">OBJECTIF ACTIF</span><h3>Stabiliser le service</h3><p>Corrige trois anomalies pour ouvrir le prochain secteur.</p><button id="playBtn">Entrer dans la salle →</button></div></div><div class="chat"><div class="chat-head"><span class="bot-dot"></span><div><b>ORBIT · copilote</b><small>connecté · mode pédagogique</small></div><span class="model">GMI / DEEPSEEK</span></div><div class="chat-body" id="chatBody"><div class="chat-msg bot">Tu bloques ? Demande-moi d’expliquer le bug, de donner un indice ou de challenger ton choix.</div></div><form class="chat-form" id="chatForm"><input id="chatInput" placeholder="Pose une question sur la mission…" autocomplete="off"><button>↑</button></form></div></div></section>
-    <section class="grid"><div class="section-title"><div><p class="eyebrow">TON PROCHAIN MOVE</p><h2>Une session, maintenant.</h2></div><span class="estimate">≈ 8 min</span></div>
-      <div class="mission-card"><div class="mission-meta"><span class="tag green">RECOMMANDÉ POUR TOI</span><span>TYPE-SCRIPT · NIVEAU 1</span></div><h3>Le radar des types</h3><p>5 cartes pour réactiver les fondamentaux qui évitent les bugs silencieux.</p><div class="mission-bottom"><span>+80 XP · 5 cartes</span><button id="startBtn">Lancer la session <span>→</span></button></div></div>
-      <div class="section-title lower"><div><p class="eyebrow">CARTE DU PARCOURS</p><h2>Les zones à sécuriser</h2></div><span class="muted">10 jours</span></div>
-      <div class="zones"><article><div class="zone-icon blue">TS</div><div><h3>TypeScript</h3><p>Types, generics, narrowing, erreurs</p><div class="mini-bar"><i style="width:42%"></i></div></div><strong>42%</strong></article><article><div class="zone-icon orange">◈</div><div><h3>Docker & delivery</h3><p>Images, compose, logs, déploiement</p><div class="mini-bar"><i style="width:16%"></i></div></div><strong>16%</strong></article><article><div class="zone-icon purple">API</div><div><h3>Backend & API</h3><p>Contrats, auth, observabilité</p><div class="mini-bar"><i style="width:20%"></i></div></div><strong>20%</strong></article><article><div class="zone-icon green-icon">↗</div><div><h3>Réflexes équipe</h3><p>Review, debug, expliquer ses choix</p><div class="mini-bar"><i style="width:12%"></i></div></div><strong>12%</strong></article></div>
-      <aside class="quote"><span>“</span><p>Le but n’est pas de tout revoir.<br><b>Le but est de redevenir dangereux rapidement.</b></p><small>— règle de la mission</small></aside>
-    </section>
-    <nav class="bottom"><button class="selected">⌂<span>Mission</span></button><button>◒<span>Réviser</span></button><button>⌁<span>Stats</span></button></nav>
-  </main>
-  <div id="modal" class="modal hidden"><div class="modal-box"><button class="close" id="close">×</button><p class="eyebrow">CARTE 01 / 05 · TYPE-SCRIPT</p><h2>Quel type est inféré ici&nbsp;?</h2><pre><code>const services = ["api", "worker"];
-services.map(service =&gt; service.toUpperCase());</code></pre><div class="answers"><button data-correct="true">string[] → string[]</button><button>any[] → any[]</button><button>readonly string[]</button></div><p id="feedback" class="feedback"></p></div></div>
-  <script src="app.js"></script>
+  <div class="bg-glow-top"></div>
+  <div class="bg-glow-bottom"></div>
+  <div id="root"></div>
 </body>
 </html>

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Run — Opus Magnum · Quête Alchimique du Code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient Aura Lights -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="app-wrapper">
+    
+    <!-- Topbar Navigation -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-mark">
+          <div class="brand-symbol">
+            <span class="alchemical-ring"></span>
+            <span class="alchemical-core">🜔</span>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">QUANTUM RUN</span>
+            <span class="brand-tag">OPUS MAGNUM <span class="tag-version">v2.0</span></span>
+          </div>
+        </div>
+
+        <div class="badges-cluster">
+          <div class="server-badge" id="serverBadge">
+            <span class="server-dot pulse-green"></span>
+            <span class="server-text" id="serverStatusText">SERVEUR NODE.JS</span>
+            <span class="server-latency" id="serverLatency">12ms</span>
+          </div>
+
+          <div class="llm-badge" title="Génération d'histoire alimentée par Google Gemini">
+            <span class="server-dot" style="background:#c084fc;box-shadow:0 0 8px #c084fc"></span>
+            <span>IA : GEMINI (GMI)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Joueur Télémétrie -->
+        <div class="hud-group">
+          <div class="hud-pill" title="Rang Alchimique">
+            <span class="pill-icon">🧙‍♂️</span>
+            <span class="pill-label">RANG</span>
+            <strong id="hudRank" class="pill-value gold-gradient">Néophyte</strong>
+          </div>
+
+          <div class="hud-pill" title="Pépites d'Or Alchimique (XP)">
+            <span class="pill-icon">🪙</span>
+            <span class="pill-label">OR</span>
+            <strong id="hudGold" class="pill-value">0</strong>
+            <small>XP</small>
+          </div>
+
+          <div class="hud-pill" title="Transmutations accomplies">
+            <span class="pill-icon">⚗️</span>
+            <span class="pill-label">QUÊTES</span>
+            <strong id="hudProgress" class="pill-value">0 / 22</strong>
+          </div>
+
+          <div class="hud-pill streak-pill" title="Jours de série active">
+            <span class="pill-icon">🔥</span>
+            <strong id="hudStreak" class="pill-value">3</strong>
+            <small>jours</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Alchimique Moderne -->
+    <section class="hero-cockpit">
+      <div class="hero-left">
+        <div class="eyebrow-pill">
+          <span class="eyebrow-icon">✨</span>
+          <span>ATELIER DU GRAND ŒUVRE NUMÉRIQUE</span>
+        </div>
+        <h1 class="hero-title">
+          Transmutez le code brute.<br>
+          <span class="shimmer-text">Forgez la Pierre Philosophale.</span>
+        </h1>
+        <p class="hero-desc">
+          Une quête initiatique d'apprentissage actif connectée à un <strong>backend Node.js haute performance</strong>. Résolvez 22 épreuves alchimiques simples, élégantes et intuitives pour maîtriser les arcanes de la programmation.
+        </p>
+      </div>
+
+      <div class="hero-right">
+        <!-- Athanor Reactor Card -->
+        <div class="athanor-reactor">
+          <div class="reactor-header">
+            <div class="reactor-meta">
+              <span class="meta-dot"></span>
+              <span class="meta-title">ATHANOR · RÉACTEUR THERMIQUE</span>
+            </div>
+            <span class="reactor-level" id="reactorPhaseNum">PHASE 1 / 6</span>
+          </div>
+
+          <div class="reactor-display">
+            <div class="glyph-orb">
+              <div class="orbital-ring ring-1"></div>
+              <div class="orbital-ring ring-2"></div>
+              <span class="glyph-symbol" id="reactorGlyph">🜍</span>
+            </div>
+            <div class="reactor-info">
+              <span class="info-label">CHAMBRE ACTIVE</span>
+              <h3 id="reactorPhaseTitle">Phase I : Calcination</h3>
+              <p id="reactorPhaseDesc">Purification des variables & types fondamentaux</p>
+            </div>
+          </div>
+
+          <div class="reactor-gauge">
+            <div class="gauge-labels">
+              <span>PROGRESSION DU GRAND ŒUVRE</span>
+              <span id="globalPctText">0%</span>
+            </div>
+            <div class="gauge-track">
+              <div class="gauge-bar" id="globalGaugeBar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bannière de Saga Continue LLM (Gemini GMI) -->
+    <div class="saga-banner" id="sagaBanner">
+      <div class="saga-title-group">
+        <span class="saga-badge">SAGA CONTINUE · GMI</span>
+        <span class="saga-text" id="sagaStatusText">
+          Chaque transmutation forge automatiquement le chapitre suivant de votre épopée alchimique via <strong>Google Gemini</strong>.
+        </span>
+      </div>
+      <div class="auto-forge-status">
+        <span class="auto-pulse"></span>
+        <span id="sagaAutoLabel">Génération Continue Active</span>
+      </div>
+    </div>
+
+    <!-- Sélecteur des 6 Salles Alchimiques -->
+    <nav class="chambers-nav">
+      <div class="chambers-header">
+        <div class="ch-title-wrap">
+          <span class="ch-badge">SANCTUAIRES</span>
+          <h2>Les 6 Chambres de Transmutation</h2>
+        </div>
+        <span class="ch-sub" id="chambersStatusText">Chambre 1 active</span>
+      </div>
+      <div class="chambers-grid" id="chambersGrid">
+        <!-- Généré dynamiquement en JS -->
+      </div>
+    </nav>
+
+    <!-- Zone Centrale : Le Creuset Cockpit (Éditeur + Console + Copilote + Grimoire) -->
+    <main class="cockpit-container">
+      
+      <!-- Panneau Principal Gauche : Éditeur & Console -->
+      <section class="main-crucible-pane">
+        
+        <!-- En-tête de Quête -->
+        <div class="quest-card">
+          <div class="quest-meta-bar">
+            <div class="quest-tags">
+              <span class="tag-quest-id" id="questIdTag">QUÊTE 01 / 22</span>
+              <span class="tag-difficulty" id="questDifficultyTag">TRÈS SIMPLE</span>
+              <span class="tag-xp" id="questXpTag">+16 XP OR</span>
+            </div>
+            <div class="quest-controls">
+              <button id="btnForgeAi" class="forge-ai-btn" title="Générer une nouvelle quête infinie avec l'IA">
+                <span class="ai-sparkle">🌌</span>
+                <span>FORGER QUÊTE (IA)</span>
+              </button>
+              <button id="prevBtn" class="action-icon-btn" title="Quête précédente">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button id="nextBtn" class="action-icon-btn" title="Quête suivante">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 class="quest-heading" id="questHeading">La Transmutation du Plomb</h2>
+          <p class="quest-lore-text" id="questLoreText">
+            Le vil métal attend dans le creuset. Pour initier le Grand Œuvre, transmutez la matière vile <code>"lead"</code> en métal précieux <code>"gold"</code>.
+          </p>
+
+          <div class="objective-card">
+            <div class="objective-flag">🎯 OBJECTIF ÉVIDENT</div>
+            <div class="objective-text" id="questObjectiveText">
+              Changez la valeur de la variable <code>metal</code> pour <code>"gold"</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Éditeur de Code Moderne (IDE Cockpit) -->
+        <div class="ide-frame">
+          <div class="ide-tab-bar">
+            <div class="ide-tab active">
+              <span class="tab-icon">⚗️</span>
+              <span class="tab-name">creuset.js</span>
+              <span class="tab-status" id="tabStatusDot"></span>
+            </div>
+            <div class="ide-tools">
+              <button id="btnReset" class="tool-btn" title="Réinitialiser le code de départ">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>Reset</span>
+              </button>
+              <button id="btnHint" class="tool-btn hint-tool" title="Demander un indice à l'Homunculus">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span>Indice</span>
+              </button>
+              <button id="btnSolution" class="tool-btn solution-tool" title="Révéler la formule exacte">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 2-2 2m-1.414 1.414-7.071 7.071A5 5 0 1 1 3.435 5.405l7.071-7.071"/></svg>
+                <span>Solution</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="ide-workspace">
+            <div class="gutter-lines" id="editorLines">1<br>2<br>3<br>4<br>5</div>
+            <textarea id="editorTextarea" class="code-input" spellcheck="false" placeholder="// Écrivez votre code alchimique ici..."></textarea>
+          </div>
+
+          <div class="ide-action-bar">
+            <div class="ide-shortcuts">
+              <span class="kbd-badge">Ctrl</span> + <span class="kbd-badge">Entrée</span> pour transmuter
+            </div>
+            <button id="btnTransmute" class="transmute-action-btn">
+              <span class="btn-sparkle">✨</span>
+              <span class="btn-caption">TRANSMUTER VIA SERVEUR</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terminal de Sortie Haute Définition -->
+        <div class="terminal-deck">
+          <div class="deck-header">
+            <div class="deck-title">
+              <span class="deck-glyph">🖳</span>
+              <span>CONSOLE DU CREUSET (TERMINAL SERVEUR)</span>
+            </div>
+            <div class="deck-actions">
+              <span class="status-indicator" id="consoleExecTime">Prêt</span>
+              <button id="btnClearTerminal" class="clear-terminal-btn">Effacer</button>
+            </div>
+          </div>
+          <div class="deck-body" id="terminalStream">
+            <div class="stream-line line-sys">
+              <span class="stream-prefix">⚗️</span>
+              <span class="stream-text">Creuset alchimique initialisé. Connecté à l'API <code>/api/transmute</code>.</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Panneau Latéral Droit : Copilote ORBIT & Grimoire -->
+      <aside class="sidebar-crucible-pane">
+        
+        <!-- Homunculus ORBIT (Copilote IA Alchimique) -->
+        <div class="homunculus-card">
+          <div class="homunculus-header">
+            <div class="homunculus-avatar-wrap">
+              <div class="h-orb">
+                <div class="h-core"></div>
+                <div class="h-glow"></div>
+              </div>
+            </div>
+            <div class="homunculus-meta">
+              <strong class="h-name">ORBIT</strong>
+              <small class="h-sub">L'Homunculus · Copilote IA</small>
+            </div>
+            <div class="online-indicator">
+              <span class="online-dot"></span>
+              <span>LIVE</span>
+            </div>
+          </div>
+
+          <div class="homunculus-dialogue" id="homunculusStream">
+            <div class="dialogue-bubble bot">
+              Salutations, adepte du code ! Je suis <strong>ORBIT</strong>, l'intelligence du creuset. Les défis sont très simples : lis l'objectif et clique sur <strong>Transmuter</strong>. Je suis là si tu as besoin d'un indice !
+            </div>
+          </div>
+
+          <div class="prompt-chips">
+            <button class="chip-btn" data-query="indice">💡 Un indice ?</button>
+            <button class="chip-btn" data-query="solution">🔑 La formule ?</button>
+            <button class="chip-btn" data-query="backend">📡 Statut serveur ?</button>
+          </div>
+
+          <form id="chatPromptForm" class="chat-prompt-bar">
+            <input id="chatPromptInput" type="text" placeholder="Interrogez l'Homunculus…" autocomplete="off" />
+            <button type="submit" class="chat-send-btn" title="Envoyer">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <!-- Grimoire de l'Opus Magnum (Liste des 22 Quêtes) -->
+        <div class="grimoire-card">
+          <div class="grimoire-header">
+            <div class="g-title-wrap">
+              <span class="g-icon">📜</span>
+              <h3>Grimoire des Quêtes</h3>
+            </div>
+            <div class="g-actions-right">
+              <button id="btnForgeAiGrimoire" class="mini-forge-btn" title="Générer une quête infinie">+ Forger IA ✨</button>
+              <span class="g-counter" id="grimoireProgressText">0 / 22 complétées</span>
+            </div>
+          </div>
+
+          <div class="grimoire-list-wrap" id="grimoireListWrap">
+            <!-- Liste générée en JS -->
+          </div>
+        </div>
+
+      </aside>
+
+    </main>
+
+    <!-- Modal Célébration Pierre Philosophale -->
+    <div id="celebrationModal" class="modal-backdrop hidden">
+      <div class="celebration-panel">
+        <div class="celebration-symbol">💎</div>
+        <div class="celebration-eyebrow">LE GRAND ŒUVRE EST ACCOMPLI</div>
+        <h2 class="celebration-title">La Pierre Philosophale est Forgée !</h2>
+        <p class="celebration-desc">
+          Par l'alliance du Soufre, du Sel et du Mercure binaire, vous avez surmonté les 22 épreuves et atteint le rang suprême de <strong>Grand Maître Alchimiste du Code</strong>.
+        </p>
+
+        <div class="celebration-metrics">
+          <div class="c-metric">
+            <strong id="finalXpNumber" class="gold-gradient">352</strong>
+            <span>Pépites d'Or XP</span>
+          </div>
+          <div class="c-metric">
+            <strong class="green-text">22 / 22</strong>
+            <span>Transmutations</span>
+          </div>
+          <div class="c-metric">
+            <strong class="cyan-text">100%</strong>
+            <span>Grand Œuvre</span>
+          </div>
+        </div>
+
+        <button id="btnCloseModal" class="celebration-btn">
+          <span>Poursuivre les Expériences Alchimiques ✨</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

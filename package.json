@@ -1,0 +1,30 @@
+{
+  "name": "quantum-run-opus-magnum",
+  "version": "2.0.0",
+  "description": "La Quête Alchimique du Code — Cockpit React & Material-UI propulsé par Express et Gemini (GMI)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
