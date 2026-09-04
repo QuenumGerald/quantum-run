@@ -345,30 +345,49 @@ function saveUsersData(users) {
   }
 }
 
-// Connexion / Création instantanée de compte
+// Connexion / Création instantanée de compte & Multi-Appareils
 app.post('/api/auth/login', (req, res) => {
   const { username } = req.body || {};
   if (!username || typeof username !== 'string' || !username.trim()) {
-    return res.status(400).json({ error: "Nom d'alchimiste requis." });
+    return res.status(400).json({ error: "Nom d'alchimiste ou Code de Sync requis." });
   }
 
-  const cleanName = username.trim();
+  const inputStr = username.trim();
   const users = loadUsersData();
 
-  if (!users[cleanName]) {
-    users[cleanName] = {
-      username: cleanName,
+  // Recherche directe par nom de compte ou par syncKey
+  let foundUser = users[inputStr];
+
+  if (!foundUser) {
+    // Chercher par syncKey (insensible à la casse)
+    const matchedKey = Object.keys(users).find(u => users[u].syncKey && users[u].syncKey.toLowerCase() === inputStr.toLowerCase());
+    if (matchedKey) {
+      foundUser = users[matchedKey];
+    }
+  }
+
+  if (!foundUser) {
+    const codePin = Math.floor(1000 + Math.random() * 9000).toString();
+    foundUser = {
+      username: inputStr,
+      syncKey: `${inputStr}#${codePin}`,
       clearedQuests: [],
       gold: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+    users[inputStr] = foundUser;
+    saveUsersData(users);
+  } else if (!foundUser.syncKey) {
+    const codePin = Math.floor(1000 + Math.random() * 9000).toString();
+    foundUser.syncKey = `${foundUser.username}#${codePin}`;
+    users[foundUser.username] = foundUser;
     saveUsersData(users);
   }
 
   res.json({
     success: true,
-    user: users[cleanName]
+    user: foundUser
   });
 });
 

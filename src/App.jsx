@@ -748,27 +748,28 @@ export default function App() {
 
       </Container>
 
-      {/* MODAL PARCOURS ALCHIMISTE */}
+      {/* MODAL PARCOURS ALCHIMISTE & MULTI-APPAREILS */}
       <Dialog open={accountModalOpen} onClose={() => setAccountModalOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 2.5 }}>
-          <Avatar sx={{ bgcolor: '#D4AF37', color: '#000', width: 32, height: 32 }}>🧙‍♂️</Avatar>
-          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 16 }}>
-            Parcours de l'Alchimiste
+          <Avatar sx={{ bgcolor: '#10A37F', color: '#FFF', width: 32, height: 32 }}>🧙‍♂️</Avatar>
+          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 16, color: '#ECECEC' }}>
+            Compte & Synchro Multi-Appareils
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box>
-              <Typography variant="caption" sx={{ color: '#94A3B8', mb: 0.5, display: 'block' }}>
-                Nom d'alchimiste (sauvegarde automatique Cloud) :
+              <Typography variant="caption" sx={{ color: '#B4B4B4', mb: 0.5, display: 'block' }}>
+                🔑 Nom de compte ou Code de Synchronisation :
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                 <TextField
                   fullWidth
                   size="small"
                   value={usernameInput}
                   onChange={(e) => setUsernameInput(e.target.value)}
-                  placeholder="Ex: Paracelse, Flamel..."
+                  placeholder="Ex: Paracelse ou PARACELSE#4829..."
+                  sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#ECECEC' } }}
                 />
                 <OpenAIButton
                   color="primary"
@@ -778,35 +779,49 @@ export default function App() {
                     setAccountModalOpen(false);
                   }}
                 >
-                  Changer
+                  Charger
                 </OpenAIButton>
               </Box>
+
+              {currentUser?.syncKey && (
+                <Paper elevation={0} sx={{ p: 1, bgcolor: 'rgba(16, 163, 127, 0.1)', border: '1px solid rgba(16, 163, 127, 0.3)', borderRadius: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#1ADA9D', fontWeight: 600, display: 'block', mb: 0.3 }}>
+                    📲 Votre Code Multi-Appareils :
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#ECECEC', fontSize: 13 }}>
+                    {currentUser.syncKey}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#B4B4B4', fontSize: 11, display: 'block', mt: 0.5 }}>
+                    Entrez ce code ou votre nom sur votre téléphone, tablette ou un autre PC pour synchroniser instantanément toute votre progression !
+                  </Typography>
+                </Paper>
+              )}
             </Box>
 
             <Divider sx={{ my: 0.5 }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Rang Alchimique :</Typography>
-                <OpenAIBadge color="primary">{getRank()}</OpenAIBadge>
+                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Rang Alchimique :</Typography>
+                <OpenAIBadge color="primary">{getRankTitle(gold)}</OpenAIBadge>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Quêtes Complétées :</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace" }}>
+                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Quêtes Complétées :</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#ECECEC' }}>
                   {clearedQuests.length} / {quests.length}
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Pépites d'Or :</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, color: '#E6C665', fontFamily: "'JetBrains Mono', monospace" }}>
+                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Expérience Accumulée :</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#D4AF37', fontFamily: "'JetBrains Mono', monospace" }}>
                   {gold} XP
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Serveur :</Typography>
+                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Sauvegarde Cloud :</Typography>
                 <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
               </Box>
             </Box>
