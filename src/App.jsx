@@ -99,32 +99,32 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍" },
-  { id: 2, name: "Distillation", symbol: "🜔" },
-  { id: 3, name: "Formules", symbol: "🜛" },
-  { id: 4, name: "Fioles", symbol: "🜁" },
-  { id: 5, name: "Rituels", symbol: "🜃" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤" }
+  { id: 1, name: "Energer", symbol: "📄" },
+  { id: 2, name: "Trust Studio", symbol: "🛡️" },
+  { id: 3, name: "La Bonne Réponse", symbol: "🏗️" },
+  { id: 4, name: "APIs & LLM", symbol: "🤖" },
+  { id: 5, name: "Analytics", symbol: "📊" },
+  { id: 6, name: "Builder Suprême", symbol: "🚀" }
 ];
 
 const getRankTitle = (xp) => {
-  if (xp >= 300) return "Grand Alchimiste 🝤";
-  if (xp >= 200) return "Maître Alchimiste 🜃";
-  if (xp >= 100) return "Adepte 🜛";
-  if (xp >= 50) return "Apprenti 🜔";
-  return "Initié 🜍";
+  if (xp >= 300) return "Senior AI Builder 🚀";
+  if (xp >= 200) return "Master Architect 🛡️";
+  if (xp >= 100) return "Full Stack Engineer 💻";
+  if (xp >= 50) return "SaaS Developer 📄";
+  return "Junior Builder 🏗️";
 };
 
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "Transmutation du Plomb",
+  title: "Validation de Facture (Energer)",
   difficulty: "FACILE",
-  lore: "Bienvenue dans l'athanor. Votre premier rituel alchimique consiste à élever la vibration du métal le plus lourd : le plomb. Transformez-le en or pur pour éveiller le creuset.",
-  objective: "Changez la valeur de <code>metal</code> pour <code>\"gold\"</code>.",
-  initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
-  solutionCode: `let metal = "gold";\n\nreturn metal;`,
-  hint: "Remplace \"lead\" par \"gold\".",
+  lore: "Bienvenue chez Quantum of Trust ! La plateforme Energer analyse automatiquement les factures clients pour détecter les incohérences. Initialisez le statut du document vérifié.",
+  objective: "Changez la valeur de la variable <code>status</code> pour <code>\"VERIFIED\"</code>.",
+  initialCode: `// Validez le statut de la facture Energer\nlet status = "PENDING";\n\nreturn status;`,
+  solutionCode: `let status = "VERIFIED";\n\nreturn status;`,
+  hint: "Remplace \"PENDING\" par \"VERIFIED\".",
   rewardXP: 16
 };
 
@@ -151,7 +151,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'ORBIT à votre service. Posez une question ou transmutez votre code.' }
+    { sender: 'bot', text: 'Bienvenue chez Quantum of Trust ! Je suis ORBIT, votre Tech Lead Copilote. Posez-moi vos questions sur Energer, Trust Studio, La Bonne Réponse ou vos exercices.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);

@@ -21,303 +21,303 @@ if (fs.existsSync(distPath)) {
 }
 
 // ==========================================================================
-// PHASES ET QUÊTES ALCHIMIQUES (UTF-8 PROPRE & INTERACTIF)
+// PHASES ET QUÊTES QUANTUM OF TRUST (FULL STACK BUILDER IA & SAAS)
 // ==========================================================================
 const PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "Types primitifs & Réactifs de base" },
-  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Calculs & Pesées de l'Athanor" },
-  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Incantations & Fonctions magiques" },
-  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Tableaux, Agrégats & Gemmes" },
-  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Filtres, Transformations & Logique" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "La Pierre Philosophale Suprême" }
+  { id: 1, name: "Energer (Docs & Fraude)", symbol: "📄", subtitle: "Analyse de Factures & Détection d'Anomalies" },
+  { id: 2, name: "Trust Studio (Supervision)", symbol: "🛡️", subtitle: "Metrics, Confiance & Traçabilité LLM" },
+  { id: 3, name: "La Bonne Réponse (BTP)", symbol: "🏗️", subtitle: "Conformité de Devis & Assistant Métier" },
+  { id: 4, name: "Pipelines & APIs IA", symbol: "🤖", subtitle: "Intégrations OpenAI/Claude/Gemini & Prompts" },
+  { id: 5, name: "Full Stack Analytics", symbol: "📊", subtitle: "Traitement de Données, Aggregations & Arrays" },
+  { id: 6, name: "Builder Suprême", symbol: "🚀", subtitle: "Architecture SaaS & Quantum of Trust" }
 ];
 
 const QUESTS = [
   {
     id: 1,
     phase: 1,
-    title: "La Transmutation du Plomb",
+    title: "Validation de Facture (Energer)",
     difficulty: "FACILE",
-    lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile <code>\"lead\"</code> en métal précieux <code>\"gold\"</code>.",
-    objective: "Changez la valeur de la variable <code>metal</code> pour <code>\"gold\"</code>.",
-    initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
-    solutionCode: `let metal = "gold";\n\nreturn metal;`,
-    hint: "Remplace simplement \"lead\" par \"gold\".",
+    lore: "Bienvenue chez Quantum of Trust ! La plateforme Energer analyse automatiquement les factures clients pour détecter les incohérences. Initialisez le statut du document vérifié.",
+    objective: "Changez la valeur de la variable <code>status</code> pour <code>\"VERIFIED\"</code>.",
+    initialCode: `// Validez le statut de la facture Energer\nlet status = "PENDING";\n\nreturn status;`,
+    solutionCode: `let status = "VERIFIED";\n\nreturn status;`,
+    hint: "Remplace \"PENDING\" par \"VERIFIED\".",
     rewardXP: 16,
-    check: (res, ctx) => res === "gold" || ctx.metal === "gold"
+    check: (res, ctx) => res === "VERIFIED" || ctx.status === "VERIFIED"
   },
   {
     id: 2,
     phase: 1,
-    title: "L'Âge de l'Initié",
+    title: "Calcul du Montant TTC (+20% TVA)",
     difficulty: "FACILE",
-    lore: "Tout alchimiste doit déclarer ses années d'apprentissage pour calibrer le fourneau de l'Athanor.",
-    objective: "Déclarez la variable <code>age</code> égale au nombre <code>20</code>.",
-    initialCode: `// Calibrez l'âge à 20\nlet age = 0;\n\nreturn age;`,
-    solutionCode: `let age = 20;\n\nreturn age;`,
-    hint: "Remplace 0 par 20 dans let age = 20;",
+    lore: "Energer vérifie les taxes sur les devis d'entreprises. Ajoutez 20% de TVA au montant HT de 100€.",
+    objective: "Calculez le montant TTC (<code>100 * 1.20</code>) dans la variable <code>montantTTC</code>.",
+    initialCode: `let montantHT = 100;\n\n// Calculez le montant TTC avec 20% de TVA\nlet montantTTC = 0;\n\nreturn montantTTC;`,
+    solutionCode: `let montantHT = 100;\nlet montantTTC = montantHT * 1.20;\n\nreturn montantTTC;`,
+    hint: "Multiplie montantHT * 1.20.",
     rewardXP: 16,
-    check: (res, ctx) => res === 20 || ctx.age === 20
+    check: (res, ctx) => res === 120 || ctx.montantTTC === 120
   },
   {
     id: 3,
     phase: 1,
-    title: "L'Élixir d'Immortalité",
+    title: "Détection d'Anomalie Financière",
     difficulty: "FACILE",
-    lore: "La fiole rouge confère l'immortalité. Activez le sceau de vérité booléenne en passant la variable à vrai.",
-    objective: "Mettez la variable <code>isImmortal</code> à <code>true</code>.",
-    initialCode: `// Activez le sceau d'immortalité\nlet isImmortal = false;\n\nreturn isImmortal;`,
-    solutionCode: `let isImmortal = true;\n\nreturn isImmortal;`,
-    hint: "Changez false par true.",
+    lore: "Une alerte Energer est déclenchée si la différence entre le devis et la facture dépasse le seuil toléré. Signalez l'anomalie.",
+    objective: "Passez la variable <code>anomalieDetectee</code> à <code>true</code>.",
+    initialCode: `// Activez le drapeau d'anomalie Energer\nlet anomalieDetectee = false;\n\nreturn anomalieDetectee;`,
+    solutionCode: `let anomalieDetectee = true;\n\nreturn anomalieDetectee;`,
+    hint: "Change false par true.",
     rewardXP: 16,
-    check: (res, ctx) => res === true || ctx.isImmortal === true
+    check: (res, ctx) => res === true || ctx.anomalieDetectee === true
   },
   {
     id: 4,
     phase: 1,
-    title: "La Potion Aqua Vitae",
+    title: "Sceau de Référence Documentaire",
     difficulty: "FACILE",
-    lore: "Fusionnez les deux vapeurs sacrées <code>\"Aqua\"</code> et <code>\"Vitae\"</code> séparées par un espace.",
-    objective: "Concaténez les variables pour obtenir <code>\"Aqua Vitae\"</code>.",
-    initialCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\n\n// Assemblez mot1 et mot2 avec un espace\nlet potion = "";\n\nreturn potion;`,
-    solutionCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\nlet potion = mot1 + " " + mot2;\n\nreturn potion;`,
-    hint: "Utilise mot1 + \" \" + mot2 !",
+    lore: "Formatez l'identifiant unique du justificatif client en assemblant le préfixe et l'année.",
+    objective: "Concaténez <code>prefixe</code> (\"DOC-\") et <code>annee</code> (2024) dans <code>refDocument</code>.",
+    initialCode: `let prefixe = "DOC-";\nlet annee = 2024;\n\n// Assemblez prefixe et annee\nlet refDocument = "";\n\nreturn refDocument;`,
+    solutionCode: `let prefixe = "DOC-";\nlet annee = 2024;\nlet refDocument = prefixe + annee;\n\nreturn refDocument;`,
+    hint: "Utilise prefixe + annee !",
     rewardXP: 16,
-    check: (res, ctx) => res === "Aqua Vitae" || ctx.potion === "Aqua Vitae"
+    check: (res, ctx) => res === "DOC-2024" || ctx.refDocument === "DOC-2024"
   },
   {
     id: 5,
     phase: 2,
-    title: "La Pesée du Soufre et du Sel",
+    title: "Calcul du Score de Confiance (Trust Studio)",
     difficulty: "MOYEN",
-    lore: "Pour stabiliser la réaction, additionnez les 10g de soufre et les 5g de sel dans le réceptacle.",
-    objective: "Additionnez <code>soufre</code> (10) et <code>sel</code> (5) dans <code>masseTotale</code>.",
-    initialCode: `let soufre = 10;\nlet sel = 5;\n\n// Faites la somme des deux réactifs\nlet masseTotale = 0;\n\nreturn masseTotale;`,
-    solutionCode: `let soufre = 10;\nlet sel = 5;\nlet masseTotale = soufre + sel;\n\nreturn masseTotale;`,
-    hint: "Additionne soufre + sel !",
+    lore: "Trust Intelligence Studio permet aux entreprises de mesurer le niveau de confiance d'une réponse d'IA. Additionnez les deux scores partiels.",
+    objective: "Additionnez <code>scorePertinence</code> (0.50) et <code>scoreSecurite</code> (0.45) dans <code>confidenceScore</code>.",
+    initialCode: `let scorePertinence = 0.50;\nlet scoreSecurite = 0.45;\n\n// Additionnez les deux scores\nlet confidenceScore = 0;\n\nreturn confidenceScore;`,
+    solutionCode: `let scorePertinence = 0.50;\nlet scoreSecurite = 0.45;\nlet confidenceScore = scorePertinence + scoreSecurite;\n\nreturn confidenceScore;`,
+    hint: "Fais scorePertinence + scoreSecurite !",
     rewardXP: 16,
-    check: (res, ctx) => res === 15 || ctx.masseTotale === 15
+    check: (res, ctx) => res === 0.95 || ctx.confidenceScore === 0.95
   },
   {
     id: 6,
     phase: 2,
-    title: "L'Ébullition Doublée",
+    title: "Supervision du Quota de Tokens LLM",
     difficulty: "MOYEN",
-    lore: "Le fourneau est à 50°C. Doublez la température actuelle pour atteindre le point d'ébullition rituel.",
-    objective: "Multipliez <code>temperature</code> par 2 dans <code>temperatureFinale</code>.",
-    initialCode: `let temperature = 50;\n\n// Doublez la température (50 * 2)\nlet temperatureFinale = 0;\n\nreturn temperatureFinale;`,
-    solutionCode: `let temperature = 50;\nlet temperatureFinale = temperature * 2;\n\nreturn temperatureFinale;`,
-    hint: "Utilise temperature * 2 !",
+    lore: "Ajustez le plafond de consommation de tokens autorisé pour une requête vers l'API Gemini ou Claude en doublant la valeur actuelle.",
+    objective: "Multipliez <code>limitTokens</code> (1000) par 2 dans <code>nouvelleLimite</code>.",
+    initialCode: `let limitTokens = 1000;\n\n// Doubler la limite de tokens\nlet nouvelleLimite = 0;\n\nreturn nouvelleLimite;`,
+    solutionCode: `let limitTokens = 1000;\nlet nouvelleLimite = limitTokens * 2;\n\nreturn nouvelleLimite;`,
+    hint: "Multiplie limitTokens * 2 !",
     rewardXP: 16,
-    check: (res, ctx) => res === 100 || ctx.temperatureFinale === 100
+    check: (res, ctx) => res === 2000 || ctx.nouvelleLimite === 2000
   },
   {
     id: 7,
     phase: 2,
-    title: "Le Reste Sacré (Modulo)",
+    title: "Load-Balancing de Clusters (Modulo)",
     difficulty: "MOYEN",
-    lore: "L'opérateur modulo <code>%</code> extrait le reste d'une division rituelle. Obtenez le reste de 10 divisé par 3.",
-    objective: "Calculez <code>10 % 3</code> dans la variable <code>reste</code>.",
-    initialCode: `// Obtenez le reste de 10 divisé par 3\nlet reste = 0;\n\nreturn reste;`,
-    solutionCode: `let reste = 10 % 3;\n\nreturn reste;`,
+    lore: "Dans Trust Intelligence Studio, répartissez la charge des requêtes sur les 3 instances du proxy IA en calculant le reste de 10 / 3.",
+    objective: "Calculez <code>10 % 3</code> dans la variable <code>serveurIndex</code>.",
+    initialCode: `// Calculez le reste de 10 divisé par 3\nlet serveurIndex = 0;\n\nreturn serveurIndex;`,
+    solutionCode: `let serveurIndex = 10 % 3;\n\nreturn serveurIndex;`,
     hint: "Écris 10 % 3 (le reste vaut 1).",
     rewardXP: 16,
-    check: (res, ctx) => res === 1 || ctx.reste === 1
+    check: (res, ctx) => res === 1 || ctx.serveurIndex === 1
   },
   {
     id: 8,
     phase: 3,
-    title: "L'Incantation d'Éveil",
+    title: "Conformité de Devis BTP (La Bonne Réponse)",
     difficulty: "MOYEN",
-    lore: "Les adeptes réveillent le laboratoire en prononçant le cri magique <code>\"Eureka!\"</code>.",
-    objective: "Complétez la fonction <code>reveiller()</code> pour qu'elle retourne <code>\"Eureka!\"</code>.",
-    initialCode: `function reveiller() {\n  // Écrivez le retour du cri rituel\n  return "";\n}\n\nreturn reveiller();`,
-    solutionCode: `function reveiller() {\n  return "Eureka!";\n}\n\nreturn reveiller();`,
-    hint: "Met return \"Eureka!\"; dans la fonction.",
+    lore: "La Bonne Réponse vérifie automatiquement si un devis du bâtiment respecte les normes réglementaires.",
+    objective: "Complétez la fonction <code>verifierConformite()</code> pour qu'elle retourne <code>\"CONFORME\"</code>.",
+    initialCode: `function verifierConformite() {\n  // Retournez le statut conforme\n  return "";\n}\n\nreturn verifierConformite();`,
+    solutionCode: `function verifierConformite() {\n  return "CONFORME";\n}\n\nreturn verifierConformite();`,
+    hint: "Met return \"CONFORME\"; dans la fonction.",
     rewardXP: 16,
-    check: (res) => res === "Eureka!"
+    check: (res) => res === "CONFORME"
   },
   {
     id: 9,
     phase: 3,
-    title: "Le Sortilège d'Amplification",
+    title: "Calculateur de Surface de Chantier BTP",
     difficulty: "MOYEN",
-    lore: "Forgez un sortilège universel capable de doubler n'importe quelle dose de poudre d'étoile.",
-    objective: "Complétez la fonction <code>doubler(x)</code> pour qu'elle retourne <code>x * 2</code>.",
-    initialCode: `function doubler(x) {\n  // Retournez le double de x\n  return 0;\n}\n\nreturn doubler(21);`,
-    solutionCode: `function doubler(x) {\n  return x * 2;\n}\n\nreturn doubler(21);`,
-    hint: "Fais return x * 2; dans la fonction.",
+    lore: "Développez une fonction pour aider les artisans BTP à calculer la surface totale à rénover.",
+    objective: "Complétez la fonction <code>calculerSurface(l, L)</code> pour qu'elle retourne <code>l * L</code>.",
+    initialCode: `function calculerSurface(l, L) {\n  // Retournez l * L\n  return 0;\n}\n\nreturn calculerSurface(10, 5);`,
+    solutionCode: `function calculerSurface(l, L) {\n  return l * L;\n}\n\nreturn calculerSurface(10, 5);`,
+    hint: "Fais return l * L; dans la fonction.",
     rewardXP: 16,
-    check: (res, ctx) => res === 42 || (typeof ctx.doubler === 'function' && ctx.doubler(10) === 20)
+    check: (res, ctx) => res === 50 || (typeof ctx.calculerSurface === 'function' && ctx.calculerSurface(4, 5) === 20)
   },
   {
     id: 10,
     phase: 3,
-    title: "L'Alliance des Deux Éléments",
+    title: "Formatage du Rapport IA BTP",
     difficulty: "MOYEN",
-    lore: "Associez le nom de deux éléments alchimiques avec un symbole d'union <code>\" + \"</code>.",
-    objective: "Complétez la fonction <code>allier(a, b)</code> pour qu'elle retourne <code>a + \" + \" + b</code>.",
-    initialCode: `function allier(a, b) {\n  // Associez a et b séparés par " + "\n  return "";\n}\n\nreturn allier("Or", "Argent");`,
-    solutionCode: `function allier(a, b) {\n  return a + " + " + b;\n}\n\nreturn allier("Or", "Argent");`,
-    hint: "Retourne a + \" + \" + b.",
+    lore: "Associez le nom du modèle d'IA et la référence du devis analysé pour le rapport client.",
+    objective: "Complétez la fonction <code>formerRapport(modele, devis)</code> pour retourner <code>modele + \" -> \" + devis</code>.",
+    initialCode: `function formerRapport(modele, devis) {\n  // Associez modele et devis séparés par " -> "\n  return "";\n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
+    solutionCode: `function formerRapport(modele, devis) {\n  return modele + " -> " + devis;\n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
+    hint: "Retourne modele + \" -> \" + devis.",
     rewardXP: 16,
-    check: (res) => res === "Or + Argent"
+    check: (res) => res === "Claude-3.5 -> Devis #884"
   },
   {
     id: 11,
     phase: 4,
-    title: "La Fiole d'Ingrédients (.push)",
+    title: "Enregistrement de Modèle IA (.push)",
     difficulty: "AVANCÉ",
-    lore: "Un précieux grain de <code>\"Rubis\"</code> doit être ajouté à la fiole d'ingrédients existants.",
-    objective: "Ajoutez <code>\"Rubis\"</code> à la fiole avec <code>fiole.push(\"Rubis\")</code>.",
-    initialCode: `let fiole = ["Quartz", "Saphir"];\n\n// Ajoutez "Rubis" à la fiole\n\nreturn fiole;`,
-    solutionCode: `let fiole = ["Quartz", "Saphir"];\nfiole.push("Rubis");\n\nreturn fiole;`,
-    hint: "Écris fiole.push(\"Rubis\");",
+    lore: "Ajoutez le modèle <code>\"claude-3-5-sonnet\"</code> au registre des LLM supervisés par Trust Studio.",
+    objective: "Ajoutez <code>\"claude-3-5-sonnet\"</code> au tableau <code>modeles</code> avec <code>.push()</code>.",
+    initialCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\n\n// Ajoutez "claude-3-5-sonnet" au tableau\n\nreturn modeles;`,
+    solutionCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\nmodeles.push("claude-3-5-sonnet");\n\nreturn modeles;`,
+    hint: "Écris modeles.push(\"claude-3-5-sonnet\");",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.includes("Rubis") && res.length === 3
+    check: (res) => Array.isArray(res) && res.includes("claude-3-5-sonnet") && res.length === 3
   },
   {
     id: 12,
     phase: 4,
-    title: "Le Dénombrement des Réactifs (.length)",
+    title: "Dénombrement de la File Energer (.length)",
     difficulty: "AVANCÉ",
-    lore: "Mesurez le nombre exact d'ingrédients présents dans l'athanor à l'aide de la propriété <code>.length</code>.",
-    objective: "Stockez la longueur du tableau <code>reactifs</code> dans la variable <code>compte</code>.",
-    initialCode: `let reactifs = ["Mercure", "Soufre", "Sel", "Or"];\n\n// Comptez le nombre de réactifs\nlet compte = 0;\n\nreturn compte;`,
-    solutionCode: `let reactifs = ["Mercure", "Soufre", "Sel", "Or"];\nlet compte = reactifs.length;\n\nreturn compte;`,
-    hint: "Utilise reactifs.length.",
+    lore: "Mesurez le nombre exact de documents en attente dans la file d'analyse Energer avec la propriété <code>.length</code>.",
+    objective: "Stockez la longueur du tableau <code>queue</code> dans la variable <code>nombreDocs</code>.",
+    initialCode: `let queue = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\n\n// Comptez le nombre de documents\nlet nombreDocs = 0;\n\nreturn nombreDocs;`,
+    solutionCode: `let queue = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\nlet nombreDocs = queue.length;\n\nreturn nombreDocs;`,
+    hint: "Utilise queue.length.",
     rewardXP: 16,
     check: (res) => res === 4
   },
   {
     id: 13,
     phase: 4,
-    title: "L'Extraction du Premier Métal",
+    title: "Extraction du Premier Document Urgent",
     difficulty: "AVANCÉ",
-    lore: "Extrayez le tout premier élément du coffre alchimique à l'index <code>0</code>.",
-    objective: "Stockez le premier élément de <code>coffre</code> dans la variable <code>premier</code>.",
-    initialCode: `let coffre = ["Or", "Argent", "Cuivre"];\n\n// Récupérez l'élément à l'index 0\nlet premier = "";\n\nreturn premier;`,
-    solutionCode: `let coffre = ["Or", "Argent", "Cuivre"];\nlet premier = coffre[0];\n\nreturn premier;`,
-    hint: "Écris coffre[0].",
+    lore: "Extrayez le tout premier justificatif de la file de traitement Energer à l'index <code>0</code>.",
+    objective: "Stockez le premier élément de <code>queue</code> dans la variable <code>prioritaire</code>.",
+    initialCode: `let queue = ["Facture_Urgente.pdf", "Devis_Standard.pdf"];\n\n// Récupérez l'élément à l'index 0\nlet prioritaire = "";\n\nreturn prioritaire;`,
+    solutionCode: `let queue = ["Facture_Urgente.pdf", "Devis_Standard.pdf"];\nlet prioritaire = queue[0];\n\nreturn prioritaire;`,
+    hint: "Écris queue[0].",
     rewardXP: 16,
-    check: (res) => res === "Or"
+    check: (res) => res === "Facture_Urgente.pdf"
   },
   {
     id: 14,
     phase: 4,
-    title: "Le Sceau du Dernier Élément",
+    title: "Dernier Log d'Audit de Sécurité",
     difficulty: "AVANCÉ",
-    lore: "Extrayez le dernier élément de la collection <code>[\"Feu\", \"Eau\", \"Air\"]</code> à l'index <code>2</code>.",
-    objective: "Stockez le dernier élément dans la variable <code>dernier</code>.",
-    initialCode: `let elements = ["Feu", "Eau", "Air"];\n\n// Récupérez l'élément à l'index 2\nlet dernier = "";\n\nreturn dernier;`,
-    solutionCode: `let elements = ["Feu", "Eau", "Air"];\nlet dernier = elements[2];\n\nreturn dernier;`,
-    hint: "Écris elements[2].",
+    lore: "Extrayez le dernier événement de traçabilité d'une réponse IA à l'index <code>2</code>.",
+    objective: "Stockez le dernier log dans la variable <code>dernierLog</code>.",
+    initialCode: `let logs = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\n\n// Récupérez l'élément à l'index 2\nlet dernierLog = "";\n\nreturn dernierLog;`,
+    solutionCode: `let logs = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\nlet dernierLog = logs[2];\n\nreturn dernierLog;`,
+    hint: "Écris logs[2].",
     rewardXP: 16,
-    check: (res) => res === "Air"
+    check: (res) => res === "CONFIDENCE_CHECKED"
   },
   {
     id: 15,
     phase: 4,
-    title: "Le Répertoire Alchimique (Objet)",
+    title: "Structure du Payload LLM (Objet)",
     difficulty: "AVANCÉ",
-    lore: "Définissez un objet d'artefact avec son nom et sa valeur en carats.",
-    objective: "Créez l'objet <code>artefact</code> avec <code>nom: \"Émeraude\"</code> et <code>valeur: 100</code>.",
-    initialCode: `// Complétez l'objet artefact\nlet artefact = {\n  nom: "",\n  valeur: 0\n};\n\nreturn artefact;`,
-    solutionCode: `let artefact = {\n  nom: "Émeraude",\n  valeur: 100\n};\n\nreturn artefact;`,
-    hint: "Met nom: \"Émeraude\", valeur: 100.",
+    lore: "Définissez un objet de métriques de requête IA pour l’enregistrement en base PostgreSQL.",
+    objective: "Créez l'objet <code>payload</code> avec <code>model: \"gemini-3.6-flash\"</code> et <code>tokens: 150</code>.",
+    initialCode: `// Complétez l'objet payload\nlet payload = {\n  model: "",\n  tokens: 0\n};\n\nreturn payload;`,
+    solutionCode: `let payload = {\n  model: "gemini-3.6-flash",\n  tokens: 150\n};\n\nreturn payload;`,
+    hint: "Met model: \"gemini-3.6-flash\", tokens: 150.",
     rewardXP: 16,
-    check: (res) => typeof res === 'object' && res.nom === "Émeraude" && res.valeur === 100
+    check: (res) => typeof res === 'object' && res.model === "gemini-3.6-flash" && res.tokens === 150
   },
   {
     id: 16,
     phase: 5,
-    title: "Le Rituel de Vérification (Condition IF)",
+    title: "Filtre de Sécurité IF (Confiance Seuil)",
     difficulty: "AVANCÉ",
-    lore: "Si la pureté est égale à 100, la réaction est parfaite.",
-    objective: "Si <code>purete === 100</code>, retournez <code>\"Succès\"</code>, sinon <code>\"Échec\"</code>.",
-    initialCode: `let purete = 100;\n\nfunction tester(valeur) {\n  // Écrivez le if (valeur === 100)\n  return "Échec";\n}\n\nreturn tester(purete);`,
-    solutionCode: `let purete = 100;\n\nfunction tester(valeur) {\n  if (valeur === 100) {\n    return "Succès";\n  }\n  return "Échec";\n}\n\nreturn tester(purete);`,
-    hint: "Si valeur === 100 renvoie \"Succès\".",
+    lore: "Dans Trust Studio, si le score de confiance est inférieur à 0.70, le système déclenche une alerte de révision humaine.",
+    objective: "Si <code>score < 0.70</code>, retournez <code>\"HUMAN_REVIEW\"</code>, sinon <code>\"AUTO_APPROVED\"</code>.",
+    initialCode: `let score = 0.55;\n\nfunction analyser(s) {\n  // Écrivez le if (s < 0.70)\n  return "AUTO_APPROVED";\n}\n\nreturn analyser(score);`,
+    solutionCode: `let score = 0.55;\n\nfunction analyser(s) {\n  if (s < 0.70) {\n    return "HUMAN_REVIEW";\n  }\n  return "AUTO_APPROVED";\n}\n\nreturn analyser(score);`,
+    hint: "Si s < 0.70 renvoie \"HUMAN_REVIEW\".",
     rewardXP: 16,
-    check: (res) => res === "Succès"
+    check: (res) => res === "HUMAN_REVIEW"
   },
   {
     id: 17,
     phase: 5,
-    title: "La Multiplication des Pépites (.map)",
+    title: "Normalisation des Devis BTP (.map)",
     difficulty: "EXPERT",
-    lore: "La méthode <code>.map()</code> transforme chaque élément d'un tableau.",
-    objective: "Doublez la valeur de chaque pépite <code>[10, 20, 30]</code> pour obtenir <code>[20, 40, 60]</code>.",
-    initialCode: `let pepites = [10, 20, 30];\n\n// Doublez chaque pépite avec .map(p => p * 2)\nlet enrichies = [];\n\nreturn enrichies;`,
-    solutionCode: `let pepites = [10, 20, 30];\nlet enrichies = pepites.map(p => p * 2);\n\nreturn enrichies;`,
-    hint: "Écris pepites.map(p => p * 2).",
+    lore: "La méthode <code>.map()</code> permet d'appliquer les frais de gestion (+10%) à chaque sous-total de devis.",
+    objective: "Multipliez chaque montant <code>[100, 200, 300]</code> par 1.10 pour obtenir <code>[110, 220, 330]</code>.",
+    initialCode: `let montants = [100, 200, 300];\n\n// Appliquez 1.10 à chaque élément avec .map(m => m * 1.10)\nlet ajustés = [];\n\nreturn ajustés;`,
+    solutionCode: `let montants = [100, 200, 300];\nlet ajustés = montants.map(m => m * 1.10);\n\nreturn ajustés;`,
+    hint: "Écris montants.map(m => m * 1.10).",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res[0] === 20 && res[1] === 40 && res[2] === 60
+    check: (res) => Array.isArray(res) && Math.round(res[0]) === 110 && Math.round(res[1]) === 220 && Math.round(res[2]) === 330
   },
   {
     id: 18,
     phase: 5,
-    title: "Le Filtrage des Impuretés (.filter)",
+    title: "Filtrage des Risques de Fraude (.filter)",
     difficulty: "EXPERT",
-    lore: "La méthode <code>.filter()</code> ne conserve que les éléments respectant une condition.",
-    objective: "Ne gardez que les métaux dont la pureté est supérieure ou égale à 50 (<code>p >= 50</code>).",
-    initialCode: `let puretes = [20, 80, 15, 95, 40, 60];\n\n// Filtrez pour garder >= 50\nlet nobles = [];\n\nreturn nobles;`,
-    solutionCode: `let puretes = [20, 80, 15, 95, 40, 60];\nlet nobles = puretes.filter(p => p >= 50);\n\nreturn nobles;`,
-    hint: "Écris puretes.filter(p => p >= 50).",
+    lore: "Dans Energer, la méthode <code>.filter()</code> n'isole que les scores de risque élevés (<code>>= 80</code>).",
+    objective: "Ne gardez que les risques de fraude supérieurs ou égaux à 80.",
+    initialCode: `let risques = [20, 85, 40, 92, 15, 80];\n\n// Filtrez pour garder >= 80\nlet alertes = [];\n\nreturn alertes;`,
+    solutionCode: `let risques = [20, 85, 40, 92, 15, 80];\nlet alertes = risques.filter(r => r >= 80);\n\nreturn alertes;`,
+    hint: "Écris risques.filter(r => r >= 80).",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.length === 3 && res.every(x => x >= 50)
+    check: (res) => Array.isArray(res) && res.length === 3 && res.includes(85) && res.includes(92) && res.includes(80)
   },
   {
     id: 19,
     phase: 5,
-    title: "La Somme des Réactifs (.reduce)",
+    title: "Total des Tokens Consommés (.reduce)",
     difficulty: "EXPERT",
-    lore: "Additionnez toute la masse des métaux purs <code>[10, 20, 30]</code> pour obtenir la masse totale <code>60</code>.",
-    objective: "Calculez la somme du tableau avec <code>.reduce((a, b) => a + b, 0)</code>.",
-    initialCode: `let masses = [10, 20, 30];\n\n// Additionnez les masses\nlet somme = 0;\n\nreturn somme;`,
-    solutionCode: `let masses = [10, 20, 30];\nlet somme = masses.reduce((a, b) => a + b, 0);\n\nreturn somme;`,
-    hint: "Écris masses.reduce((a, b) => a + b, 0).",
+    lore: "Calculez la consommation totale de tokens sur l'ensemble des requêtes LLM du mois pour la facturation SaaS.",
+    objective: "Calculez la somme du tableau <code>tokens</code> avec <code>.reduce((a, b) => a + b, 0)</code>.",
+    initialCode: `let tokens = [500, 1200, 800];\n\n// Additionnez les tokens avec .reduce\nlet totalTokens = 0;\n\nreturn totalTokens;`,
+    solutionCode: `let tokens = [500, 1200, 800];\nlet totalTokens = tokens.reduce((a, b) => a + b, 0);\n\nreturn totalTokens;`,
+    hint: "Écris tokens.reduce((a, b) => a + b, 0).",
     rewardXP: 16,
-    check: (res) => res === 60
+    check: (res) => res === 2500
   },
   {
     id: 20,
     phase: 6,
-    title: "La Fusion Thermique (Ternaire)",
+    title: "Décision de Routing Express (Ternaire)",
     difficulty: "EXPERT",
-    lore: "Si la température est supérieure ou égale à 500, la fusion s'enclenche.",
-    objective: "Retournez <code>\"Fusion!\"</code> si <code>degres >= 500</code>, sinon <code>\"En attente\"</code>.",
-    initialCode: `let degres = 600;\n\n// Écrivez l'expression ternaire (degres >= 500 ? "Fusion!" : "En attente")\nlet etat = "";\n\nreturn etat;`,
-    solutionCode: `let degres = 600;\nlet etat = degres >= 500 ? "Fusion!" : "En attente";\n\nreturn etat;`,
-    hint: "Utilise degres >= 500 ? \"Fusion!\" : \"En attente\".",
+    lore: "Si le score de confiance est supérieur ou égal à 0.8, validez automatiquement l'analyse d'IA dans l'API Express/NestJS.",
+    objective: "Retournez <code>\"APPLICABLE\"</code> si <code>confiance >= 0.8</code>, sinon <code>\"REJETÉ\"</code>.",
+    initialCode: `let confiance = 0.9;\n\n// Écrivez l'expression ternaire (confiance >= 0.8 ? "APPLICABLE" : "REJETÉ")\nlet decision = "";\n\nreturn decision;`,
+    solutionCode: `let confiance = 0.9;\nlet decision = confiance >= 0.8 ? "APPLICABLE" : "REJETÉ";\n\nreturn decision;`,
+    hint: "Utilise confiance >= 0.8 ? \"APPLICABLE\" : \"REJETÉ\".",
     rewardXP: 16,
-    check: (res) => res === "Fusion!"
+    check: (res) => res === "APPLICABLE"
   },
   {
     id: 21,
     phase: 6,
-    title: "La Quintessence des Éléments (Spread)",
+    title: "Agrégation des Logs SaaS (Spread Operator)",
     difficulty: "EXPERT",
-    lore: "Rassemblez les 3 éléments primordiaux dans un réceptacle unique avec l'opérateur spread <code>...</code>.",
-    objective: "Fusionnez les deux tableaux avec <code>[...el1, ...el2]</code>.",
-    initialCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\n\n// Fusionnez les deux tableaux\nlet quintessence = [];\n\nreturn quintessence;`,
-    solutionCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\nlet quintessence = [...el1, ...el2];\n\nreturn quintessence;`,
-    hint: "Utilise [...el1, ...el2].",
+    lore: "Rassemblez les journaux d'événements Energer et Trust Studio dans une vue d'ensemble unifiée avec l'opérateur spread <code>...</code>.",
+    objective: "Fusionnez les deux tableaux avec <code>[...logsEnerger, ...logsTrust]</code>.",
+    initialCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\n\n// Fusionnez les deux tableaux avec ...\nlet logsSysteme = [];\n\nreturn logsSysteme;`,
+    solutionCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\nlet logsSysteme = [...logsEnerger, ...logsTrust];\n\nreturn logsSysteme;`,
+    hint: "Utilise [...logsEnerger, ...logsTrust].",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.length === 3 && res.includes("Feu")
+    check: (res) => Array.isArray(res) && res.length === 3 && res[0] === "FRAUD_CHECK_OK"
   },
   {
     id: 22,
     phase: 6,
-    title: "La Pierre Philosophale (Opus Magnum)",
+    title: "Le Système Global Quantum of Trust (Opus Magnum)",
     difficulty: "EXPERT",
-    lore: "L'ultime transmutation ! Forgez l'artefact suprême de l'Alchimiste du Code.",
-    objective: "Complétez l'objet <code>{ nom: \"Pierre Philosophale\", transmutations: 22, accompli: true }</code>.",
-    initialCode: `// Complétez l'Artefact Suprême\nconst OpusMagnum = {\n  nom: "",\n  transmutations: 0,\n  accompli: false\n};\n\nreturn OpusMagnum;`,
-    solutionCode: `const OpusMagnum = {\n  nom: "Pierre Philosophale",\n  transmutations: 22,\n  accompli: true\n};\n\nreturn OpusMagnum;`,
-    hint: "Met nom: \"Pierre Philosophale\", transmutations: 22, accompli: true.",
+    lore: "Félicitations Builder ! Vous maîtrisez les composants fondamentaux des solutions SaaS d'IA de Quantum of Trust (Energer, Trust Intelligence Studio, La Bonne Réponse).",
+    objective: "Complétez l'objet <code>{ entreprise: \"Quantum of Trust\", produit: \"Trust Intelligence Studio\", stack: \"TypeScript & Node.js\", recrute: true }</code>.",
+    initialCode: `// Complétez le Système Suprême Quantum of Trust\nconst QuantumSystem = {\n  entreprise: "",\n  produit: "",\n  stack: "",\n  recrute: false\n};\n\nreturn QuantumSystem;`,
+    solutionCode: `const QuantumSystem = {\n  entreprise: "Quantum of Trust",\n  produit: "Trust Intelligence Studio",\n  stack: "TypeScript & Node.js",\n  recrute: true\n};\n\nreturn QuantumSystem;`,
+    hint: "Met entreprise: \"Quantum of Trust\", produit: \"Trust Intelligence Studio\", stack: \"TypeScript & Node.js\", recrute: true.",
     rewardXP: 25,
-    check: (res) => typeof res === 'object' && res.nom === "Pierre Philosophale" && res.accompli === true
+    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.recrute === true
   }
 ];
 
@@ -493,18 +493,23 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
     await sleep(MIN_GEMINI_INTERVAL_MS - timeSinceLastCall);
   }
 
-  const prompt = `Génère une micro-quête JavaScript TRÈS SIMPLE à trous sur l'alchimie du code.
-RÈGLE OBLIGATOIRE : initialCode DOIT ÊTRE UN EXERCICE À COMPLÉTER PAR LE JOUEUR (ex: let mercure = 50; return mercure;). Ne mets JAMAIS la solution dans initialCode !
+  const prompt = `Génère un exercice JavaScript/TypeScript immersif pour un Développeur Full Stack Builder chez Quantum of Trust (startup SaaS IA à Marseille).
+Les thèmes des produits sont : 
+- Energer : Analyse intelligente de factures/devis et détection d'anomalies ou fraudes documentaires.
+- Trust Intelligence Studio : Supervision de modèles d'IA, mesure de score de confiance (confidenceScore), traçabilité des réponses et metrics tokens.
+- La Bonne Réponse : Assistant SaaS BTP, vérification de conformité réglementaire de devis du bâtiment.
+
+RÈGLE OBLIGATOIRE : initialCode DOIT ÊTRE UN EXERCICE À TROUS À COMPLÉTER PAR LE JOUEUR. Ne mets JAMAIS la solution dans initialCode !
 
 Réponds STRICTEMENT en JSON :
 {
-  "title": "Titre captivant (ex: L'Éveil du Mercure Volatil)",
+  "title": "Titre professionnel (ex: Contrôle de Fraude Devis Energer)",
   "storyContinuity": "",
-  "lore": "Un court récit alchimique captivant et immersif (1-2 phrases).",
-  "objective": "Consigne très simple (ex: Multipliez la variable mercure par 2).",
-  "initialCode": "let mercure = 50;\\n\\n// Multipliez mercure par 2 ici\\n\\nreturn mercure;",
-  "solutionCode": "let mercure = 50;\\nmercure = mercure * 2;\\nreturn mercure;",
-  "hint": "Utilise * 2 pour doubler la valeur."
+  "lore": "Un court récit de mise en situation concrète chez Quantum of Trust (1-2 phrases).",
+  "objective": "Consigne d'exercice précise (ex: Calculez le score de risque avec la TVA).",
+  "initialCode": "let HT = 200;\\n\\n// Calculez le TTC avec 20% de TVA\\nlet TTC = 0;\\n\\nreturn TTC;",
+  "solutionCode": "let HT = 200;\\nlet TTC = HT * 1.20;\\nreturn TTC;",
+  "hint": "Utilise HT * 1.20."
 }`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
@@ -553,9 +558,9 @@ app.post('/api/quests/generate-saga', async (req, res) => {
     const newQuest = {
       id: questId,
       phase: nextPhase,
-      title: geminiData.title || `Chapitre #${questId} : Les Secrets de l'Athanor`,
+      title: geminiData.title || `Chapitre #${questId} : Quantum of Trust Analytics`,
       difficulty: "FORGÉE PAR GMI ✨",
-      lore: geminiData.lore || "Une nouvelle transmutation alchimique commence.",
+      lore: geminiData.lore || "Une nouvelle fonctionnalité SaaS IA à concevoir chez Quantum of Trust.",
       objective: geminiData.objective,
       initialCode: geminiData.initialCode,
       solutionCode: geminiData.solutionCode,
@@ -578,13 +583,13 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   const proceduralQuest = {
     id: questId,
     phase: nextPhase,
-    title: `La Transmutation #${questId}`,
+    title: `SaaS Feature #${questId}`,
     difficulty: "AUTOMATIQUE",
-    lore: "L'Athanor exige une nouvelle pesée d'ingrédients.",
-    objective: `Multipliez la quantité <code>25</code> par 2.`,
-    initialCode: `let dose = 25;\n\n// Doublez la dose\nlet resultat = 0;\n\nreturn resultat;`,
-    solutionCode: `let dose = 25;\nlet resultat = dose * 2;\n\nreturn resultat;`,
-    hint: "Fais dose * 2 !",
+    lore: "Superviser les métriques de confiance du modèle dans Trust Intelligence Studio.",
+    objective: `Multipliez la métrique de confiance <code>0.45</code> par 2.`,
+    initialCode: `let score = 0.45;\n\n// Doublez le score de confiance\nlet resultat = 0;\n\nreturn resultat;`,
+    solutionCode: `let score = 0.45;\nlet resultat = score * 2;\n\nreturn resultat;`,
+    hint: "Fais score * 2 !",
     rewardXP: 20,
     isGenerated: true,
     check: () => true
@@ -604,14 +609,14 @@ async function callGeminiForOrbitChat({ message, quest, geminiKey }) {
   const apiKey = geminiKey || process.env.GEMINI_API_KEY || process.env.GMI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey) return null;
 
-  const prompt = `Tu es ORBIT, l'Homunculus Alchimique et copilote IA de l'alchimiste.
+  const prompt = `Tu es ORBIT, le Tech Lead Copilote chez Quantum of Trust (startup SaaS IA à Marseille). Tu accompagnes le nouveau Développeur Full Stack sur les produits Energer, Trust Intelligence Studio et La Bonne Réponse.
 Quête actuelle #${quest?.id || 1} : "${quest?.title || 'Quête'}".
 Objectif : "${quest?.objective || 'Transmuter'}".
 Indice : "${quest?.hint || 'Vérifie le code'}".
 
-Question de l'alchimiste : "${message}"
+Question du développeur : "${message}"
 
-Réponds de manière concise (2 phrases max), bienveillante et très utile pour l'alchimiste.`;
+Réponds de manière très concise (2 phrases max), encourageante, et directement liée aux enjeux de Quantum of Trust (TypeScript, Node.js, React, IA).`;
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
