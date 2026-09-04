@@ -135,6 +135,7 @@ export default function App() {
   const [code, setCode] = useState(INITIAL_QUEST.initialCode);
   const [clearedQuests, setClearedQuests] = useState([]);
   const [gold, setGold] = useState(0);
+  const [mobileTab, setMobileTab] = useState(0); // 0: Code, 1: Grimoire, 2: Copilote ORBIT
 
   // Compte et parcours alchimiste
   const [currentUser, setCurrentUser] = useState(null);
@@ -247,6 +248,7 @@ export default function App() {
   const selectQuest = (q) => {
     setActiveQuest(q);
     setCode(q.initialCode);
+    setMobileTab(0); // Bascule automatiquement sur l'onglet Éditeur sur mobile
     addTerminal('sys', `Quête #${q.id} active : ${q.title}`);
     
     setTimeout(() => {
@@ -431,51 +433,88 @@ export default function App() {
         </Container>
       </AppBar>
 
-      <Container maxWidth="xl" sx={{ mt: 2.5 }}>
+      <Container maxWidth="xl" sx={{ mt: 2, px: { xs: 1.5, sm: 3 } }}>
         
-        {/* GRILLE DES PHASES ALCHIMIQUES */}
-        <Grid container spacing={1} sx={{ mb: 2.5 }}>
+        {/* BARRE DES PHASES (SCROLL HORIZONTAL TOUCH SUR MOBILE) */}
+        <Box sx={{ display: 'flex', gap: 1, overflowX: 'auto', pb: 1, mb: 2, '&::-webkit-scrollbar': { display: 'none' }, scrollbarWidth: 'none' }}>
           {phases.map((ph) => {
             const isCurrent = activeQuest.phase === ph.id;
             return (
-              <Grid item xs={4} sm={2} key={ph.id}>
-                <Card
-                  onClick={() => {
-                    const firstInPhase = quests.find(q => q.phase === ph.id);
-                    if (firstInPhase) selectQuest(firstInPhase);
-                  }}
-                  sx={{
-                    cursor: 'pointer',
-                    borderColor: isCurrent ? '#10A37F' : 'rgba(255, 255, 255, 0.12)',
-                    bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.18)' : '#171717',
-                    p: 1,
-                    textAlign: 'center',
-                    transition: 'all 0.15s ease',
-                    '&:hover': { borderColor: '#10A37F' },
-                  }}
-                >
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 12 }}>
-                    {ph.symbol} {ph.name}
-                  </Typography>
-                </Card>
-              </Grid>
+              <Paper
+                key={ph.id}
+                elevation={0}
+                onClick={() => {
+                  const firstInPhase = quests.find(q => q.phase === ph.id);
+                  if (firstInPhase) selectQuest(firstInPhase);
+                }}
+                sx={{
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                  px: 1.5,
+                  py: 0.8,
+                  borderRadius: 2,
+                  border: '1px solid',
+                  borderColor: isCurrent ? '#10A37F' : 'rgba(255, 255, 255, 0.12)',
+                  bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.18)' : '#171717',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.8,
+                  transition: 'all 0.15s ease',
+                  '&:hover': { borderColor: '#10A37F' },
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 600, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 12, whiteSpace: 'nowrap' }}>
+                  {ph.symbol} {ph.name}
+                </Typography>
+              </Paper>
             );
           })}
-        </Grid>
+        </Box>
+
+        {/* BARRE DE NAVIGATION ONGLETS (EXCLUSIF MOBILE XS / SM / MD) */}
+        <Box sx={{ display: { xs: 'flex', lg: 'none' }, gap: 0.5, mb: 2, bgcolor: '#171717', p: 0.5, borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+          <OpenAIButton
+            fullWidth
+            size="sm"
+            variant={mobileTab === 0 ? "solid" : "ghost"}
+            color={mobileTab === 0 ? "primary" : "secondary"}
+            onClick={() => setMobileTab(0)}
+          >
+            ⚡ Exercice & Code
+          </OpenAIButton>
+          <OpenAIButton
+            fullWidth
+            size="sm"
+            variant={mobileTab === 1 ? "solid" : "ghost"}
+            color={mobileTab === 1 ? "primary" : "secondary"}
+            onClick={() => setMobileTab(1)}
+          >
+            📜 Quêtes ({clearedQuests.length}/{quests.length})
+          </OpenAIButton>
+          <OpenAIButton
+            fullWidth
+            size="sm"
+            variant={mobileTab === 2 ? "solid" : "ghost"}
+            color={mobileTab === 2 ? "primary" : "secondary"}
+            onClick={() => setMobileTab(2)}
+          >
+            💬 Copilote
+          </OpenAIButton>
+        </Box>
 
         {/* COCKPIT PRINCIPAL */}
         <Grid container spacing={2.5}>
           
-          {/* COLONNE GAUCHE : QUÊTE & ÉDITEUR */}
-          <Grid item xs={12} lg={8}>
+          {/* COLONNE GAUCHE : QUÊTE & ÉDITEUR (AFFICHÉ SUR MOBILE QUAND mobileTab === 0, OU SUR DESKTOP) */}
+          <Grid item xs={12} lg={8} sx={{ display: { xs: mobileTab === 0 ? 'block' : 'none', lg: 'block' } }}>
             
             {/* CARTE DE QUÊTE */}
             <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1, flexWrap: 'wrap', gap: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#ECECEC', fontSize: 17 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#ECECEC', fontSize: { xs: 15, sm: 17 } }}>
                       #{activeQuest.id} {activeQuest.title}
                     </Typography>
                     <OpenAIBadge color="primary">
@@ -540,7 +579,7 @@ export default function App() {
             {/* ÉDITEUR DE CODE */}
             <Card sx={{ mb: 2, overflow: 'hidden', bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', flexWrap: 'wrap', gap: 0.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Science sx={{ fontSize: 14, color: '#10A37F' }} />
                   <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#B4B4B4', fontSize: 11 }}>
@@ -561,14 +600,14 @@ export default function App() {
                 </Box>
               </Box>
 
-              {/* Workspace Code */}
-              <Box sx={{ display: 'flex', minHeight: 180, maxHeight: 300, bgcolor: '#0D0D0D' }}>
+              {/* Workspace Code (Adapté Clavier Tactile Mobile) */}
+              <Box sx={{ display: 'flex', minHeight: 180, maxHeight: 320, bgcolor: '#0D0D0D' }}>
                 <Box
                   ref={gutterRef}
                   sx={{
-                    width: 40,
+                    width: 36,
                     py: 1.5,
-                    px: 1,
+                    px: 0.8,
                     textAlign: 'right',
                     color: '#676767',
                     fontFamily: "'JetBrains Mono', monospace",
@@ -602,24 +641,27 @@ export default function App() {
                     padding: '12px 14px',
                     color: '#ECECEC',
                     fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 13,
+                    fontSize: '14px',
                     lineHeight: 1.6,
                     whiteSpace: 'pre',
                     tabSize: 2,
                     overflowY: 'auto',
+                    touchAction: 'manipulation',
                   }}
                 />
               </Box>
 
               {/* Action Bar avec OpenAIButton */}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.2, bgcolor: '#212121', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                <Typography variant="caption" sx={{ color: '#B4B4B4', fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
+                <Typography variant="caption" sx={{ color: '#B4B4B4', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, display: { xs: 'none', sm: 'block' } }}>
                   Ctrl + Entrée
                 </Typography>
                 <OpenAIButton
                   color="primary"
                   size="md"
+                  fullWidth
                   onClick={handleTransmute}
+                  style={{ minHeight: 42 }}
                 >
                   TRANSMUTER <PlayArrow style={{ width: 16, height: 16 }} />
                 </OpenAIButton>
@@ -656,16 +698,16 @@ export default function App() {
 
           </Grid>
 
-          {/* COLONNE DROITE : SIDEBAR & ORBIT */}
-          <Grid item xs={12} lg={4}>
+          {/* COLONNE DROITE : SIDEBAR & ORBIT (GESTION TOUCH & TABS MOBILE) */}
+          <Grid item xs={12} lg={4} sx={{ display: { xs: (mobileTab === 1 || mobileTab === 2) ? 'block' : 'none', lg: 'block' } }}>
             
-            {/* GRIMOIRE DES QUÊTES */}
-            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* GRIMOIRE DES QUÊTES (AFFICHÉ SUR MOBILE QUAND mobileTab === 1, OU SUR DESKTOP) */}
+            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)', display: { xs: mobileTab === 1 ? 'block' : 'none', lg: 'block' } }}>
               <CardHeader
                 title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>Grimoire des Quêtes ({clearedQuests.length}/{quests.length})</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
               />
-              <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
+              <List sx={{ maxHeight: { xs: 350, lg: 220 }, overflowY: 'auto', p: 0.5 }}>
                 {quests.map((q) => {
                   const isCleared = clearedQuests.includes(q.id);
                   const isCurrent = q.id === activeQuest.id;
@@ -676,7 +718,7 @@ export default function App() {
                       onClick={() => selectQuest(q)}
                       sx={{
                         borderRadius: 1,
-                        py: 0.6,
+                        py: 0.8,
                         px: 1,
                         mb: 0.3,
                         bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.15)' : 'transparent',
@@ -699,15 +741,15 @@ export default function App() {
               </List>
             </Card>
 
-            {/* ASSISTANT ORBIT */}
-            <Card sx={{ bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* ASSISTANT ORBIT (AFFICHÉ SUR MOBILE QUAND mobileTab === 2, OU SUR DESKTOP) */}
+            <Card sx={{ bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)', display: { xs: mobileTab === 2 ? 'block' : 'none', lg: 'block' } }}>
               <CardHeader
                 avatar={<Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: 26, height: 26 }}><SmartToy sx={{ fontSize: 16 }} /></Avatar>}
                 title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>ORBIT (ChatGPT Apps SDK)</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
               />
               <CardContent sx={{ p: 1.5 }}>
-                <Box ref={chatScrollRef} sx={{ maxHeight: 150, minHeight: 80, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 0.8, mb: 1 }}>
+                <Box ref={chatScrollRef} sx={{ maxHeight: { xs: 260, lg: 150 }, minHeight: 100, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 0.8, mb: 1 }}>
                   {chatMessages.map((m, i) => (
                     <Paper
                       key={i}
@@ -733,9 +775,9 @@ export default function App() {
                     placeholder="Question…"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 12, py: 0.8, color: '#ECECEC' } }}
+                    sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#ECECEC' } }}
                   />
-                  <IconButton color="primary" type="submit" size="small">
+                  <IconButton color="primary" type="submit" size="small" sx={{ p: 1 }}>
                     <Send sx={{ fontSize: 16 }} />
                   </IconButton>
                 </Box>
