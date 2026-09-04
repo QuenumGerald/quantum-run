@@ -1,25 +1,26 @@
 import { createTheme } from '@mui/material/styles';
 
-// Palette officielle inspirée du Design System d'OpenAI (ChatGPT & Canvas UI)
+// Thème officiel Cyber-Alchimique Opus Magnum (Or Alchimique, Émeraude Hermétique & Athanor)
 export const alchemicalTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#10A37F', // Vert Émeraude Signature OpenAI
-      light: '#1ADA9D',
-      dark: '#0B7A5F',
-      contrastText: '#FFFFFF',
+      main: '#F59E0B', // Or Alchimique Doré (Grand Œuvre)
+      light: '#FBBF24',
+      dark: '#B45309',
+      contrastText: '#05070A',
     },
     secondary: {
-      main: '#D4AF37', // Or Alchimique pour la progression et l'XP
-      light: '#E6C665',
-      dark: '#AA8822',
-      contrastText: '#0D0D0D',
+      main: '#10B981', // Vert Émeraude Hermétique (Table d'Émeraude)
+      light: '#34D399',
+      dark: '#059669',
+      contrastText: '#05070A',
     },
     info: {
-      main: '#38BDF8', // Cyan ChatGPT Apps
-      light: '#7DD3FC',
-      dark: '#0284C7',
+      main: '#A855F7', // Violet Améthyste Mystique (Saga des Arcanes)
+      light: '#C084FC',
+      dark: '#7E22CE',
+      contrastText: '#FFFFFF',
     },
     warning: {
       main: '#F59E0B',
@@ -28,39 +29,39 @@ export const alchemicalTheme = createTheme({
       main: '#EF4444',
     },
     background: {
-      default: '#0D0D0D', // Fond ChatGPT ultra-épuré
-      paper: '#171717',   // Cartes & Surfaces OpenAI
+      default: '#05070A', // Void Alchimique Stellaire
+      paper: '#0C101A',   // Surfaces & Creuset de l'Athanor
     },
     text: {
-      primary: '#ECECEC',   // Texte principal OpenAI
-      secondary: '#B4B4B4', // Texte secondaire OpenAI
+      primary: '#F8FAFC',   // Parchemin Céleste
+      secondary: '#94A3B8', // Argent Lunaire
     },
-    divider: 'rgba(255, 255, 255, 0.12)',
+    divider: 'rgba(245, 158, 11, 0.16)',
   },
   typography: {
     fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-    h1: { fontWeight: 700, letterSpacing: '-0.02em' },
-    h2: { fontWeight: 700, letterSpacing: '-0.02em' },
-    h3: { fontWeight: 600 },
-    h4: { fontWeight: 600 },
-    h5: { fontWeight: 600 },
-    h6: { fontWeight: 600 },
+    h1: { fontFamily: "'Cinzel', serif", fontWeight: 900, letterSpacing: '0.04em' },
+    h2: { fontFamily: "'Cinzel', serif", fontWeight: 700, letterSpacing: '0.03em' },
+    h3: { fontFamily: "'Cinzel', serif", fontWeight: 700, letterSpacing: '0.02em' },
+    h4: { fontFamily: "'Cinzel', serif", fontWeight: 700 },
+    h5: { fontFamily: "'Cinzel', serif", fontWeight: 700 },
+    h6: { fontFamily: "'Cinzel', serif", fontWeight: 700 },
     button: {
       textTransform: 'none',
-      fontWeight: 600,
+      fontWeight: 700,
       fontFamily: "'JetBrains Mono', monospace",
-      letterSpacing: '0.02em',
+      letterSpacing: '0.04em',
     },
   },
   shape: {
-    borderRadius: 8, // Standard OpenAI Apps SDK
+    borderRadius: 10,
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#0D0D0D',
-          color: '#ECECEC',
+          backgroundColor: '#05070A',
+          color: '#F8FAFC',
         },
       },
     },
@@ -68,18 +69,18 @@ export const alchemicalTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: '#171717',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+          backgroundColor: '#0C101A',
+          border: '1px solid rgba(245, 158, 11, 0.16)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.55)',
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#171717',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: 'none',
+          backgroundColor: 'rgba(9, 13, 20, 0.92)',
+          borderBottom: '1px solid rgba(245, 158, 11, 0.2)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
         },
       },
     },
@@ -94,25 +95,31 @@ export const alchemicalTheme = createTheme({
           },
         },
         containedPrimary: {
-          background: '#10A37F',
-          color: '#FFFFFF',
+          background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+          color: '#05070A',
+          fontWeight: 700,
+          boxShadow: '0 0 16px rgba(245, 158, 11, 0.3)',
           '&:hover': {
-            background: '#1ADA9D',
+            background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)',
+            boxShadow: '0 0 24px rgba(245, 158, 11, 0.5)',
           },
         },
         containedSecondary: {
-          background: '#D4AF37',
-          color: '#0D0D0D',
+          background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+          color: '#FFFFFF',
+          fontWeight: 700,
+          boxShadow: '0 0 16px rgba(16, 185, 129, 0.3)',
           '&:hover': {
-            background: '#E6C665',
+            background: 'linear-gradient(135deg, #34D399 0%, #10B981 100%)',
+            boxShadow: '0 0 24px rgba(16, 185, 129, 0.5)',
           },
         },
         outlinedPrimary: {
-          borderColor: 'rgba(16, 163, 127, 0.4)',
-          color: '#10A37F',
+          borderColor: 'rgba(245, 158, 11, 0.4)',
+          color: '#FBBF24',
           '&:hover': {
-            borderColor: '#10A37F',
-            backgroundColor: 'rgba(16, 163, 127, 0.08)',
+            borderColor: '#F59E0B',
+            backgroundColor: 'rgba(245, 158, 11, 0.08)',
           },
         },
       },
@@ -121,7 +128,7 @@ export const alchemicalTheme = createTheme({
       styleOverrides: {
         root: {
           fontFamily: "'JetBrains Mono', monospace",
-          fontWeight: 500,
+          fontWeight: 600,
           borderRadius: 6,
         },
       },
@@ -129,9 +136,10 @@ export const alchemicalTheme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: 10,
-          background: '#171717',
+          border: '1px solid rgba(245, 158, 11, 0.16)',
+          borderRadius: 12,
+          background: 'linear-gradient(160deg, #0F1523 0%, #090E17 100%)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
         },
       },
     },

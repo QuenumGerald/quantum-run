@@ -110,32 +110,32 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Energer", symbol: "📄" },
-  { id: 2, name: "Trust Studio", symbol: "🛡️" },
-  { id: 3, name: "La Bonne Réponse", symbol: "🏗️" },
-  { id: 4, name: "APIs & LLM", symbol: "🤖" },
-  { id: 5, name: "Analytics", symbol: "📊" },
-  { id: 6, name: "Builder Suprême", symbol: "🚀" }
+  { id: 1, name: "Calcination", symbol: "🜍" },
+  { id: 2, name: "Distillation", symbol: "🜔" },
+  { id: 3, name: "Formules", symbol: "🜛" },
+  { id: 4, name: "Fioles", symbol: "🜁" },
+  { id: 5, name: "Rituels", symbol: "🜃" },
+  { id: 6, name: "Grand Œuvre", symbol: "🝤" }
 ];
 
 const getRankTitle = (xp) => {
-  if (xp >= 300) return "Senior AI Builder 🚀";
-  if (xp >= 200) return "Master Architect 🛡️";
-  if (xp >= 100) return "Full Stack Engineer 💻";
-  if (xp >= 50) return "SaaS Developer 📄";
-  return "Junior Builder 🏗️";
+  if (xp >= 300) return "Grand Alchimiste 🝤";
+  if (xp >= 200) return "Maître Alchimiste 🜃";
+  if (xp >= 100) return "Adepte 🜛";
+  if (xp >= 50) return "Apprenti 🜔";
+  return "Initié 🜍";
 };
 
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "Validation de Facture (Energer)",
+  title: "La Transmutation du Plomb",
   difficulty: "FACILE",
-  lore: "Bienvenue chez Quantum of Trust ! La plateforme Energer analyse automatiquement les factures clients pour détecter les incohérences. Initialisez le statut du document vérifié.",
-  objective: "Changez la valeur de la variable <code>status</code> pour <code>\"VERIFIED\"</code>.",
-  initialCode: `// Validez le statut de la facture Energer\nlet status = "PENDING";\n\nreturn status;`,
-  solutionCode: `let status = "VERIFIED";\n\nreturn status;`,
-  hint: "Remplace \"PENDING\" par \"VERIFIED\".",
+  lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile \"lead\" en métal précieux \"gold\".",
+  objective: "Changez la valeur de la variable <code>metal</code> pour <code>\"gold\"</code>.",
+  initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
+  solutionCode: `let metal = "gold";\n\nreturn metal;`,
+  hint: "Remplace simplement \"lead\" par \"gold\".",
   rewardXP: 16
 };
 
@@ -165,12 +165,12 @@ export default function App() {
   const [modelName, setModelName] = useState('GEMINI 3.6 FLASH');
   const [hasApiKey, setHasApiKey] = useState(false);
   const [terminalLogs, setTerminalLogs] = useState([
-    { type: 'sys', text: 'Console initialisée avec OpenAI Apps SDK UI.' }
+    { type: 'sys', text: 'Console de l\'Athanor initialisée avec succès.' }
   ]);
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Bienvenue chez Quantum of Trust ! Je suis ORBIT, votre Tech Lead Copilote. Posez-moi vos questions sur Energer, Trust Studio, La Bonne Réponse ou vos exercices.' }
+    { sender: 'bot', text: 'Bienvenue dans l\'Athanor ! Je suis ORBIT, votre Homunculus et Copilote Alchimiste. Posez-moi vos questions sur le Grand Œuvre, vos réactifs ou vos formules de transmutation.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -328,8 +328,8 @@ export default function App() {
       if (clean && clean.length <= 18) set.add(clean);
     });
 
-    // Mots-clés courants en JavaScript
-    ['status', 'true', 'false', 'return', '120', 'montantTTC', 'anomalieDetectee', 'refDocument', 'confidenceScore'].forEach(kw => {
+    // Mots-clés courants alchimiques et JavaScript
+    ['metal', 'lead', 'gold', 'true', 'false', 'age', 'mot1', 'mot2', 'potion', 'soufre', 'sel', 'masseTotale', 'temperature', 'return'].forEach(kw => {
       if (rawText.includes(kw)) set.add(kw);
     });
 
@@ -477,37 +477,50 @@ export default function App() {
     : quests;
 
   return (
-    <Box sx={{ minHeight: '100dvh', pb: { xs: 10, lg: 5 }, bgcolor: '#0D0D0D' }}>
+    <Box sx={{ minHeight: '100dvh', pb: { xs: 10, lg: 5 }, bgcolor: '#05070A', color: '#F8FAFC' }}>
       
-      {/* HEADER ULTRA-RESPONSIVE ADAPTÉ SMARTPHONES & DESKTOP */}
-      <AppBar position="sticky" elevation={0} sx={{ bgcolor: '#171717', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', zIndex: 1000 }}>
+      {/* HEADER ULTRA-RESPONSIVE CYBER-ALCHIMIQUE SMARTPHONES & DESKTOP */}
+      <AppBar position="sticky" elevation={0} sx={{ bgcolor: 'rgba(12, 16, 26, 0.95)', borderBottom: '1px solid rgba(245, 158, 11, 0.2)', backdropFilter: 'blur(16px)', zIndex: 1000 }}>
         <Container maxWidth="xl">
           <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 0.8, sm: 0.5 }, minHeight: { xs: 48, sm: 56 }, px: { xs: 0.5, sm: 2 } }}>
             
-            {/* Branding & Status */}
+            {/* Branding & Status Alchimique */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
-              <Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: { xs: 28, sm: 32 }, height: { xs: 28, sm: 32 }, fontSize: { xs: 14, sm: 16 } }}>
+              <Avatar sx={{
+                bgcolor: 'rgba(245, 158, 11, 0.12)',
+                color: '#F59E0B',
+                border: '1px solid rgba(245, 158, 11, 0.5)',
+                width: { xs: 30, sm: 34 },
+                height: { xs: 30, sm: 34 },
+                fontSize: { xs: 16, sm: 18 },
+                boxShadow: '0 0 14px rgba(245, 158, 11, 0.3)'
+              }}>
                 🜔
               </Avatar>
-              <Typography variant="subtitle1" sx={{ fontWeight: 700, letterSpacing: '0.04em', color: '#ECECEC', fontSize: { xs: 13, sm: 15 } }}>
-                QUANTUM RUN
-              </Typography>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 900, letterSpacing: '0.06em', color: '#FBBF24', fontSize: { xs: 13, sm: 15 }, lineHeight: 1.1 }}>
+                  QUANTUM RUN
+                </Typography>
+                <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#94A3B8', fontSize: { xs: 8.5, sm: 9.5 }, letterSpacing: '0.12em', textTransform: 'uppercase', display: { xs: 'none', sm: 'block' } }}>
+                  Opus Magnum · Grand Œuvre
+                </Typography>
+              </Box>
 
-              {/* Statut Serveur Minimaliste sur Mobile */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+              {/* Statut Athanor Ping Minimaliste sur Mobile */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, ml: { xs: 0.5, sm: 1 } }}>
                 <Box
                   sx={{
                     width: 7,
                     height: 7,
                     borderRadius: '50%',
-                    bgcolor: serverOnline ? '#10A37F' : '#EF4444',
-                    boxShadow: serverOnline ? '0 0 8px #10A37F' : 'none',
+                    bgcolor: serverOnline ? '#10B981' : '#EF4444',
+                    boxShadow: serverOnline ? '0 0 8px #10B981' : 'none',
                     display: { xs: 'block', sm: 'none' }
                   }}
                 />
                 <Box sx={{ display: { xs: 'none', sm: 'flex' } }}>
                   <OpenAIBadge color={serverOnline ? "success" : "secondary"}>
-                    {serverOnline ? `${latency}ms` : "OFFLINE"}
+                    {serverOnline ? `${latency}ms Athanor` : "ATHANOR ÉTEINT"}
                   </OpenAIBadge>
                 </Box>
               </Box>
@@ -520,20 +533,20 @@ export default function App() {
               </Box>
             </Box>
 
-            {/* Statistiques & Bouton Profil / Synchro */}
+            {/* Statistiques Or Alchimique & Bouton Arcanes / Synchro */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.8, sm: 1 } }}>
               <OpenAIBadge color="warning">
-                🪙 {gold} <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>XP</Box>
+                🪙 {gold} <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>XP Or</Box>
               </OpenAIBadge>
 
-              {/* Titre de Rang (masqué sur très petit écran pour éviter tout débordement) */}
+              {/* Titre de Rang Alchimique */}
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <OpenAIBadge color="secondary">
                   {getRankTitle(gold)}
                 </OpenAIBadge>
               </Box>
 
-              {/* Bouton Compte / Profil */}
+              {/* Bouton Sceau / Profil */}
               <OpenAIButton
                 variant="soft"
                 color="secondary"
@@ -548,7 +561,7 @@ export default function App() {
               >
                 <Person style={{ width: 14, height: 14 }} />
                 <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-                  {currentUser?.username || "Compte"}
+                  {currentUser?.username || "Alchimiste"}
                 </Box>
               </OpenAIButton>
             </Box>
@@ -559,7 +572,7 @@ export default function App() {
 
       <Container maxWidth="xl" sx={{ mt: { xs: 1, sm: 2 }, px: { xs: 1, sm: 3 } }}>
         
-        {/* BARRE DES PHASES (SCROLL HORIZONTAL TOUCH MOMENTUM) */}
+        {/* BARRE DES CHAMBRES ALCHIMIQUES (SCROLL HORIZONTAL TOUCH MOMENTUM) */}
         <Box
           ref={phaseScrollRef}
           sx={{
@@ -591,8 +604,9 @@ export default function App() {
                   py: { xs: 0.6, sm: 0.8 },
                   borderRadius: 2,
                   border: '1px solid',
-                  borderColor: isCurrent ? '#10A37F' : 'rgba(255, 255, 255, 0.12)',
-                  bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.18)' : '#171717',
+                  borderColor: isCurrent ? '#F59E0B' : 'rgba(245, 158, 11, 0.18)',
+                  bgcolor: isCurrent ? 'rgba(245, 158, 11, 0.16)' : '#0C101A',
+                  boxShadow: isCurrent ? '0 0 14px rgba(245, 158, 11, 0.25)' : 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 0.8,
@@ -601,7 +615,7 @@ export default function App() {
                   '&:active': { transform: 'scale(0.97)' },
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: 600, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: { xs: 11, sm: 12 }, whiteSpace: 'nowrap' }}>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: isCurrent ? '#FBBF24' : '#94A3B8', fontSize: { xs: 11, sm: 12 }, whiteSpace: 'nowrap' }}>
                   {ph.symbol} {ph.name}
                 </Typography>
               </Paper>
@@ -628,17 +642,17 @@ export default function App() {
           >
             
             {/* CARTE DE QUÊTE AVEC LORE RÉPONDANT SUR MOBILE */}
-            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
               <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
                 
-                {/* Entête Quête : Titre, XP et Boutons Précédent / Suivant */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1, flexWrap: 'wrap', gap: 1 }}>
+                {/* Entête Rituel : Titre Alchimique, XP Or et Navigation */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.2, flexWrap: 'wrap', gap: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#ECECEC', fontSize: { xs: 14, sm: 17 } }}>
+                    <Typography variant="h6" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#F8FAFC', fontSize: { xs: 14, sm: 17 } }}>
                       #{activeQuest.id} {activeQuest.title}
                     </Typography>
-                    <OpenAIBadge color="primary">
-                      +{activeQuest.rewardXP || 16} XP
+                    <OpenAIBadge color="warning">
+                      +{activeQuest.rewardXP || 16} XP Or
                     </OpenAIBadge>
                   </Box>
 
@@ -650,8 +664,8 @@ export default function App() {
                       onClick={handleManualForge}
                       disabled={isForging}
                     >
-                      {isForging ? <CircularProgress size={12} /> : <AutoAwesome style={{ width: 14, height: 14 }} />}
-                      {isForging ? "Forge..." : "Forger"}
+                      {isForging ? <CircularProgress size={12} sx={{ color: '#F59E0B' }} /> : <AutoAwesome style={{ width: 14, height: 14 }} />}
+                      {isForging ? "Forge..." : "Forger (IA)"}
                     </OpenAIButton>
                     <IconButton
                       size="small"
@@ -660,7 +674,7 @@ export default function App() {
                         const idx = quests.findIndex(q => q.id === activeQuest.id);
                         if (idx > 0) selectQuest(quests[idx - 1]);
                       }}
-                      sx={{ p: { xs: 0.5, sm: 1 } }}
+                      sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
                       <NavigateBefore fontSize="small" />
                     </IconButton>
@@ -671,14 +685,14 @@ export default function App() {
                         const idx = quests.findIndex(q => q.id === activeQuest.id);
                         if (idx < quests.length - 1) selectQuest(quests[idx + 1]);
                       }}
-                      sx={{ p: { xs: 0.5, sm: 1 } }}
+                      sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
                       <NavigateNext fontSize="small" />
                     </IconButton>
                   </Box>
                 </Box>
 
-                {/* Récit Lore (Rétractable sur smartphone pour économiser la hauteur d'écran) */}
+                {/* Récit de l'Athanor (Rétractable sur smartphone pour économiser la hauteur d'écran) */}
                 {activeQuest.lore && (
                   <Box sx={{ mb: 1.2 }}>
                     {/* Bouton accordéon mobile */}
@@ -692,41 +706,41 @@ export default function App() {
                         px: 1,
                         borderRadius: 1,
                         cursor: 'pointer',
-                        bgcolor: 'rgba(255, 255, 255, 0.04)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        bgcolor: 'rgba(245, 158, 11, 0.08)',
+                        border: '1px solid rgba(245, 158, 11, 0.2)',
                         mb: loreOpen ? 0.8 : 0,
                       }}
                     >
-                      <Typography variant="caption" sx={{ color: '#1ADA9D', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        📜 Histoire & Contexte {loreOpen ? '(masquer)' : '(dérouler)'}
+                      <Typography variant="caption" sx={{ color: '#FBBF24', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                        📜 Récit de l'Athanor {loreOpen ? '(masquer)' : '(dérouler)'}
                       </Typography>
-                      {loreOpen ? <ExpandLess fontSize="small" sx={{ color: '#1ADA9D' }} /> : <ExpandMore fontSize="small" sx={{ color: '#1ADA9D' }} />}
+                      {loreOpen ? <ExpandLess fontSize="small" sx={{ color: '#FBBF24' }} /> : <ExpandMore fontSize="small" sx={{ color: '#FBBF24' }} />}
                     </Box>
 
                     {/* Contenu rétractable sur mobile */}
                     <Collapse in={loreOpen} sx={{ display: { xs: 'block', sm: 'none' } }}>
-                      <Box sx={{ p: 1, bgcolor: 'rgba(16, 163, 127, 0.08)', borderRadius: 1, border: '1px solid rgba(16, 163, 127, 0.2)' }}>
-                        <Typography variant="body2" sx={{ color: '#B4B4B4', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.45 }}>
+                      <Box sx={{ p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                        <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.5 }}>
                           📜 {activeQuest.lore}
                         </Typography>
                       </Box>
                     </Collapse>
 
                     {/* Visible directement sur tablette & desktop */}
-                    <Box sx={{ display: { xs: 'none', sm: 'block' }, p: 1.2, bgcolor: 'rgba(16, 163, 127, 0.08)', borderRadius: 1, border: '1px solid rgba(16, 163, 127, 0.2)' }}>
-                      <Typography variant="body2" sx={{ color: '#B4B4B4', fontStyle: 'italic', fontSize: 13, lineHeight: 1.5 }}>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' }, p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                      <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
                         📜 {activeQuest.lore}
                       </Typography>
                     </Box>
                   </Box>
                 )}
 
-                {/* Objectif Direct et Précis */}
-                <Paper elevation={0} sx={{ p: { xs: 1, sm: 1.2 }, bgcolor: '#212121', borderLeft: '3px solid #10A37F', borderRadius: 1 }}>
-                  <Typography variant="caption" sx={{ color: '#10A37F', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', mb: 0.2, fontSize: 11 }}>
-                    Objectif du Rituel
+                {/* Objectif Direct du Rituel */}
+                <Paper elevation={0} sx={{ p: { xs: 1, sm: 1.2 }, bgcolor: '#070A10', borderLeft: '3px solid #F59E0B', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 1 }}>
+                  <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#F59E0B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', mb: 0.3, fontSize: 11 }}>
+                    🎯 Rituel du Grand Œuvre
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#ECECEC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 } }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
+                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 } }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
                 </Paper>
 
               </CardContent>
@@ -740,8 +754,9 @@ export default function App() {
                   p: 1.5,
                   mb: 2,
                   borderRadius: 2,
-                  bgcolor: 'rgba(16, 163, 127, 0.15)',
-                  border: '1px solid #10A37F',
+                  bgcolor: 'rgba(245, 158, 11, 0.15)',
+                  border: '1px solid #F59E0B',
+                  boxShadow: '0 0 20px rgba(245, 158, 11, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -750,13 +765,13 @@ export default function App() {
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <CheckCircle sx={{ color: '#10A37F', fontSize: 24 }} />
+                  <CheckCircle sx={{ color: '#F59E0B', fontSize: 24 }} />
                   <Box>
-                    <Typography variant="subtitle2" sx={{ color: '#ECECEC', fontWeight: 700, fontSize: 13 }}>
-                      ✨ Quête #{lastSuccess.id} réussie ! (+{lastSuccess.rewardXP} XP)
+                    <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", color: '#FBBF24', fontWeight: 700, fontSize: 13 }}>
+                      ✨ Transmutation du Grand Œuvre Réussie ! (+{lastSuccess.rewardXP} XP Or)
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#1ADA9D', fontSize: 11 }}>
-                      Formule alchimique validée avec succès.
+                    <Typography variant="caption" sx={{ color: '#10B981', fontSize: 11 }}>
+                      La matière a vibré dans le creuset. Formule alchimique validée avec succès.
                     </Typography>
                   </Box>
                 </Box>
@@ -772,38 +787,38 @@ export default function App() {
                       }
                     }}
                   >
-                    Quête Suivante <NavigateNext style={{ width: 14, height: 14 }} />
+                    Rituel Suivant <NavigateNext style={{ width: 14, height: 14 }} />
                   </OpenAIButton>
                 )}
               </Paper>
             )}
 
             {/* ÉDITEUR DE CODE AVEC CLAVIER D'ACCESSOIRES TACTILE */}
-            <Card sx={{ mb: 2, overflow: 'hidden', bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            <Card sx={{ mb: 2, overflow: 'hidden', bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
               
-              {/* Barre de titre du fichier & Actions Rapides */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', flexWrap: 'wrap', gap: 0.5 }}>
+              {/* Barre de titre du creuset & Actions Rapides */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.8, bgcolor: 'rgba(12, 16, 26, 0.8)', borderBottom: '1px solid rgba(245, 158, 11, 0.15)', flexWrap: 'wrap', gap: 0.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Science sx={{ fontSize: 14, color: '#10A37F' }} />
-                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#B4B4B4', fontSize: 11 }}>
-                    creuset.js
+                  <Science sx={{ fontSize: 15, color: '#F59E0B' }} />
+                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#CBD5E1', fontSize: 11.5, fontWeight: 600 }}>
+                    creuset.js · Athanor
                   </Typography>
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
                   <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.initialCode)}>
-                    <Refresh style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Reset</Box>
+                    <Refresh style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Réinitialiser</Box>
                   </OpenAIButton>
-                  <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => addTerminal('sys', `💡 Indice : ${activeQuest.hint}`)}>
+                  <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => addTerminal('sys', `💡 Grimoire : ${activeQuest.hint}`)}>
                     <Lightbulb style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Indice</Box>
                   </OpenAIButton>
                   <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.solutionCode)}>
-                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Solution</Box>
+                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Pierre Philosophale</Box>
                   </OpenAIButton>
                 </Box>
               </Box>
 
-              {/* BARRE D'ACCESSOIRES TOUCH DÉVELOPPEUR (GAME-CHANGER POUR SMARTPHONES) */}
+              {/* BARRE D'ACCESSOIRES TOUCH DÉVELOPPEUR */}
               <Box
                 sx={{
                   display: 'flex',
@@ -811,15 +826,15 @@ export default function App() {
                   gap: 0.6,
                   px: 1,
                   py: 0.6,
-                  bgcolor: '#1E1E1E',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  bgcolor: '#080C14',
+                  borderBottom: '1px solid rgba(245, 158, 11, 0.12)',
                   overflowX: 'auto',
                   WebkitOverflowScrolling: 'touch',
                   '&::-webkit-scrollbar': { display: 'none' },
                   scrollbarWidth: 'none',
                 }}
               >
-                <Typography variant="caption" sx={{ color: '#888', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', mr: 0.3, flexShrink: 0 }}>
+                <Typography variant="caption" sx={{ color: '#F59E0B', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', mr: 0.3, flexShrink: 0 }}>
                   Touches :
                 </Typography>
                 {[
@@ -847,22 +862,22 @@ export default function App() {
                       px: 0.9,
                       py: 0.4,
                       borderRadius: 1,
-                      bgcolor: '#2A2A2A',
-                      color: '#ECECEC',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      bgcolor: '#101726',
+                      color: '#F8FAFC',
+                      border: '1px solid rgba(245, 158, 11, 0.18)',
                       cursor: 'pointer',
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 12,
                       fontWeight: 600,
                       userSelect: 'none',
-                      '&:active': { bgcolor: '#10A37F', color: '#FFF' },
+                      '&:active': { bgcolor: '#F59E0B', color: '#05070A' },
                     }}
                   >
                     {keyItem.label}
                   </Paper>
                 ))}
 
-                {/* Puces intelligentes déduites du contexte de l'exercice */}
+                {/* Puces intelligentes alchimiques déduites du contexte de l'athanor */}
                 {quickTokens.map((token, i) => (
                   <Paper
                     key={`token-${i}`}
@@ -873,15 +888,15 @@ export default function App() {
                       px: 1,
                       py: 0.4,
                       borderRadius: 1,
-                      bgcolor: 'rgba(16, 163, 127, 0.2)',
-                      color: '#1ADA9D',
-                      border: '1px solid rgba(16, 163, 127, 0.4)',
+                      bgcolor: 'rgba(16, 185, 129, 0.15)',
+                      color: '#34D399',
+                      border: '1px solid rgba(16, 185, 129, 0.35)',
                       cursor: 'pointer',
                       fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11.5,
                       fontWeight: 700,
                       userSelect: 'none',
-                      '&:active': { bgcolor: '#10A37F', color: '#FFF' },
+                      '&:active': { bgcolor: '#10B981', color: '#05070A' },
                     }}
                   >
                     +{token}
@@ -890,7 +905,7 @@ export default function App() {
               </Box>
 
               {/* Workspace Code (Anti-Zoom iOS Safari & Clavier Tactile) */}
-              <Box sx={{ display: 'flex', minHeight: { xs: 170, sm: 200 }, maxHeight: { xs: 260, sm: 320 }, bgcolor: '#0D0D0D' }}>
+              <Box sx={{ display: 'flex', minHeight: { xs: 170, sm: 200 }, maxHeight: { xs: 260, sm: 320 }, bgcolor: '#05070A' }}>
                 <Box
                   ref={gutterRef}
                   sx={{
@@ -898,12 +913,12 @@ export default function App() {
                     py: 1.2,
                     px: { xs: 0.4, sm: 0.8 },
                     textAlign: 'right',
-                    color: '#676767',
+                    color: '#64748B',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: { xs: 12, sm: 13 },
                     lineHeight: 1.6,
                     userSelect: 'none',
-                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRight: '1px solid rgba(245, 158, 11, 0.12)',
                     overflowY: 'hidden',
                   }}
                 >
@@ -931,7 +946,7 @@ export default function App() {
                     outline: 'none',
                     resize: 'none',
                     padding: '10px 12px',
-                    color: '#ECECEC',
+                    color: '#F8FAFC',
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '16px', // Empêche strictement le zoom automatique iOS Safari !
                     lineHeight: 1.6,
@@ -943,33 +958,33 @@ export default function App() {
                 />
               </Box>
 
-              {/* Barre d'Action avec Bouton Transmuter Large Tactile */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: { xs: 1, sm: 1.2 }, bgcolor: '#212121', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                <Typography variant="caption" sx={{ color: '#B4B4B4', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, display: { xs: 'none', sm: 'block' } }}>
-                  Ctrl + Entrée
+              {/* Barre d'Action avec Bouton Transmuter Alchimique */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: { xs: 1, sm: 1.2 }, bgcolor: 'rgba(12, 16, 26, 0.8)', borderTop: '1px solid rgba(245, 158, 11, 0.15)' }}>
+                <Typography variant="caption" sx={{ color: '#94A3B8', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, display: { xs: 'none', sm: 'block' } }}>
+                  Ctrl + Entrée · Transmutation instantanée
                 </Typography>
                 <OpenAIButton
                   color="primary"
                   size="md"
                   fullWidth
                   onClick={handleTransmute}
-                  style={{ minHeight: 44 }}
+                  style={{ minHeight: 46 }}
                 >
-                  ⚡ TRANSMUTER <PlayArrow style={{ width: 16, height: 16 }} />
+                  ⚗️ TRANSMUTER LA MATIÈRE <PlayArrow style={{ width: 16, height: 16 }} />
                 </OpenAIButton>
               </Box>
             </Card>
 
-            {/* TERMINAL CONSOLE */}
-            <Paper elevation={0} sx={{ bgcolor: '#0D0D0D', borderRadius: 2, border: '1px solid rgba(255, 255, 255, 0.12)', overflow: 'hidden' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.6, bgcolor: '#212121', borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* CONSOLE DE L'ATHANOR */}
+            <Paper elevation={0} sx={{ bgcolor: '#05070A', borderRadius: 2, border: '1px solid rgba(245, 158, 11, 0.2)', overflow: 'hidden' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1.5, py: 0.6, bgcolor: '#0C101A', borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <TerminalIcon sx={{ fontSize: 14, color: '#10A37F' }} />
-                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, color: '#B4B4B4', fontSize: 11 }}>
-                    CONSOLE
+                  <TerminalIcon sx={{ fontSize: 14, color: '#F59E0B' }} />
+                  <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#FBBF24', fontSize: 11 }}>
+                    CONSOLE DE L'ATHANOR
                   </Typography>
                 </Box>
-                <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#B4B4B4', fontSize: 11 }}>
+                <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#94A3B8', fontSize: 11 }}>
                   {execTime}
                 </Typography>
               </Box>
@@ -979,7 +994,7 @@ export default function App() {
                   <Box
                     key={idx}
                     sx={{
-                      color: log.type === 'ok' ? '#10A37F' : log.type === 'fail' ? '#EF4444' : '#B4B4B4',
+                      color: log.type === 'ok' ? '#10B981' : log.type === 'fail' ? '#EF4444' : '#F59E0B',
                     }}
                   >
                     {log.text}
@@ -994,7 +1009,7 @@ export default function App() {
           {/* VUE MOBILE DÉDIÉE : ONGLETS QUÊTES (1), COPILOTE (2), PROFIL (3)           */}
           {/* ========================================================================= */}
 
-          {/* ONGLET QUÊTES MOBILE PLEIN ÉCRAN */}
+          {/* ONGLET GRIMOIRE DES QUÊTES MOBILE PLEIN ÉCRAN */}
           <Grid
             item
             xs={12}
@@ -1005,12 +1020,12 @@ export default function App() {
               }
             }}
           >
-            {/* Progression Globale */}
-            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* Progression Alchimique Globale */}
+            <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardContent sx={{ p: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#ECECEC' }}>
-                    Progression Alchimique
+                  <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#FBBF24' }}>
+                    Progression du Grand Œuvre
                   </Typography>
                   <OpenAIBadge color="primary">
                     {clearedQuests.length} / {quests.length} ({Math.round((clearedQuests.length / quests.length) * 100)}%)
@@ -1022,23 +1037,26 @@ export default function App() {
                   sx={{
                     height: 8,
                     borderRadius: 4,
-                    bgcolor: '#262626',
-                    '& .MuiLinearProgress-bar': { bgcolor: '#10A37F' }
+                    bgcolor: 'rgba(245, 158, 11, 0.1)',
+                    '& .MuiLinearProgress-bar': {
+                      background: 'linear-gradient(90deg, #F59E0B 0%, #10B981 100%)'
+                    }
                   }}
                 />
               </CardContent>
             </Card>
 
-            {/* Filtres de Phase */}
+            {/* Filtres de Chambres Alchimiques */}
             <Box sx={{ display: 'flex', gap: 0.8, overflowX: 'auto', pb: 1, mb: 1.5, '&::-webkit-scrollbar': { display: 'none' } }}>
               <Chip
-                label="Toutes"
+                label="Toutes les Chambres"
                 size="small"
                 onClick={() => setPhaseFilter(null)}
                 sx={{
-                  bgcolor: phaseFilter === null ? '#10A37F' : '#212121',
-                  color: phaseFilter === null ? '#FFF' : '#B4B4B4',
-                  fontWeight: 600,
+                  bgcolor: phaseFilter === null ? '#F59E0B' : '#0C101A',
+                  color: phaseFilter === null ? '#05070A' : '#94A3B8',
+                  fontWeight: 700,
+                  border: '1px solid rgba(245, 158, 11, 0.3)',
                 }}
               />
               {phases.map(ph => (
@@ -1048,9 +1066,10 @@ export default function App() {
                   size="small"
                   onClick={() => setPhaseFilter(ph.id)}
                   sx={{
-                    bgcolor: phaseFilter === ph.id ? '#10A37F' : '#212121',
-                    color: phaseFilter === ph.id ? '#FFF' : '#B4B4B4',
-                    fontWeight: 600,
+                    bgcolor: phaseFilter === ph.id ? '#F59E0B' : '#0C101A',
+                    color: phaseFilter === ph.id ? '#05070A' : '#94A3B8',
+                    fontWeight: 700,
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
                   }}
                 />
               ))}
@@ -1071,36 +1090,36 @@ export default function App() {
                       borderRadius: 2,
                       cursor: 'pointer',
                       border: '1px solid',
-                      borderColor: isCurrent ? '#10A37F' : 'rgba(255, 255, 255, 0.12)',
-                      bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.12)' : '#171717',
+                      borderColor: isCurrent ? '#F59E0B' : 'rgba(245, 158, 11, 0.15)',
+                      bgcolor: isCurrent ? 'rgba(245, 158, 11, 0.15)' : '#0C101A',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       transition: 'all 0.15s ease',
-                      '&:active': { bgcolor: 'rgba(16, 163, 127, 0.2)' },
+                      '&:active': { bgcolor: 'rgba(245, 158, 11, 0.25)' },
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       {isCleared ? (
-                        <CheckCircle sx={{ color: '#10A37F', fontSize: 20 }} />
+                        <CheckCircle sx={{ color: '#10B981', fontSize: 20 }} />
                       ) : (
-                        <RadioButtonUnchecked sx={{ color: '#676767', fontSize: 20 }} />
+                        <RadioButtonUnchecked sx={{ color: '#64748B', fontSize: 20 }} />
                       )}
                       <Box>
-                        <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 500, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 13 }}>
+                        <Typography variant="body2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: isCurrent ? 700 : 600, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 13 }}>
                           #{q.id} {q.title}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#888', fontSize: 11 }}>
-                          Phase {q.phase} • {q.difficulty || 'FACILE'}
+                        <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
+                          Chambre {q.phase} • {q.difficulty || 'FACILE'}
                         </Typography>
                       </Box>
                     </Box>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <OpenAIBadge color="primary">
-                        +{q.rewardXP || 16} XP
+                      <OpenAIBadge color="warning">
+                        +{q.rewardXP || 16} XP Or
                       </OpenAIBadge>
-                      <NavigateNext sx={{ color: '#676767', fontSize: 18 }} />
+                      <NavigateNext sx={{ color: '#64748B', fontSize: 18 }} />
                     </Box>
                   </Paper>
                 );
@@ -1108,7 +1127,7 @@ export default function App() {
             </Box>
           </Grid>
 
-          {/* ONGLET COPILOTE ORBIT PLEIN ÉCRAN */}
+          {/* ONGLET HOMUNCULUS ORBIT PLEIN ÉCRAN */}
           <Grid
             item
             xs={12}
@@ -1119,12 +1138,12 @@ export default function App() {
               }
             }}
           >
-            <Card sx={{ bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)', minHeight: 'calc(100dvh - 200px)', display: 'flex', flexDirection: 'column' }}>
+            <Card sx={{ bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)', minHeight: 'calc(100dvh - 200px)', display: 'flex', flexDirection: 'column' }}>
               <CardHeader
-                avatar={<Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: 28, height: 28 }}><SmartToy sx={{ fontSize: 16 }} /></Avatar>}
-                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>ORBIT Copilote</Typography>}
-                subheader={<Typography variant="caption" sx={{ color: '#10A37F', fontSize: 11 }}>{modelName} • Prêt à vous guider</Typography>}
-                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
+                avatar={<Avatar sx={{ bgcolor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', border: '1px solid rgba(245, 158, 11, 0.4)', width: 30, height: 30, fontSize: 16 }}>🔮</Avatar>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>ORBIT · Homunculus Alchimiste</Typography>}
+                subheader={<Typography variant="caption" sx={{ color: '#10B981', fontSize: 11 }}>{modelName} • Connaissance de l'Athanor</Typography>}
+                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <CardContent sx={{ p: 1.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
                 
@@ -1150,23 +1169,24 @@ export default function App() {
                         p: 1.2,
                         maxWidth: '88%',
                         alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
-                        bgcolor: m.sender === 'user' ? 'rgba(16, 163, 127, 0.25)' : '#212121',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        bgcolor: m.sender === 'user' ? 'rgba(245, 158, 11, 0.18)' : '#070A10',
+                        border: '1px solid',
+                        borderColor: m.sender === 'user' ? 'rgba(245, 158, 11, 0.4)' : 'rgba(245, 158, 11, 0.15)',
                         borderRadius: 2,
                       }}
                     >
-                      <Typography variant="body2" sx={{ fontSize: 13, color: '#ECECEC', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: m.text }} />
+                      <Typography variant="body2" sx={{ fontSize: 13, color: '#F8FAFC', lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: m.text }} />
                     </Paper>
                   ))}
                 </Box>
 
-                {/* Suggestions Rapides de Questions en 1 Tap */}
+                {/* Suggestions Rapides Hermétiques en 1 Tap */}
                 <Box sx={{ display: 'flex', gap: 0.6, overflowX: 'auto', pb: 1, mb: 1, '&::-webkit-scrollbar': { display: 'none' } }}>
                   {[
-                    "💡 Donne-moi un indice",
-                    "🎯 Quel est l'objectif ?",
-                    "⚡ Montre la syntaxe",
-                    "🔍 Explique la solution",
+                    "⚗️ Comment accomplir ce rituel ?",
+                    "📜 Révèle la formule secrète",
+                    "💡 Donne un indice alchimique",
+                    "🔍 Explique la pierre philosophale",
                   ].map((sug, idx) => (
                     <Paper
                       key={idx}
@@ -1190,13 +1210,13 @@ export default function App() {
                         flexShrink: 0,
                         px: 1,
                         py: 0.4,
-                        bgcolor: '#262626',
+                        bgcolor: '#101726',
                         borderRadius: 2,
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(245, 158, 11, 0.2)',
                         cursor: 'pointer',
                         fontSize: 11.5,
-                        color: '#ECECEC',
-                        '&:active': { bgcolor: '#10A37F' }
+                        color: '#F8FAFC',
+                        '&:active': { bgcolor: '#F59E0B', color: '#05070A' }
                       }}
                     >
                       {sug}
@@ -1209,16 +1229,16 @@ export default function App() {
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="Posez une question sur le code…"
+                    placeholder="Consulter l'Homunculus ORBIT…"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     sx={{
-                      bgcolor: '#0D0D0D',
+                      bgcolor: '#05070A',
                       borderRadius: 1.5,
-                      '& input': { fontSize: '16px', py: 1, color: '#ECECEC' } // 16px empêche le zoom iOS
+                      '& input': { fontSize: '16px', py: 1, color: '#F8FAFC' } // 16px empêche le zoom iOS
                     }}
                   />
-                  <IconButton color="primary" type="submit" sx={{ p: 1.2, bgcolor: '#10A37F', color: '#FFF', '&:hover': { bgcolor: '#1ADA9D' } }}>
+                  <IconButton color="primary" type="submit" sx={{ p: 1.2, bgcolor: '#F59E0B', color: '#05070A', '&:hover': { bgcolor: '#FBBF24' } }}>
                     <Send sx={{ fontSize: 16 }} />
                   </IconButton>
                 </Box>
@@ -1227,7 +1247,7 @@ export default function App() {
             </Card>
           </Grid>
 
-          {/* ONGLET PROFIL & SYNCHRONISATION MULTI-APPAREILS PLEIN ÉCRAN */}
+          {/* ONGLET ARCANES & SYNCHRONISATION MULTI-APPAREILS PLEIN ÉCRAN */}
           <Grid
             item
             xs={12}
@@ -1238,29 +1258,29 @@ export default function App() {
               }
             }}
           >
-            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardContent sx={{ p: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                  <Avatar sx={{ bgcolor: '#10A37F', color: '#FFF', width: 44, height: 44, fontSize: 22 }}>🧙‍♂️</Avatar>
+                  <Avatar sx={{ bgcolor: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', border: '1px solid #F59E0B', width: 44, height: 44, fontSize: 22 }}>🧙‍♂️</Avatar>
                   <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#ECECEC' }}>
+                    <Typography variant="subtitle1" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#FBBF24' }}>
                       {currentUser?.username || "Alchimiste"}
                     </Typography>
-                    <OpenAIBadge color="primary">
+                    <OpenAIBadge color="secondary">
                       {getRankTitle(gold)}
                     </OpenAIBadge>
                   </Box>
                 </Box>
 
-                <Divider sx={{ my: 1.5 }} />
+                <Divider sx={{ my: 1.5, borderColor: 'rgba(245, 158, 11, 0.15)' }} />
 
-                {/* Code de Synchronisation Multi-Appareils avec 1-Tap Copy */}
+                {/* Sceau de Synchronisation Multi-Appareils avec 1-Tap Copy */}
                 {currentUser?.syncKey && (
-                  <Paper elevation={0} sx={{ p: 1.5, mb: 2, bgcolor: 'rgba(16, 163, 127, 0.1)', border: '1px solid rgba(16, 163, 127, 0.3)', borderRadius: 2 }}>
-                    <Typography variant="caption" sx={{ color: '#1ADA9D', fontWeight: 700, display: 'block', mb: 0.5 }}>
-                      📲 VOTRE CODE MULTI-APPAREILS :
+                  <Paper elevation={0} sx={{ p: 1.5, mb: 2, bgcolor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: 2 }}>
+                    <Typography variant="caption" sx={{ color: '#FBBF24', fontWeight: 700, display: 'block', mb: 0.5, fontFamily: "'Cinzel', serif" }}>
+                      📲 VOTRE SCEAU HERMÉTIQUE MULTI-APPAREILS :
                     </Typography>
-                    <Typography variant="body1" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#ECECEC', fontSize: 15, mb: 1 }}>
+                    <Typography variant="body1" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#F8FAFC', fontSize: 15, mb: 1 }}>
                       {currentUser.syncKey}
                     </Typography>
 
@@ -1272,18 +1292,18 @@ export default function App() {
                       onClick={copySyncKey}
                     >
                       {copySuccess ? <Check style={{ width: 14, height: 14 }} /> : <ContentCopy style={{ width: 14, height: 14 }} />}
-                      {copySuccess ? "Code copié !" : "Copier le Code de Synchronisation"}
+                      {copySuccess ? "Sceau copié !" : "Copier le Sceau Alchimique"}
                     </OpenAIButton>
 
-                    <Typography variant="caption" sx={{ color: '#B4B4B4', fontSize: 11, display: 'block', mt: 1 }}>
-                      Collez ce code sur un autre téléphone, tablette ou PC pour reprendre instantanément votre progression alchimique !
+                    <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11, display: 'block', mt: 1 }}>
+                      Transférez ce sceau sur votre smartphone, tablette ou PC pour reprendre instantanément votre creuset et vos transmutations !
                     </Typography>
                   </Paper>
                 )}
 
-                {/* Charger un Compte ou un Code Existant */}
-                <Typography variant="caption" sx={{ color: '#B4B4B4', mb: 0.5, display: 'block' }}>
-                  🔑 Charger un autre compte ou code :
+                {/* Charger un Compte ou un Sceau Existant */}
+                <Typography variant="caption" sx={{ color: '#94A3B8', mb: 0.5, display: 'block' }}>
+                  🔑 Charger un autre sceau alchimique :
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                   <TextField
@@ -1292,39 +1312,39 @@ export default function App() {
                     value={usernameInput}
                     onChange={(e) => setUsernameInput(e.target.value)}
                     placeholder="Ex: Paracelse ou PARACELSE#4829..."
-                    sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: '16px', py: 0.8, color: '#ECECEC' } }}
+                    sx={{ bgcolor: '#05070A', borderRadius: 1, '& input': { fontSize: '16px', py: 0.8, color: '#F8FAFC' } }}
                   />
                   <OpenAIButton
                     color="primary"
                     size="sm"
                     onClick={() => {
                       loginUser(usernameInput);
-                      setSnackbar({ open: true, message: 'Compte chargé !', severity: 'success' });
+                      setSnackbar({ open: true, message: 'Sceau alchimique chargé !', severity: 'success' });
                     }}
                   >
-                    Charger
+                    Invoquer
                   </OpenAIButton>
                 </Box>
 
                 {/* Statistiques Détaillées */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Quêtes Complétées :</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#ECECEC' }}>
+                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>Rituels Accomplys :</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#F8FAFC' }}>
                       {clearedQuests.length} / {quests.length}
                     </Typography>
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Expérience :</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 700, color: '#D4AF37', fontFamily: "'JetBrains Mono', monospace" }}>
+                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>Or Alchimique :</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 700, color: '#FBBF24', fontFamily: "'JetBrains Mono', monospace" }}>
                       {gold} XP
                     </Typography>
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Synchronisation Cloud :</Typography>
-                    <OpenAIBadge color="success">Connecté ☁️</OpenAIBadge>
+                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Astrale :</Typography>
+                    <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
                   </Box>
                 </Box>
 
@@ -1337,11 +1357,11 @@ export default function App() {
           {/* ========================================================================= */}
           <Grid item xs={12} lg={4} sx={{ display: { xs: 'none', lg: 'block' } }}>
             
-            {/* GRIMOIRE DES QUÊTES (DESKTOP) */}
-            <Card sx={{ mb: 2, bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* GRIMOIRE DU GRAND ŒUVRE (DESKTOP) */}
+            <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>Grimoire des Quêtes ({clearedQuests.length}/{quests.length})</Typography>}
-                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire du Grand Œuvre ({clearedQuests.length}/{quests.length})</Typography>}
+                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
                 {quests.map((q) => {
@@ -1357,16 +1377,16 @@ export default function App() {
                         py: 0.8,
                         px: 1,
                         mb: 0.3,
-                        bgcolor: isCurrent ? 'rgba(16, 163, 127, 0.15)' : 'transparent',
-                        '&.Mui-selected': { bgcolor: 'rgba(16, 163, 127, 0.2)' }
+                        bgcolor: isCurrent ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                        '&.Mui-selected': { bgcolor: 'rgba(245, 158, 11, 0.2)' }
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 26 }}>
-                        {isCleared ? <CheckCircle color="primary" sx={{ fontSize: 16 }} /> : <RadioButtonUnchecked sx={{ fontSize: 16, color: '#676767' }} />}
+                        {isCleared ? <CheckCircle sx={{ fontSize: 16, color: '#10B981' }} /> : <RadioButtonUnchecked sx={{ fontSize: 16, color: '#64748B' }} />}
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#1ADA9D' : '#ECECEC', fontSize: 12 }}>
+                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 12 }}>
                             #{q.id} {q.title}
                           </Typography>
                         }
@@ -1377,12 +1397,12 @@ export default function App() {
               </List>
             </Card>
 
-            {/* ASSISTANT ORBIT (DESKTOP) */}
-            <Card sx={{ bgcolor: '#171717', border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+            {/* HOMUNCULUS ORBIT (DESKTOP) */}
+            <Card sx={{ bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                avatar={<Avatar sx={{ bgcolor: 'transparent', color: '#10A37F', border: '1px solid rgba(16, 163, 127, 0.4)', width: 26, height: 26 }}><SmartToy sx={{ fontSize: 16 }} /></Avatar>}
-                title={<Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: 13, color: '#ECECEC' }}>ORBIT (ChatGPT Apps SDK)</Typography>}
-                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
+                avatar={<Avatar sx={{ bgcolor: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', border: '1px solid rgba(245, 158, 11, 0.4)', width: 26, height: 26, fontSize: 14 }}>🔮</Avatar>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>ORBIT · Homunculus Alchimiste</Typography>}
+                sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <CardContent sx={{ p: 1.5 }}>
                 <Box ref={chatScrollRef} sx={{ maxHeight: 150, minHeight: 100, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 0.8, mb: 1 }}>
@@ -1394,12 +1414,13 @@ export default function App() {
                         p: 1,
                         maxWidth: '92%',
                         alignSelf: m.sender === 'user' ? 'flex-end' : 'flex-start',
-                        bgcolor: m.sender === 'user' ? 'rgba(16, 163, 127, 0.2)' : '#212121',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        bgcolor: m.sender === 'user' ? 'rgba(245, 158, 11, 0.18)' : '#070A10',
+                        border: '1px solid',
+                        borderColor: m.sender === 'user' ? 'rgba(245, 158, 11, 0.35)' : 'rgba(245, 158, 11, 0.15)',
                         borderRadius: 1,
                       }}
                     >
-                      <Typography variant="body2" sx={{ fontSize: 12, color: '#ECECEC' }} dangerouslySetInnerHTML={{ __html: m.text }} />
+                      <Typography variant="body2" sx={{ fontSize: 12, color: '#F8FAFC' }} dangerouslySetInnerHTML={{ __html: m.text }} />
                     </Paper>
                   ))}
                 </Box>
@@ -1408,12 +1429,12 @@ export default function App() {
                   <TextField
                     fullWidth
                     size="small"
-                    placeholder="Question…"
+                    placeholder="Question à ORBIT…"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#ECECEC' } }}
+                    sx={{ bgcolor: '#05070A', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#F8FAFC' } }}
                   />
-                  <IconButton color="primary" type="submit" size="small" sx={{ p: 1 }}>
+                  <IconButton color="primary" type="submit" size="small" sx={{ p: 1, bgcolor: '#F59E0B', color: '#05070A', '&:hover': { bgcolor: '#FBBF24' } }}>
                     <Send sx={{ fontSize: 16 }} />
                   </IconButton>
                 </Box>
@@ -1440,24 +1461,24 @@ export default function App() {
           display: { xs: 'flex', lg: 'none' },
           justifyContent: 'space-around',
           alignItems: 'center',
-          bgcolor: 'rgba(23, 23, 23, 0.95)',
-          backdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+          bgcolor: 'rgba(9, 13, 20, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(245, 158, 11, 0.25)',
           pb: 'max(8px, env(safe-area-inset-bottom, 8px))',
           pt: 1,
           px: 1,
         }}
       >
         {[
-          { id: 0, label: 'Éditeur', icon: <CodeIcon sx={{ fontSize: 22 }} /> },
+          { id: 0, label: 'Creuset', icon: <Science sx={{ fontSize: 22 }} /> },
           {
             id: 1,
-            label: 'Quêtes',
+            label: 'Grimoire',
             icon: <MenuBookIcon sx={{ fontSize: 22 }} />,
             badge: `${clearedQuests.length}/${quests.length}`
           },
-          { id: 2, label: 'Copilote', icon: <ChatIcon sx={{ fontSize: 22 }} /> },
-          { id: 3, label: 'Profil', icon: <AccountCircleIcon sx={{ fontSize: 22 }} /> },
+          { id: 2, label: 'Homunculus', icon: <SmartToy sx={{ fontSize: 22 }} /> },
+          { id: 3, label: 'Arcanes', icon: <AccountCircleIcon sx={{ fontSize: 22 }} /> },
         ].map((tab) => {
           const isActive = mobileTab === tab.id;
           return (
@@ -1476,7 +1497,7 @@ export default function App() {
                 flex: 1,
                 py: 0.4,
                 borderRadius: 2,
-                color: isActive ? '#10A37F' : '#888',
+                color: isActive ? '#F59E0B' : '#64748B',
                 transition: 'all 0.15s ease',
                 position: 'relative',
                 '&:active': { transform: 'scale(0.92)' },
@@ -1490,10 +1511,10 @@ export default function App() {
                       position: 'absolute',
                       top: -4,
                       right: -12,
-                      bgcolor: '#10A37F',
-                      color: '#FFF',
+                      bgcolor: '#F59E0B',
+                      color: '#05070A',
                       fontSize: 9,
-                      fontWeight: 700,
+                      fontWeight: 800,
                       px: 0.5,
                       py: 0.1,
                       borderRadius: 2,
@@ -1509,7 +1530,8 @@ export default function App() {
                   fontSize: 10.5,
                   fontWeight: isActive ? 700 : 500,
                   mt: 0.3,
-                  color: isActive ? '#1ADA9D' : '#888',
+                  color: isActive ? '#FBBF24' : '#64748B',
+                  fontFamily: isActive ? "'Cinzel', serif" : 'inherit',
                 }}
               >
                 {tab.label}
@@ -1521,17 +1543,17 @@ export default function App() {
 
       {/* MODAL PARCOURS ALCHIMISTE & MULTI-APPAREILS (POUR DESKTOP) */}
       <Dialog open={accountModalOpen} onClose={() => setAccountModalOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 2.5 }}>
-          <Avatar sx={{ bgcolor: '#10A37F', color: '#FFF', width: 32, height: 32 }}>🧙‍♂️</Avatar>
-          <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 16, color: '#ECECEC' }}>
-            Compte & Synchro Multi-Appareils
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 2.5, bgcolor: '#0C101A' }}>
+          <Avatar sx={{ bgcolor: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', border: '1px solid #F59E0B', width: 32, height: 32 }}>🧙‍♂️</Avatar>
+          <Typography variant="h6" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 16, color: '#FBBF24' }}>
+            Sceau & Arcanes de l'Alchimiste
           </Typography>
         </DialogTitle>
-        <DialogContent sx={{ pt: 1 }}>
+        <DialogContent sx={{ pt: 1, bgcolor: '#0C101A' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Box>
-              <Typography variant="caption" sx={{ color: '#B4B4B4', mb: 0.5, display: 'block' }}>
-                🔑 Nom de compte ou Code de Synchronisation :
+              <Typography variant="caption" sx={{ color: '#94A3B8', mb: 0.5, display: 'block' }}>
+                🔑 Nom de compte ou Sceau Alchimique :
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                 <TextField
@@ -1540,7 +1562,7 @@ export default function App() {
                   value={usernameInput}
                   onChange={(e) => setUsernameInput(e.target.value)}
                   placeholder="Ex: Paracelse ou PARACELSE#4829..."
-                  sx={{ bgcolor: '#0D0D0D', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#ECECEC' } }}
+                  sx={{ bgcolor: '#05070A', borderRadius: 1, '& input': { fontSize: 13, py: 0.8, color: '#F8FAFC' } }}
                 />
                 <OpenAIButton
                   color="primary"
@@ -1555,11 +1577,11 @@ export default function App() {
               </Box>
 
               {currentUser?.syncKey && (
-                <Paper elevation={0} sx={{ p: 1, bgcolor: 'rgba(16, 163, 127, 0.1)', border: '1px solid rgba(16, 163, 127, 0.3)', borderRadius: 1 }}>
-                  <Typography variant="caption" sx={{ color: '#1ADA9D', fontWeight: 600, display: 'block', mb: 0.3 }}>
-                    📲 Votre Code Multi-Appareils :
+                <Paper elevation={0} sx={{ p: 1, bgcolor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#FBBF24', fontWeight: 600, display: 'block', mb: 0.3, fontFamily: "'Cinzel', serif" }}>
+                    📲 Sceau Hermétique Multi-Appareils :
                   </Typography>
-                  <Typography variant="body2" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#ECECEC', fontSize: 13, mb: 1 }}>
+                  <Typography variant="body2" sx={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: '#F8FAFC', fontSize: 13, mb: 1 }}>
                     {currentUser.syncKey}
                   </Typography>
                   <OpenAIButton
@@ -1570,45 +1592,45 @@ export default function App() {
                     onClick={copySyncKey}
                   >
                     {copySuccess ? <Check style={{ width: 14, height: 14 }} /> : <ContentCopy style={{ width: 14, height: 14 }} />}
-                    {copySuccess ? "Code copié !" : "Copier le code"}
+                    {copySuccess ? "Sceau copié !" : "Copier le sceau"}
                   </OpenAIButton>
-                  <Typography variant="caption" sx={{ color: '#B4B4B4', fontSize: 11, display: 'block', mt: 0.5 }}>
-                    Entrez ce code ou votre nom sur votre téléphone, tablette ou un autre PC pour synchroniser instantanément toute votre progression !
+                  <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11, display: 'block', mt: 0.5 }}>
+                    Entrez ce sceau sur votre smartphone ou tablette pour reprendre instantanément votre progression alchimique !
                   </Typography>
                 </Paper>
               )}
             </Box>
 
-            <Divider sx={{ my: 0.5 }} />
+            <Divider sx={{ my: 0.5, borderColor: 'rgba(245, 158, 11, 0.15)' }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Rang Alchimique :</Typography>
-                <OpenAIBadge color="primary">{getRankTitle(gold)}</OpenAIBadge>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Rang Alchimique :</Typography>
+                <OpenAIBadge color="secondary">{getRankTitle(gold)}</OpenAIBadge>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Quêtes Complétées :</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#ECECEC' }}>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Rituels Accomplys :</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: '#F8FAFC' }}>
                   {clearedQuests.length} / {quests.length}
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Expérience Accumulée :</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 700, color: '#D4AF37', fontFamily: "'JetBrains Mono', monospace" }}>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Or Alchimique (XP) :</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: '#FBBF24', fontFamily: "'JetBrains Mono', monospace" }}>
                   {gold} XP
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#B4B4B4' }}>Sauvegarde Cloud :</Typography>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Astrale :</Typography>
                 <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
               </Box>
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ pb: 2, px: 3 }}>
+        <DialogActions sx={{ pb: 2, px: 3, bgcolor: '#0C101A', borderTop: '1px solid rgba(245, 158, 11, 0.15)' }}>
           <OpenAIButton variant="ghost" color="secondary" onClick={() => setAccountModalOpen(false)}>
             Fermer
           </OpenAIButton>
