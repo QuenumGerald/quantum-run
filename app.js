@@ -20,8 +20,9 @@ const FALLBACK_QUESTS = [
     phase: 1,
     title: "La Transmutation du Plomb",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Une variable <code>let</code> est une boîte : tu y ranges un texte entre guillemets, puis tu remplaces le contenu.",
     lore: "Le vil métal attend dans le creuset. Pour initier le Grand Œuvre, transmutez la matière vile <code>\"lead\"</code> en métal précieux <code>\"gold\"</code>.",
-    objective: "Changez la valeur de la variable <code>metal</code> pour <code>\"gold\"</code>.",
+    objective: "Le plomb dort dans <code>metal</code> — mets <code>\"gold\"</code> à la place.",
     initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nconsole.log("Métal dans le creuset :", metal);\nreturn metal;`,
     solutionCode: `let metal = "gold";\n\nconsole.log("Métal dans le creuset :", metal);\nreturn metal;`,
     hint: "Remplace simplement \"lead\" par \"gold\" à la ligne 2 !",
@@ -32,8 +33,9 @@ const FALLBACK_QUESTS = [
     phase: 1,
     title: "L'Âge de l'Initié",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Un nombre n'a jamais de guillemets : <code>20</code> c'est une quantité, <code>\"20\"</code> ce serait juste du texte.",
     lore: "Tout alchimiste doit déclarer ses années d'apprentissage pour calibrer l'Athanor.",
-    objective: "Déclarez une variable <code>age</code> égale au nombre <code>20</code>.",
+    objective: "L'âge est à <code>0</code> — passe-le à <code>20</code>.",
     initialCode: `// Déclarez la variable age avec le nombre 20\nlet age = 0;\n\nconsole.log("Âge de l'alchimiste :", age);\nreturn age;`,
     solutionCode: `let age = 20;\n\nconsole.log("Âge de l'alchimiste :", age);\nreturn age;`,
     hint: "Remplace 0 par 20 dans let age = 20;",
@@ -44,8 +46,9 @@ const FALLBACK_QUESTS = [
     phase: 1,
     title: "L'Élixir d'Immortalité",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>true</code> et <code>false</code> sont les deux seuls interrupteurs du langage : allumé ou éteint, sans guillemets.",
     lore: "La fiole rouge confère l'immortalité. Activez le sceau de vérité booléen.",
-    objective: "Mettez la variable <code>isImmortal</code> à <code>true</code>.",
+    objective: "L'interrupteur <code>isImmortal</code> est éteint — allume-le.",
     initialCode: `// Activez l'élixir avec la valeur booléenne true\nlet isImmortal = false;\n\nconsole.log("Immortalité active :", isImmortal);\nreturn isImmortal;`,
     solutionCode: `let isImmortal = true;\n\nconsole.log("Immortalité active :", isImmortal);\nreturn isImmortal;`,
     hint: "Change false en true !",
@@ -56,8 +59,9 @@ const FALLBACK_QUESTS = [
     phase: 1,
     title: "L'Eau de Vie (Aqua Vitae)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Deux textes se collent avec <code>+</code> : <code>\"Aqua\" + \" \" + \"Vitae\"</code> fabrique une phrase.",
     lore: "Fusionnez les deux vapeurs sacrées pour obtenir la potion complète <code>\"Aqua Vitae\"</code>.",
-    objective: "Concaténez les deux mots pour que <code>potion</code> vaille <code>\"Aqua Vitae\"</code>.",
+    objective: "Colle <code>mot1</code> et <code>mot2</code> avec un espace dans <code>potion</code>.",
     initialCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\n\n// Concaténez les deux mots avec un espace\nlet potion = mot1 + " " + mot2;\n\nconsole.log("Potion créée :", potion);\nreturn potion;`,
     solutionCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\nlet potion = mot1 + " " + mot2;\n\nconsole.log("Potion créée :", potion);\nreturn potion;`,
     hint: "Le code est déjà prêt ! Clique sur Transmuter !",
@@ -68,8 +72,9 @@ const FALLBACK_QUESTS = [
     phase: 2,
     title: "La Pesée du Soufre et du Sel",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Le <code>+</code> entre deux nombres additionne vraiment : <code>soufre + sel</code> calcule, ça ne colle pas du texte.",
     lore: "Pour stabiliser la réaction, additionnez les 10 grammes de soufre et les 5 grammes de sel.",
-    objective: "Faites la somme de <code>soufre</code> et <code>sel</code> dans la variable <code>total</code>.",
+    objective: "Verse <code>soufre</code> et <code>sel</code> dans <code>total</code>.",
     initialCode: `let soufre = 10;\nlet sel = 5;\n\n// Calculez la somme des deux poudres\nlet total = soufre + sel;\n\nconsole.log("Masse totale :", total, "grammes");\nreturn total;`,
     solutionCode: `let soufre = 10;\nlet sel = 5;\nlet total = soufre + sel;\n\nconsole.log("Masse totale :", total, "grammes");\nreturn total;`,
     hint: "L'addition soufre + sel donne 15. Lance la transmutation !",
@@ -80,8 +85,9 @@ const FALLBACK_QUESTS = [
     phase: 2,
     title: "La Flamme de l'Athanor",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>*</code> multiplie : si tu as une valeur, <code>temperature * 2</code> la double sans la réécrire à la main.",
     lore: "Le fourneau est tiède. Doublez la température actuelle pour lancer l'ébullition.",
-    objective: "Multipliez <code>temperature</code> par <code>2</code>.",
+    objective: "Double <code>temperature</code> dans <code>temperatureFinale</code>.",
     initialCode: `let temperature = 50;\n\n// Doublez la température (temperature * 2)\nlet temperatureFinale = temperature * 2;\n\nconsole.log("Température de l'Athanor :", temperatureFinale, "°C");\nreturn temperatureFinale;`,
     solutionCode: `let temperature = 50;\nlet temperatureFinale = temperature * 2;\n\nconsole.log("Température de l'Athanor :", temperatureFinale, "°C");\nreturn temperatureFinale;`,
     hint: "50 * 2 = 100°C. La formule est prête !",
@@ -92,8 +98,9 @@ const FALLBACK_QUESTS = [
     phase: 2,
     title: "Le Reste Sacré (Modulo)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>%</code> n'est pas un pourcentage : c'est le reste après une division — <code>10 % 3</code> vaut <code>1</code>.",
     lore: "L'opérateur modulo <code>%</code> donne le reste d'une division. Trouvez le reste de <code>10 % 3</code>.",
-    objective: "Calculez <code>10 % 3</code> dans la variable <code>reste</code> (doit valoir 1).",
+    objective: "Trouve ce qui reste quand tu partages 10 en 3, dans <code>reste</code>.",
     initialCode: `// Calculez 10 % 3\nlet reste = 10 % 3;\n\nconsole.log("Goutte restante :", reste);\nreturn reste;`,
     solutionCode: `let reste = 10 % 3;\n\nconsole.log("Goutte restante :", reste);\nreturn reste;`,
     hint: "10 divisé par 3 fait 3 avec un reste de 1 !",
@@ -104,8 +111,9 @@ const FALLBACK_QUESTS = [
     phase: 3,
     title: "L'Incantation d'Éveil",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Une fonction est un sort réutilisable : ce que tu <code>return</code> est ce qu'elle te rend quand tu l'appelles.",
     lore: "Les alchimistes réveillent le laboratoire en prononçant le cri rituel : <code>\"Eureka!\"</code>.",
-    objective: "Complétez la fonction pour qu'elle retourne <code>\"Eureka!\"</code>.",
+    objective: "Fais parler <code>incantation()</code> : elle doit rendre <code>\"Eureka!\"</code>.",
     initialCode: `function incantation() {\n  // Retournez "Eureka!"\n  return "Eureka!";\n}\n\nlet cri = incantation();\nconsole.log("Parole magique :", cri);\nreturn cri;`,
     solutionCode: `function incantation() {\n  return "Eureka!";\n}\n\nlet cri = incantation();\nconsole.log("Parole magique :", cri);\nreturn cri;`,
     hint: "La fonction retourne déjà \"Eureka!\". Transmute !",
@@ -116,8 +124,9 @@ const FALLBACK_QUESTS = [
     phase: 3,
     title: "Le Multiplicateur d'Essence",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Le paramètre <code>x</code> est un trou : tu y verses n'importe quelle dose, et <code>x * 2</code> la transforme.",
     lore: "Créez un sortilège capable de doubler n'importe quelle dose de poudre magique.",
-    objective: "Complétez la fonction <code>doubler(x)</code> pour qu'elle retourne <code>x * 2</code>.",
+    objective: "Le sort <code>doubler(x)</code> doit rendre le double de ce qu'on lui verse.",
     initialCode: `function doubler(x) {\n  // Retournez le double de x\n  return x * 2;\n}\n\nlet resultat = doubler(21);\nconsole.log("Dose doublée :", resultat);\nreturn resultat;`,
     solutionCode: `function doubler(x) {\n  return x * 2;\n}\n\nlet resultat = doubler(21);\nconsole.log("Dose doublée :", resultat);\nreturn resultat;`,
     hint: "doubler(21) donne 42. Clique sur Transmuter !",
@@ -128,8 +137,9 @@ const FALLBACK_QUESTS = [
     phase: 3,
     title: "L'Alliance des Deux Éléments",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Deux paramètres, c'est deux trous : <code>fusionner(a, b)</code> reçoit deux réactifs et les assemble.",
     lore: "Une fonction alchimique prend deux réactifs en paramètres et les fusionne par addition.",
-    objective: "Écrivez une fonction <code>fusionner(a, b)</code> qui retourne <code>a + b</code>.",
+    objective: "Le sort <code>fusionner</code> additionne ce qu'on lui verse.",
     initialCode: `function fusionner(a, b) {\n  // Retournez a + b\n  return a + b;\n}\n\nlet alliage = fusionner(30, 70);\nconsole.log("Alliage obtenu :", alliage);\nreturn alliage;`,
     solutionCode: `function fusionner(a, b) {\n  return a + b;\n}\n\nlet alliage = fusionner(30, 70);\nconsole.log("Alliage obtenu :", alliage);\nreturn alliage;`,
     hint: "30 + 70 = 100. Transmute le code !",
@@ -140,8 +150,9 @@ const FALLBACK_QUESTS = [
     phase: 4,
     title: "L'Inventaire du Laboratoire",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Un tableau est une fiole : <code>.push()</code> ajoute un ingrédient à la fin, sans recréer la liste.",
     lore: "Les réactifs sont stockés dans une fiole collective (un tableau). Ajoutez le réactif <code>\"sel\"</code>.",
-    objective: "Ajoutez <code>\"sel\"</code> au tableau <code>reactifs</code>.",
+    objective: "Ajoute <code>\"sel\"</code> dans <code>reactifs</code>.",
     initialCode: `let reactifs = ["mercure", "soufre"];\n\n// Ajoutez "sel" au tableau (avec .push("sel"))\nreactifs.push("sel");\n\nconsole.log("Inventaire :", reactifs);\nreturn reactifs;`,
     solutionCode: `let reactifs = ["mercure", "soufre"];\nreactifs.push("sel");\n\nconsole.log("Inventaire :", reactifs);\nreturn reactifs;`,
     hint: "La méthode .push(\"sel\") ajoute l'élément à la fin !",
@@ -152,8 +163,9 @@ const FALLBACK_QUESTS = [
     phase: 4,
     title: "L'Essence Primaire (Premier Index)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Les listes commencent à <code>0</code> : le premier élément est <code>métaux[0]</code>, pas <code>métaux[1]</code>.",
     lore: "En JavaScript, le premier élément d'une liste se trouve à l'index <code>0</code>.",
-    objective: "Extrayez le premier élément du tableau dans <code>premier</code>.",
+    objective: "Sors le premier métal dans <code>premier</code>.",
     initialCode: `let métaux = ["argent", "cuivre", "fer"];\n\n// Récupérez le premier élément avec métaux[0]\nlet premier = métaux[0];\n\nconsole.log("Premier métal :", premier);\nreturn premier;`,
     solutionCode: `let métaux = ["argent", "cuivre", "fer"];\nlet premier = métaux[0];\n\nconsole.log("Premier métal :", premier);\nreturn premier;`,
     hint: "métaux[0] récupère \"argent\" !",
@@ -164,8 +176,9 @@ const FALLBACK_QUESTS = [
     phase: 4,
     title: "Le Compte des Flacons",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>.length</code> compte les cases d'une liste — pas besoin de les dénombrer à la main.",
     lore: "La propriété <code>.length</code> permet de connaître le nombre d'éléments dans un tableau.",
-    objective: "Mesurez la taille du tableau avec <code>flacons.length</code>.",
+    objective: "Compte les flacons et range le nombre dans <code>totalFlacons</code>.",
     initialCode: `let flacons = ["rubis", "saphir", "émeraude", "topaze"];\n\n// Obtenez la taille avec flacons.length\nlet totalFlacons = flacons.length;\n\nconsole.log("Nombre de flacons :", totalFlacons);\nreturn totalFlacons;`,
     solutionCode: `let flacons = ["rubis", "saphir", "émeraude", "topaze"];\nlet totalFlacons = flacons.length;\n\nconsole.log("Nombre de flacons :", totalFlacons);\nreturn totalFlacons;`,
     hint: "Le tableau contient 4 éléments !",
@@ -176,8 +189,9 @@ const FALLBACK_QUESTS = [
     phase: 4,
     title: "La Fiole Philosophale (Objet)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Un objet <code>{ nom, puissance }</code> est une fiche : chaque propriété a un nom et un contenu.",
     lore: "Un objet structure les propriétés d'un artefact alchimique magique.",
-    objective: "Créez un objet <code>elixir</code> avec <code>puissance: 100</code>.",
+    objective: "Remplis la fiche <code>elixir</code> : puissance <code>100</code>.",
     initialCode: `let elixir = {\n  nom: "Potion d'Or",\n  puissance: 100\n};\n\nconsole.log("Élixir créé :", elixir.nom, "- Puissance :", elixir.puissance);\nreturn elixir;`,
     solutionCode: `let elixir = {\n  nom: "Potion d'Or",\n  puissance: 100\n};\n\nconsole.log("Élixir créé :", elixir.nom, "- Puissance :", elixir.puissance);\nreturn elixir;`,
     hint: "L'objet possède bien la propriété puissance = 100. Transmute !",
@@ -188,8 +202,9 @@ const FALLBACK_QUESTS = [
     phase: 4,
     title: "Le Sceau de l'Auteur",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Tu changes une propriété d'objet avec un point : <code>grimoire.auteur = \"Hermès\"</code> réécrit la fiche.",
     lore: "Modifiez la propriété d'un objet existant pour signer le grimoire.",
-    objective: "Définissez la propriété <code>grimoire.auteur = \"Hermès\"</code>.",
+    objective: "Signe le grimoire : l'auteur devient <code>\"Hermès\"</code>.",
     initialCode: `let grimoire = {\n  titre: "La Table d'Émeraude",\n  auteur: "Inconnu"\n};\n\n// Remplacez "Inconnu" par "Hermès"\ngrimoire.auteur = "Hermès";\n\nconsole.log("Auteur du grimoire :", grimoire.auteur);\nreturn grimoire;`,
     solutionCode: `let grimoire = {\n  titre: "La Table d'Émeraude",\n  auteur: "Hermès"\n};\n\nconsole.log("Auteur du grimoire :", grimoire.auteur);\nreturn grimoire;`,
     hint: "grimoire.auteur vaut maintenant \"Hermès\" !",
@@ -200,8 +215,9 @@ const FALLBACK_QUESTS = [
     phase: 5,
     title: "La Parole Majuscule",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>.toUpperCase()</code> transforme un texte en MAJUSCULES sans toucher à l'original — ça rend une copie.",
     lore: "Pour que le sortilège résonne, convertissez la formule en lettres majuscules avec <code>.toUpperCase()</code>.",
-    objective: "Appliquez <code>.toUpperCase()</code> sur la variable <code>mot</code>.",
+    objective: "Fais crier <code>mot</code> en majuscules dans <code>paroleMagique</code>.",
     initialCode: `let mot = "transmutation";\n\n// Transformez le mot en MAJUSCULES\nlet paroleMagique = mot.toUpperCase();\n\nconsole.log("Incantation :", paroleMagique);\nreturn paroleMagique;`,
     solutionCode: `let mot = "transmutation";\nlet paroleMagique = mot.toUpperCase();\n\nconsole.log("Incantation :", paroleMagique);\nreturn paroleMagique;`,
     hint: "\"transmutation\".toUpperCase() donne \"TRANSMUTATION\" !",
@@ -212,8 +228,9 @@ const FALLBACK_QUESTS = [
     phase: 5,
     title: "La Multiplication des Pépites (.map)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>.map()</code> passe sur chaque élément et en fabrique un nouveau — la liste d'origine reste intacte.",
     lore: "La méthode <code>.map()</code> transforme chaque élément d'un tableau.",
-    objective: "Doublez la valeur de chaque pépite <code>[10, 20, 30]</code> pour obtenir <code>[20, 40, 60]</code>.",
+    objective: "Double chaque pépite, sans toucher à la liste d'origine.",
     initialCode: `let pepites = [10, 20, 30];\n\n// Doublez chaque pépite avec .map(p => p * 2)\nlet enrichies = pepites.map(p => p * 2);\n\nconsole.log("Pépites doublées :", enrichies);\nreturn enrichies;`,
     solutionCode: `let pepites = [10, 20, 30];\nlet enrichies = pepites.map(p => p * 2);\n\nconsole.log("Pépites doublées :", enrichies);\nreturn enrichies;`,
     hint: "La fonction .map(p => p * 2) transforme parfaitement la liste !",
@@ -224,8 +241,9 @@ const FALLBACK_QUESTS = [
     phase: 5,
     title: "Le Filtrage des Impuretés (.filter)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>.filter()</code> ne garde que ce qui passe le test : le reste disparaît de la nouvelle liste.",
     lore: "La méthode <code>.filter()</code> ne conserve que les éléments respectant une condition.",
-    objective: "Ne gardez que les métaux dont la pureté est supérieure ou égale à 50 (<code>p >= 50</code>).",
+    objective: "Garde seulement ce qui est assez pur (<code>≥ 50</code>).",
     initialCode: `let puretes = [20, 80, 15, 95, 40, 60];\n\n// Filtrez pour garder >= 50\nlet nobles = puretes.filter(p => p >= 50);\n\nconsole.log("Métaux purs conservés :", nobles);\nreturn nobles;`,
     solutionCode: `let puretes = [20, 80, 15, 95, 40, 60];\nlet nobles = puretes.filter(p => p >= 50);\n\nconsole.log("Métaux purs conservés :", nobles);\nreturn nobles;`,
     hint: "Le filtre garde [80, 95, 60]. Transmute !",
@@ -236,8 +254,9 @@ const FALLBACK_QUESTS = [
     phase: 5,
     title: "Le Sceau de Pureté Absolue",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>if</code> pose une question : si c'est vrai tu prends un chemin, sinon tu prends l'autre.",
     lore: "Vérifiez si l'élixir a atteint une pureté parfaite de <code>100</code> à l'aide d'une condition <code>if</code>.",
-    objective: "Si <code>purete === 100</code>, retournez <code>\"Parfait\"</code>.",
+    objective: "Si c'est <code>100</code>, dis <code>\"Parfait\"</code>.",
     initialCode: `let purete = 100;\n\nfunction verifier(valeur) {\n  if (valeur === 100) {\n    return "Parfait";\n  }\n  return "Impur";\n}\n\nlet verdict = verifier(purete);\nconsole.log("Verdict :", verdict);\nreturn verdict;`,
     solutionCode: `let purete = 100;\n\nfunction verifier(valeur) {\n  if (valeur === 100) {\n    return "Parfait";\n  }\n  return "Impur";\n}\n\nlet verdict = verifier(purete);\nconsole.log("Verdict :", verdict);\nreturn verdict;`,
     hint: "La fonction renvoie \"Parfait\" car la pureté vaut 100 !",
@@ -248,8 +267,9 @@ const FALLBACK_QUESTS = [
     phase: 6,
     title: "La Fusion Thermique",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>condition ? oui : non</code> est un <code>if</code> en une ligne : tu choisis une valeur selon un test.",
     lore: "L'Athanor atteint son paroxysme. Si la température est supérieure à 500, la fusion s'enclenche.",
-    objective: "Écrivez une condition qui retourne <code>\"Fusion!\"</code> si <code>degres >= 500</code>.",
+    objective: "Si ça dépasse 500°, c'est <code>\"Fusion!\"</code> — sinon on attend.",
     initialCode: `let degres = 600;\n\nlet etat = degres >= 500 ? "Fusion!" : "En attente";\n\nconsole.log("État de l'Athanor :", etat);\nreturn etat;`,
     solutionCode: `let degres = 600;\nlet etat = degres >= 500 ? "Fusion!" : "En attente";\n\nconsole.log("État de l'Athanor :", etat);\nreturn etat;`,
     hint: "La ternaire degres >= 500 renvoie bien \"Fusion!\".",
@@ -260,8 +280,9 @@ const FALLBACK_QUESTS = [
     phase: 6,
     title: "La Quintessence des Éléments",
     difficulty: "TRÈS SIMPLE",
+    lesson: "<code>...</code> ouvre une liste et verse son contenu dans une autre — c'est une fusion, pas un imbriquement.",
     lore: "Rassemblez les 3 éléments primordiaux (Terre, Eau, Feu) dans un réceptacle final.",
-    objective: "Fusionnez les éléments avec <code>[...elements1, ...elements2]</code> ou créez <code>[\"Terre\", \"Eau\", \"Feu\"]</code>.",
+    objective: "Verse les deux listes dans un seul réceptacle.",
     initialCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\n\n// Fusionnez les deux tableaux\nlet quintessence = [...el1, ...el2];\n\nconsole.log("Éléments assemblés :", quintessence);\nreturn quintessence;`,
     solutionCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\nlet quintessence = [...el1, ...el2];\n\nconsole.log("Éléments assemblés :", quintessence);\nreturn quintessence;`,
     hint: "Le spread operator [...el1, ...el2] assemble les 3 éléments !",
@@ -272,8 +293,9 @@ const FALLBACK_QUESTS = [
     phase: 6,
     title: "La Pierre Philosophale (Opus Magnum)",
     difficulty: "TRÈS SIMPLE",
+    lesson: "Un objet peut porter plusieurs vérités à la fois : un nom, un compteur, un drapeau <code>true</code>.",
     lore: "L'ultime transmutation ! Combinez l'Or, l'Immortalité et le Savoir dans l'artefact suprême.",
-    objective: "Retournez l'objet <code>{ nom: \"Pierre Philosophale\", transmutations: 22, accompli: true }</code>.",
+    objective: "Signe l'artefact : nom Pierre Philosophale, 22 transmutations, accompli.",
     initialCode: `// L'Artefact Suprême de l'Alchimiste\nconst OpusMagnum = {\n  nom: "Pierre Philosophale",\n  transmutations: 22,\n  accompli: true\n};\n\nconsole.log("✨ LA PIERRE PHILOSOPHALE EST FORGÉE ! ✨", OpusMagnum);\nreturn OpusMagnum;`,
     solutionCode: `const OpusMagnum = {\n  nom: "Pierre Philosophale",\n  transmutations: 22,\n  accompli: true\n};\n\nconsole.log("✨ LA PIERRE PHILOSOPHALE EST FORGÉE ! ✨", OpusMagnum);\nreturn OpusMagnum;`,
     hint: "Clique sur Transmuter pour accomplir le Grand Œuvre !",
@@ -444,6 +466,7 @@ class QuantumCockpit {
     this.questDifficultyTag = document.querySelector('#questDifficultyTag');
     this.questXpTag = document.querySelector('#questXpTag');
     this.questHeading = document.querySelector('#questHeading');
+    this.questLessonText = document.querySelector('#questLessonText');
     this.questLoreText = document.querySelector('#questLoreText');
     this.questObjectiveText = document.querySelector('#questObjectiveText');
     this.prevBtn = document.querySelector('#prevBtn');
@@ -684,6 +707,9 @@ class QuantumCockpit {
     this.questDifficultyTag.textContent = quest.difficulty;
     this.questXpTag.textContent = `+${quest.rewardXP} XP OR`;
     this.questHeading.textContent = quest.title;
+    if (this.questLessonText) {
+      this.questLessonText.innerHTML = quest.lesson || "En JavaScript, tu changes une valeur, puis tu la rends avec return — c'est ça, une transmutation.";
+    }
     this.questLoreText.innerHTML = quest.lore;
     this.questObjectiveText.innerHTML = quest.objective;
 
@@ -816,12 +842,8 @@ class QuantumCockpit {
           this.renderChambers();
           this.renderGrimoire();
 
-          setTimeout(() => {
-            audio.playSuccess();
-            this.selectQuest(data.quest.id);
-            this.writeTerminalLine('line-ok', `📜 Nouveau Chapitre #${data.quest.id} ouvert : "${data.quest.title}" (${data.source})`);
-            this.sayHomunculus(`📖 <strong>L'histoire se poursuit :</strong> <em>${data.quest.title}</em> ! Relève le défi pour continuer l'épopée.`);
-          }, 700);
+          this.writeTerminalLine('line-ok', `Nouveau cas prêt dans le grimoire : #${data.quest.id} "${data.quest.title}" — on ne t'interrompt pas.`);
+          this.sayHomunculus(`Nouveau cas métier prêt : <em>${data.quest.title}</em>. Ouvre-le quand tu veux, on reste sur l'exercice en cours.`);
           return;
         }
       }

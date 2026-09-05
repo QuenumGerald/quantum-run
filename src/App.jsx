@@ -59,6 +59,7 @@ import {
   MenuBook as MenuBookIcon,
   Chat as ChatIcon,
   AccountCircle as AccountCircleIcon,
+  AutoStories as AutoStoriesIcon,
 } from '@mui/icons-material';
 
 class AudioSynth {
@@ -110,12 +111,12 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍" },
-  { id: 2, name: "Distillation", symbol: "🜔" },
-  { id: 3, name: "Formules", symbol: "🜛" },
-  { id: 4, name: "Fioles", symbol: "🜁" },
-  { id: 5, name: "Rituels", symbol: "🜃" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤" }
+  { id: 1, name: "Energer", symbol: "🜍", subtitle: "Calcination · docs, factures & fraude" },
+  { id: 2, name: "Trust Studio", symbol: "🜔", subtitle: "Distillation · confiance, tokens & traces" },
+  { id: 3, name: "Bonne Réponse", symbol: "🜛", subtitle: "Formules · assistant métier BTP" },
+  { id: 4, name: "Pipelines IA", symbol: "🜁", subtitle: "Fioles · modèles, files & payloads" },
+  { id: 5, name: "Analytics", symbol: "🜃", subtitle: "Rituels · usage, risques & facturation" },
+  { id: 6, name: "Launch", symbol: "🝤", subtitle: "Grand Œuvre · routing, audit & workspace" }
 ];
 
 const getRankTitle = (xp) => {
@@ -126,17 +127,71 @@ const getRankTitle = (xp) => {
   return "Initié 🜍";
 };
 
+const difficultyTone = (label = '') => {
+  const upper = String(label).toUpperCase();
+  if (upper.includes('MAÎTRE') || upper.includes('MAITRE')) {
+    return { color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.18)', border: 'rgba(245, 158, 11, 0.45)' };
+  }
+  if (upper.includes('EXPERT')) {
+    return { color: '#C084FC', bg: 'rgba(168, 85, 247, 0.16)', border: 'rgba(168, 85, 247, 0.4)' };
+  }
+  if (upper.includes('AVANC')) {
+    return { color: '#FB923C', bg: 'rgba(251, 146, 60, 0.16)', border: 'rgba(251, 146, 60, 0.4)' };
+  }
+  if (upper.includes('MOYEN')) {
+    return { color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.14)', border: 'rgba(251, 191, 36, 0.35)' };
+  }
+  if (upper.includes('FACILE')) {
+    return { color: '#34D399', bg: 'rgba(16, 185, 129, 0.14)', border: 'rgba(16, 185, 129, 0.35)' };
+  }
+  return { color: '#94A3B8', bg: 'rgba(148, 163, 184, 0.12)', border: 'rgba(148, 163, 184, 0.25)' };
+};
+
+const DifficultyChip = ({ label }) => {
+  const tone = difficultyTone(label);
+  return (
+    <Chip
+      size="small"
+      label={label || 'FACILE'}
+      sx={{
+        height: 20,
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: '0.04em',
+        color: tone.color,
+        bgcolor: tone.bg,
+        border: `1px solid ${tone.border}`,
+        '& .MuiChip-label': { px: 0.9 },
+      }}
+    />
+  );
+};
+
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "La Transmutation du Plomb",
+  title: "La transmutation de la facture",
   difficulty: "FACILE",
-  lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile \"lead\" en métal précieux \"gold\".",
-  objective: "Changez la valeur de la variable <code>metal</code> pour <code>\"gold\"</code>.",
-  initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
-  solutionCode: `let metal = "gold";\n\nreturn metal;`,
-  hint: "Remplace simplement \"lead\" par \"gold\".",
+  lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
+  lore: "Le vil \"PENDING\" repose dans le creuset d'Energer. Transmute-le en \"VERIFIED\" — le client pro attend l'or du badge vert.",
+  objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
+  initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
+  solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
+  hint: "Remplace \"PENDING\" par \"VERIFIED\".",
   rewardXP: 16
+};
+
+const codeInlineSx = {
+  '& code': {
+    fontFamily: "'JetBrains Mono', monospace",
+    bgcolor: 'rgba(16, 185, 129, 0.16)',
+    color: '#6EE7B7',
+    px: 0.55,
+    py: '1px',
+    borderRadius: '4px',
+    fontSize: '0.92em',
+    fontWeight: 600,
+  },
 };
 
 export default function App() {
@@ -152,8 +207,10 @@ export default function App() {
   // Ergonomie mobile : Récit accordéon, copie et enchaînement
   const [loreOpen, setLoreOpen] = useState(false);
   const [lastSuccess, setLastSuccess] = useState(null);
+  const [readyQuest, setReadyQuest] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [phaseFilter, setPhaseFilter] = useState(null);
+  const activeQuestIdRef = useRef(INITIAL_QUEST.id);
 
   // Compte et parcours alchimiste
   const [currentUser, setCurrentUser] = useState(null);
@@ -170,7 +227,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Bienvenue dans l\'Athanor ! Je suis ORBIT, votre Homunculus et Copilote Alchimiste. Posez-moi vos questions sur le Grand Œuvre, vos réactifs ou vos formules de transmutation.' }
+    { sender: 'bot', text: 'Salut. Je suis ORBIT, Homunculus de Quantum of Trust. On apprend le JS dans le creuset du SaaS IA : Energer, Trust Studio, La Bonne Réponse. Lis le principe, puis transmutes.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -274,9 +331,12 @@ export default function App() {
 
   const selectQuest = (q) => {
     setActiveQuest(q);
+    activeQuestIdRef.current = q.id;
     setCode(q.initialCode);
     setMobileTab(0); // Bascule automatiquement sur l'onglet Éditeur sur mobile
     setLastSuccess(null);
+    setLoreOpen(false);
+    setReadyQuest((pending) => (pending && pending.id === q.id ? null : pending));
     addTerminal('sys', `Quête #${q.id} active : ${q.title}`);
     
     setTimeout(() => {
@@ -312,7 +372,7 @@ export default function App() {
   // Puces intelligentes extraites automatiquement de la quête active
   const quickTokens = useMemo(() => {
     const set = new Set();
-    const rawText = `${activeQuest.objective || ''} ${activeQuest.solutionCode || ''} ${activeQuest.initialCode || ''}`;
+    const rawText = `${activeQuest.lesson || ''} ${activeQuest.objective || ''} ${activeQuest.solutionCode || ''} ${activeQuest.initialCode || ''}`;
     
     // Extraction des balises <code>...</code>
     const codeMatches = (activeQuest.objective || '').match(/<code>([^<]+)<\/code>/g) || [];
@@ -329,7 +389,7 @@ export default function App() {
     });
 
     // Mots-clés courants alchimiques et JavaScript
-    ['metal', 'lead', 'gold', 'true', 'false', 'age', 'mot1', 'mot2', 'potion', 'soufre', 'sel', 'masseTotale', 'temperature', 'return'].forEach(kw => {
+    ['statut', 'PENDING', 'VERIFIED', 'true', 'false', 'tokens', 'confiance', 'modeles', 'file', 'sieges', 'return'].forEach(kw => {
       if (rawText.includes(kw)) set.add(kw);
     });
 
@@ -398,9 +458,19 @@ export default function App() {
     }
   };
 
+  const ingestGeneratedQuest = (quest) => {
+    setQuests(prev => {
+      if (prev.some(q => q.id === quest.id)) return prev;
+      return [...prev, quest];
+    });
+    setReadyQuest(quest);
+    addTerminal('ok', `Nouveau défi prêt dans le grimoire : #${quest.id} ${quest.title}`);
+    setSnackbar({ open: true, message: `Nouveau défi prêt : ${quest.title}`, severity: 'info' });
+  };
+
   const triggerSagaGeneration = async (completedId) => {
     setIsForging(true);
-    addTerminal('sys', 'Forge du chapitre suivant...');
+    addTerminal('sys', 'Préparation du prochain cas métier...');
     try {
       const res = await fetch('/api/quests/generate-saga', {
         method: 'POST',
@@ -409,12 +479,7 @@ export default function App() {
       });
       const data = await res.json();
       if (data.success && data.quest) {
-        setQuests(prev => {
-          if (prev.some(q => q.id === data.quest.id)) return prev;
-          return [...prev, data.quest];
-        });
-        addTerminal('ok', `✨ Chapitre #${data.quest.id} forgé : ${data.quest.title}`);
-        selectQuest(data.quest);
+        ingestGeneratedQuest(data.quest);
       }
     } catch (err) {} finally {
       setIsForging(false);
@@ -422,6 +487,7 @@ export default function App() {
   };
 
   const handleManualForge = async () => {
+    const forgedFromId = activeQuest.id;
     setIsForging(true);
     try {
       const res = await fetch('/api/quests/generate-saga', {
@@ -431,9 +497,13 @@ export default function App() {
       });
       const data = await res.json();
       if (data.success && data.quest) {
-        setQuests(prev => [...prev, data.quest]);
-        selectQuest(data.quest);
-        setSnackbar({ open: true, message: 'Nouvelle quête créée !', severity: 'info' });
+        if (activeQuestIdRef.current === forgedFromId) {
+          setQuests(prev => (prev.some(q => q.id === data.quest.id) ? prev : [...prev, data.quest]));
+          selectQuest(data.quest);
+          setSnackbar({ open: true, message: 'Nouveau cas métier ouvert.', severity: 'info' });
+        } else {
+          ingestGeneratedQuest(data.quest);
+        }
       }
     } catch (err) {} finally {
       setIsForging(false);
@@ -456,7 +526,7 @@ export default function App() {
       const data = await res.json();
       setChatMessages(prev => [...prev, { sender: 'bot', text: data.reply }]);
     } catch (err) {
-      setChatMessages(prev => [...prev, { sender: 'bot', text: `Indice : ${activeQuest.hint}` }]);
+      setChatMessages(prev => [...prev, { sender: 'bot', text: activeQuest.lesson ? `Le principe : ${activeQuest.lesson.replace(/<\/?code>/g, '')} — ${activeQuest.hint}` : `Indice : ${activeQuest.hint}` }]);
     }
   };
 
@@ -472,9 +542,13 @@ export default function App() {
     return "Néophyte";
   };
 
+  const orderedQuests = useMemo(
+    () => [...quests].sort((a, b) => a.id - b.id),
+    [quests]
+  );
   const filteredQuests = phaseFilter
-    ? quests.filter(q => q.phase === phaseFilter)
-    : quests;
+    ? orderedQuests.filter(q => q.phase === phaseFilter)
+    : orderedQuests;
 
   return (
     <Box sx={{ minHeight: '100dvh', pb: { xs: 10, lg: 5 }, bgcolor: '#05070A', color: '#F8FAFC' }}>
@@ -502,7 +576,7 @@ export default function App() {
                   QUANTUM RUN
                 </Typography>
                 <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#94A3B8', fontSize: { xs: 8.5, sm: 9.5 }, letterSpacing: '0.12em', textTransform: 'uppercase', display: { xs: 'none', sm: 'block' } }}>
-                  Opus Magnum · Grand Œuvre
+                  Opus Magnum · SaaS IA pour les pros
                 </Typography>
               </Box>
 
@@ -647,10 +721,11 @@ export default function App() {
                 
                 {/* Entête Rituel : Titre Alchimique, XP Or et Navigation */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.2, flexWrap: 'wrap', gap: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                     <Typography variant="h6" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#F8FAFC', fontSize: { xs: 14, sm: 17 } }}>
                       #{activeQuest.id} {activeQuest.title}
                     </Typography>
+                    <DifficultyChip label={activeQuest.difficulty || 'FACILE'} />
                     <OpenAIBadge color="warning">
                       +{activeQuest.rewardXP || 16} XP Or
                     </OpenAIBadge>
@@ -671,8 +746,8 @@ export default function App() {
                       size="small"
                       disabled={activeQuest.id <= 1}
                       onClick={() => {
-                        const idx = quests.findIndex(q => q.id === activeQuest.id);
-                        if (idx > 0) selectQuest(quests[idx - 1]);
+                        const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
+                        if (idx > 0) selectQuest(orderedQuests[idx - 1]);
                       }}
                       sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
@@ -680,10 +755,10 @@ export default function App() {
                     </IconButton>
                     <IconButton
                       size="small"
-                      disabled={activeQuest.id >= quests[quests.length - 1]?.id}
+                      disabled={activeQuest.id >= orderedQuests[orderedQuests.length - 1]?.id}
                       onClick={() => {
-                        const idx = quests.findIndex(q => q.id === activeQuest.id);
-                        if (idx < quests.length - 1) selectQuest(quests[idx + 1]);
+                        const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
+                        if (idx < orderedQuests.length - 1) selectQuest(orderedQuests[idx + 1]);
                       }}
                       sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
@@ -691,6 +766,45 @@ export default function App() {
                     </IconButton>
                   </Box>
                 </Box>
+
+                {/* Micro-cours : le principe AVANT le défi */}
+                {activeQuest.lesson && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: { xs: 1.15, sm: 1.35 },
+                      mb: 1.2,
+                      bgcolor: 'rgba(16, 185, 129, 0.08)',
+                      border: '1px solid rgba(16, 185, 129, 0.35)',
+                      borderLeft: '3px solid #10B981',
+                      borderRadius: 1,
+                      boxShadow: '0 0 18px rgba(16, 185, 129, 0.08)',
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontFamily: "'Cinzel', serif",
+                        color: '#34D399',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.6,
+                        mb: 0.45,
+                        fontSize: 11,
+                      }}
+                    >
+                      <AutoStoriesIcon sx={{ fontSize: 14, color: '#34D399' }} />
+                      Le principe
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: '#E2E8F0', fontWeight: 500, fontSize: { xs: 13, sm: 14 }, lineHeight: 1.55, ...codeInlineSx }}
+                      dangerouslySetInnerHTML={{ __html: activeQuest.lesson }}
+                    />
+                  </Paper>
+                )}
 
                 {/* Récit de l'Athanor (Rétractable sur smartphone pour économiser la hauteur d'écran) */}
                 {activeQuest.lore && (
@@ -721,26 +835,26 @@ export default function App() {
                     <Collapse in={loreOpen} sx={{ display: { xs: 'block', sm: 'none' } }}>
                       <Box sx={{ p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
                         <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.5 }}>
-                          📜 {activeQuest.lore}
+                          {activeQuest.lore}
                         </Typography>
                       </Box>
                     </Collapse>
 
                     {/* Visible directement sur tablette & desktop */}
                     <Box sx={{ display: { xs: 'none', sm: 'block' }, p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
-                        📜 {activeQuest.lore}
+                      <Typography variant="body2" sx={{ color: '#94A3B8', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
+                        {activeQuest.lore}
                       </Typography>
                     </Box>
                   </Box>
                 )}
 
-                {/* Objectif Direct du Rituel */}
+                {/* Action à jouer — après le principe */}
                 <Paper elevation={0} sx={{ p: { xs: 1, sm: 1.2 }, bgcolor: '#070A10', borderLeft: '3px solid #F59E0B', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 1 }}>
-                  <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#F59E0B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', mb: 0.3, fontSize: 11 }}>
-                    🎯 Rituel du Grand Œuvre
+                  <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#F59E0B', fontWeight: 700, letterSpacing: '0.06em', display: 'block', mb: 0.3, fontSize: 11 }}>
+                    À toi
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 } }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
+                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 }, ...codeInlineSx }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
                 </Paper>
 
               </CardContent>
@@ -768,28 +882,62 @@ export default function App() {
                   <CheckCircle sx={{ color: '#F59E0B', fontSize: 24 }} />
                   <Box>
                     <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", color: '#FBBF24', fontWeight: 700, fontSize: 13 }}>
-                      ✨ Transmutation du Grand Œuvre Réussie ! (+{lastSuccess.rewardXP} XP Or)
+                      Cas validé — +{lastSuccess.rewardXP} XP
                     </Typography>
                     <Typography variant="caption" sx={{ color: '#10B981', fontSize: 11 }}>
-                      La matière a vibré dans le creuset. Formule alchimique validée avec succès.
+                      Cas validé. Tu viens de faire le même geste qu'en prod.
                     </Typography>
                   </Box>
                 </Box>
 
-                {activeQuest.id < quests[quests.length - 1]?.id && (
+                {(readyQuest || activeQuest.id < quests[quests.length - 1]?.id) && (
                   <OpenAIButton
                     color="primary"
                     size="sm"
                     onClick={() => {
+                      if (readyQuest) {
+                        selectQuest(readyQuest);
+                        return;
+                      }
                       const idx = quests.findIndex(q => q.id === activeQuest.id);
                       if (idx < quests.length - 1) {
                         selectQuest(quests[idx + 1]);
                       }
                     }}
                   >
-                    Rituel Suivant <NavigateNext style={{ width: 14, height: 14 }} />
+                    Cas suivant <NavigateNext style={{ width: 14, height: 14 }} />
                   </OpenAIButton>
                 )}
+              </Paper>
+            )}
+
+            {readyQuest && readyQuest.id !== activeQuest.id && (
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 1.3,
+                  mb: 2,
+                  borderRadius: 2,
+                  bgcolor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
+              >
+                <Box>
+                  <Typography variant="caption" sx={{ color: '#34D399', fontWeight: 700, letterSpacing: '0.06em', display: 'block' }}>
+                    Prêt dans le grimoire — on ne t'a pas interrompu
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontSize: 13, fontWeight: 600 }}>
+                    #{readyQuest.id} {readyQuest.title}
+                  </Typography>
+                </Box>
+                <OpenAIButton color="secondary" size="sm" onClick={() => selectQuest(readyQuest)}>
+                  Ouvrir quand tu veux <NavigateNext style={{ width: 14, height: 14 }} />
+                </OpenAIButton>
               </Paper>
             )}
 
@@ -813,7 +961,7 @@ export default function App() {
                     <Lightbulb style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Indice</Box>
                   </OpenAIButton>
                   <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.solutionCode)}>
-                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Pierre Philosophale</Box>
+                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Solution</Box>
                   </OpenAIButton>
                 </Box>
               </Box>
@@ -1049,7 +1197,7 @@ export default function App() {
             {/* Filtres de Chambres Alchimiques */}
             <Box sx={{ display: 'flex', gap: 0.8, overflowX: 'auto', pb: 1, mb: 1.5, '&::-webkit-scrollbar': { display: 'none' } }}>
               <Chip
-                label="Toutes les Chambres"
+                label="Tous les produits"
                 size="small"
                 onClick={() => setPhaseFilter(null)}
                 sx={{
@@ -1109,9 +1257,14 @@ export default function App() {
                         <Typography variant="body2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: isCurrent ? 700 : 600, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 13 }}>
                           #{q.id} {q.title}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
-                          Chambre {q.phase} • {q.difficulty || 'FACILE'}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.7, mt: 0.25, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
+                            {phases.find(p => p.id === q.phase)?.name || 'Produit'}
+                            {q.isGenerated ? ' • nouveau' : ''}
+                            {readyQuest && readyQuest.id === q.id ? ' • prêt' : ''}
+                          </Typography>
+                          <DifficultyChip label={q.difficulty || 'FACILE'} />
+                        </Box>
                       </Box>
                     </Box>
 
@@ -1183,10 +1336,10 @@ export default function App() {
                 {/* Suggestions Rapides Hermétiques en 1 Tap */}
                 <Box sx={{ display: 'flex', gap: 0.6, overflowX: 'auto', pb: 1, mb: 1, '&::-webkit-scrollbar': { display: 'none' } }}>
                   {[
-                    "⚗️ Comment accomplir ce rituel ?",
-                    "📜 Révèle la formule secrète",
-                    "💡 Donne un indice alchimique",
-                    "🔍 Explique la pierre philosophale",
+                    "Explique-moi le principe",
+                    "Je bloque, aide-moi sans spoiler",
+                    "Montre-moi juste un indice",
+                    "Pourquoi ça marche comme ça ?",
                   ].map((sug, idx) => (
                     <Paper
                       key={idx}
@@ -1360,11 +1513,11 @@ export default function App() {
             {/* GRIMOIRE DU GRAND ŒUVRE (DESKTOP) */}
             <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire du Grand Œuvre ({clearedQuests.length}/{quests.length})</Typography>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire Quantum of Trust ({clearedQuests.length}/{quests.length})</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
-                {quests.map((q) => {
+                {orderedQuests.map((q) => {
                   const isCleared = clearedQuests.includes(q.id);
                   const isCurrent = q.id === activeQuest.id;
                   return (
@@ -1386,8 +1539,13 @@ export default function App() {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 12 }}>
-                            #{q.id} {q.title}
+                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : (readyQuest && readyQuest.id === q.id ? '#34D399' : '#F8FAFC'), fontSize: 12 }}>
+                            #{q.id} {q.title}{q.isGenerated ? ' · nouveau' : ''}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="caption" sx={{ color: difficultyTone(q.difficulty).color, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>
+                            {q.difficulty || 'FACILE'} · +{q.rewardXP || 16} XP
                           </Typography>
                         }
                       />
