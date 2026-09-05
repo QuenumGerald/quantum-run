@@ -111,12 +111,12 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "CRM, statuts & données brutes" },
-  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Prix, stocks & calculs métier" },
-  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Helpers qu'on réutilise en équipe" },
-  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Paniers, tickets & fiches produit" },
-  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Nettoyer et transformer des données" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "Décider et livrer" }
+  { id: 1, name: "Energer", symbol: "📄", subtitle: "Docs, factures & fraude" },
+  { id: 2, name: "Trust Studio", symbol: "🛡️", subtitle: "Confiance, tokens & traces LLM" },
+  { id: 3, name: "Bonne Réponse", symbol: "🏗️", subtitle: "Assistant métier BTP" },
+  { id: 4, name: "Pipelines IA", symbol: "🤖", subtitle: "Modèles, files & payloads" },
+  { id: 5, name: "Analytics", symbol: "📊", subtitle: "Usage, risques & facturation" },
+  { id: 6, name: "Launch", symbol: "🚀", subtitle: "Routing, audit & workspace Pro" }
 ];
 
 const getRankTitle = (xp) => {
@@ -130,14 +130,14 @@ const getRankTitle = (xp) => {
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "Le statut du prospect",
+  title: "La facture à valider",
   difficulty: "FACILE",
-  lesson: "Au CRM, un statut client c'est une variable texte : tu changes le contenu, la fiche change.",
-  lore: "Léa a signé. Dans Salesforce le statut est encore \"prospect\" — l'équipe attend le bon badge.",
-  objective: "Passe <code>statut</code> de <code>\"prospect\"</code> à <code>\"client\"</code>.",
-  initialCode: `// Fiche CRM du jour\nlet statut = "prospect";\n\nreturn statut;`,
-  solutionCode: `let statut = "client";\n\nreturn statut;`,
-  hint: "Remplace \"prospect\" par \"client\".",
+  lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
+  lore: "Energer vient de lire la facture. Elle est encore \"PENDING\" — le client pro attend le badge vert.",
+  objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
+  initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
+  solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
+  hint: "Remplace \"PENDING\" par \"VERIFIED\".",
   rewardXP: 16
 };
 
@@ -187,7 +187,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Salut. Je suis ORBIT. On apprend le JS comme on le parle en équipe : un principe, puis un vrai cas (CRM, facture, ticket). Lis le micro-cours, puis code.' }
+    { sender: 'bot', text: 'Salut. Je suis ORBIT, copilote de Quantum of Trust. On apprend le JS sur le vrai SaaS IA : Energer, Trust Studio, La Bonne Réponse. Lis le principe, puis code.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -349,7 +349,7 @@ export default function App() {
     });
 
     // Mots-clés courants alchimiques et JavaScript
-    ['statut', 'prospect', 'client', 'true', 'false', 'prenom', 'nom', 'panier', 'stock', 'facture', 'ticket', 'return'].forEach(kw => {
+    ['statut', 'PENDING', 'VERIFIED', 'true', 'false', 'tokens', 'confiance', 'modeles', 'file', 'sieges', 'return'].forEach(kw => {
       if (rawText.includes(kw)) set.add(kw);
     });
 
@@ -532,7 +532,7 @@ export default function App() {
                   QUANTUM RUN
                 </Typography>
                 <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#94A3B8', fontSize: { xs: 8.5, sm: 9.5 }, letterSpacing: '0.12em', textTransform: 'uppercase', display: { xs: 'none', sm: 'block' } }}>
-                  Opus Magnum · Grand Œuvre
+                  SaaS IA · pour les pros
                 </Typography>
               </Box>
 
@@ -1128,7 +1128,7 @@ export default function App() {
               <CardContent sx={{ p: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                   <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#FBBF24' }}>
-                    Progression du Grand Œuvre
+                    Progression du workspace
                   </Typography>
                   <OpenAIBadge color="primary">
                     {clearedQuests.length} / {quests.length} ({Math.round((clearedQuests.length / quests.length) * 100)}%)
@@ -1152,7 +1152,7 @@ export default function App() {
             {/* Filtres de Chambres Alchimiques */}
             <Box sx={{ display: 'flex', gap: 0.8, overflowX: 'auto', pb: 1, mb: 1.5, '&::-webkit-scrollbar': { display: 'none' } }}>
               <Chip
-                label="Toutes les Chambres"
+                label="Tous les produits"
                 size="small"
                 onClick={() => setPhaseFilter(null)}
                 sx={{
@@ -1213,7 +1213,7 @@ export default function App() {
                           #{q.id} {q.title}
                         </Typography>
                         <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
-                          Cas métier • {q.difficulty || 'FACILE'}
+                          {phases.find(p => p.id === q.phase)?.name || 'Produit'} • {q.difficulty || 'FACILE'}
                           {q.isGenerated ? ' • nouveau' : ''}
                           {readyQuest && readyQuest.id === q.id ? ' • prêt' : ''}
                         </Typography>
@@ -1465,7 +1465,7 @@ export default function App() {
             {/* GRIMOIRE DU GRAND ŒUVRE (DESKTOP) */}
             <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire du Grand Œuvre ({clearedQuests.length}/{quests.length})</Typography>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Parcours Quantum of Trust ({clearedQuests.length}/{quests.length})</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>

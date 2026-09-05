@@ -21,325 +21,325 @@ if (fs.existsSync(distPath)) {
 }
 
 // ==========================================================================
-// PHASES ET QUÊTES ALCHIMIQUES (UTF-8 PROPRE & INTERACTIF)
+// PHASES ET QUÊTES QUANTUM OF TRUST (SAAS IA POUR LES PROS)
 // ==========================================================================
 const PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "CRM, statuts & données brutes" },
-  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Prix, stocks & calculs métier" },
-  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Helpers qu'on réutilise en équipe" },
-  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Paniers, tickets & fiches produit" },
-  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Nettoyer et transformer des données" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "Décider et livrer" }
+  { id: 1, name: "Energer", symbol: "📄", subtitle: "Docs, factures & fraude" },
+  { id: 2, name: "Trust Studio", symbol: "🛡️", subtitle: "Confiance, tokens & traces LLM" },
+  { id: 3, name: "Bonne Réponse", symbol: "🏗️", subtitle: "Assistant métier BTP" },
+  { id: 4, name: "Pipelines IA", symbol: "🤖", subtitle: "Modèles, files & payloads" },
+  { id: 5, name: "Analytics", symbol: "📊", subtitle: "Usage, risques & facturation" },
+  { id: 6, name: "Launch", symbol: "🚀", subtitle: "Routing, audit & workspace Pro" }
 ];
 
 const QUESTS = [
   {
     id: 1,
     phase: 1,
-    title: "Le statut du prospect",
+    title: "La facture à valider",
     difficulty: "FACILE",
-    lesson: "Au CRM, un statut client c'est une variable texte : tu changes le contenu, la fiche change.",
-    lore: "Léa a signé. Dans Salesforce le statut est encore <code>\"prospect\"</code> — l'équipe attend le bon badge.",
-    objective: "Passe <code>statut</code> de <code>\"prospect\"</code> à <code>\"client\"</code>.",
-    initialCode: `// Fiche CRM du jour\nlet statut = "prospect";\n\nreturn statut;`,
-    solutionCode: `let statut = "client";\n\nreturn statut;`,
-    hint: "Remplace \"prospect\" par \"client\".",
+    lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
+    lore: "Energer vient de lire la facture. Elle est encore <code>\"PENDING\"</code> — le client pro attend le badge vert.",
+    objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
+    initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
+    solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
+    hint: "Remplace \"PENDING\" par \"VERIFIED\".",
     rewardXP: 16,
-    check: (res, ctx) => res === "client" || ctx.statut === "client"
+    check: (res, ctx) => res === "VERIFIED" || ctx.statut === "VERIFIED"
   },
   {
     id: 2,
     phase: 1,
-    title: "Le stock à corriger",
+    title: "Les sièges de l'espace pro",
     difficulty: "FACILE",
-    lesson: "Un stock, un prix, un délai : en prod ce sont des nombres, sans guillemets.",
-    lore: "L'inventaire affiche 0 alors que 12 casques sont rentrés ce matin. Corrige avant le brief logistique.",
-    objective: "Le <code>stock</code> est à <code>0</code> — mets-le à <code>12</code>.",
-    initialCode: `// Quantité réelle en entrepôt\nlet stock = 0;\n\nreturn stock;`,
-    solutionCode: `let stock = 12;\n\nreturn stock;`,
+    lesson: "Un quota SaaS (sièges, crédits, tokens) c'est un nombre, sans guillemets.",
+    lore: "Le workspace Quantum of Trust affiche 0 siège. L'équipe en a 12 sur le plan Pro.",
+    objective: "Les <code>sieges</code> sont à <code>0</code> — mets-les à <code>12</code>.",
+    initialCode: `// Sièges du workspace Pro\nlet sieges = 0;\n\nreturn sieges;`,
+    solutionCode: `let sieges = 12;\n\nreturn sieges;`,
     hint: "Remplace 0 par 12.",
     rewardXP: 16,
-    check: (res, ctx) => res === 12 || ctx.stock === 12
+    check: (res, ctx) => res === 12 || ctx.sieges === 12
   },
   {
     id: 3,
     phase: 1,
-    title: "L'email vérifié",
+    title: "L'alerte fraude",
     difficulty: "FACILE",
-    lesson: "<code>true</code> / <code>false</code> c'est le même interrupteur qu'un feature flag ou qu'un email vérifié.",
-    lore: "Le user a cliqué le lien de confirmation. Le compte reste bloqué tant que le flag est éteint.",
-    objective: "Allume <code>emailVerifie</code>.",
-    initialCode: `// Flag du compte\nlet emailVerifie = false;\n\nreturn emailVerifie;`,
-    solutionCode: `let emailVerifie = true;\n\nreturn emailVerifie;`,
+    lesson: "<code>true</code> / <code>false</code> c'est le même interrupteur qu'une alerte IA ou qu'un flag de revue humaine.",
+    lore: "Energer a vu un écart devis / facture. L'alerte reste éteinte — le contrôleur ne voit rien.",
+    objective: "Allume <code>anomalieDetectee</code>.",
+    initialCode: `// Flag fraude Energer\nlet anomalieDetectee = false;\n\nreturn anomalieDetectee;`,
+    solutionCode: `let anomalieDetectee = true;\n\nreturn anomalieDetectee;`,
     hint: "Passe false à true.",
     rewardXP: 16,
-    check: (res, ctx) => res === true || ctx.emailVerifie === true
+    check: (res, ctx) => res === true || ctx.anomalieDetectee === true
   },
   {
     id: 4,
     phase: 1,
-    title: "Le nom sur le badge",
+    title: "La référence document",
     difficulty: "FACILE",
-    lesson: "Prénom + nom, c'est le même <code>+</code> que pour un email de bienvenue ou un badge Slack.",
-    lore: "Le badge de la new hire est vide. Colle prénom et nom pour le slack-bot d'onboarding.",
-    objective: "Colle <code>prenom</code> et <code>nom</code> avec un espace dans <code>affichage</code>.",
-    initialCode: `let prenom = "Léa";\nlet nom = "Martin";\n\n// Nom affiché sur le badge\nlet affichage = "";\n\nreturn affichage;`,
-    solutionCode: `let prenom = "Léa";\nlet nom = "Martin";\nlet affichage = prenom + " " + nom;\n\nreturn affichage;`,
-    hint: "Utilise prenom + \" \" + nom.",
+    lesson: "Coller un préfixe et une année avec <code>+</code>, c'est l'ID qu'Energer pose sur chaque justificatif.",
+    lore: "Le PDF doit sortir en <code>DOC-2024</code> pour le coffre client. Les deux morceaux sont déjà là.",
+    objective: "Colle <code>prefixe</code> et <code>annee</code> dans <code>refDocument</code>.",
+    initialCode: `let prefixe = "DOC-";\nlet annee = 2024;\n\n// Référence unique Energer\nlet refDocument = "";\n\nreturn refDocument;`,
+    solutionCode: `let prefixe = "DOC-";\nlet annee = 2024;\nlet refDocument = prefixe + annee;\n\nreturn refDocument;`,
+    hint: "Utilise prefixe + annee.",
     rewardXP: 16,
-    check: (res, ctx) => res === "Léa Martin" || ctx.affichage === "Léa Martin"
+    check: (res, ctx) => res === "DOC-2024" || ctx.refDocument === "DOC-2024"
   },
   {
     id: 5,
     phase: 2,
-    title: "Le total de la commande",
+    title: "Le score de confiance",
     difficulty: "MOYEN",
-    lesson: "En caisse, <code>+</code> entre deux nombres additionne : prix + frais, jamais du texte.",
-    lore: "Le panier affiche 10€ + 5€ de livraison. Le total checkout est encore à 0.",
-    objective: "Verse <code>prix</code> et <code>frais</code> dans <code>total</code>.",
-    initialCode: `let prix = 10;\nlet frais = 5;\n\n// Total à encaisser\nlet total = 0;\n\nreturn total;`,
-    solutionCode: `let prix = 10;\nlet frais = 5;\nlet total = prix + frais;\n\nreturn total;`,
-    hint: "Additionne prix + frais.",
+    lesson: "Dans Trust Studio, <code>+</code> additionne deux notes IA : pertinence + sécurité, jamais du texte.",
+    lore: "La réponse LLM a 50 de pertinence et 45 de sécurité. Le badge confiance est encore à 0.",
+    objective: "Verse <code>pertinence</code> et <code>securite</code> dans <code>confiance</code>.",
+    initialCode: `let pertinence = 50;\nlet securite = 45;\n\n// Score Trust Studio\nlet confiance = 0;\n\nreturn confiance;`,
+    solutionCode: `let pertinence = 50;\nlet securite = 45;\nlet confiance = pertinence + securite;\n\nreturn confiance;`,
+    hint: "Additionne pertinence + securite.",
     rewardXP: 16,
-    check: (res, ctx) => res === 15 || ctx.total === 15
+    check: (res, ctx) => res === 95 || ctx.confiance === 95
   },
   {
     id: 6,
     phase: 2,
-    title: "La ligne de facture",
+    title: "Le plafond de tokens",
     difficulty: "MOYEN",
-    lesson: "<code>prixUnitaire * quantite</code> c'est la ligne de facture que tu calcules tous les jours.",
-    lore: "Deux licences à 50€. La ligne doit sortir toute seule, sans réécrire 100 à la main.",
-    objective: "Calcule la ligne dans <code>ligne</code>.",
-    initialCode: `let prixUnitaire = 50;\nlet quantite = 2;\n\n// Montant de la ligne\nlet ligne = 0;\n\nreturn ligne;`,
-    solutionCode: `let prixUnitaire = 50;\nlet quantite = 2;\nlet ligne = prixUnitaire * quantite;\n\nreturn ligne;`,
-    hint: "Utilise prixUnitaire * quantite.",
+    lesson: "<code>limite * 2</code> c'est le geste du plan Pro : tu doubles le quota sans réécrire le chiffre.",
+    lore: "Le workspace tape dans le plafond. Passe le quota Gemini / Claude de 1000 à 2000 tokens.",
+    objective: "Double <code>limiteTokens</code> dans <code>nouvelleLimite</code>.",
+    initialCode: `let limiteTokens = 1000;\n\n// Nouveau plafond LLM\nlet nouvelleLimite = 0;\n\nreturn nouvelleLimite;`,
+    solutionCode: `let limiteTokens = 1000;\nlet nouvelleLimite = limiteTokens * 2;\n\nreturn nouvelleLimite;`,
+    hint: "Utilise limiteTokens * 2.",
     rewardXP: 16,
-    check: (res, ctx) => res === 100 || ctx.ligne === 100
+    check: (res, ctx) => res === 2000 || ctx.nouvelleLimite === 2000
   },
   {
     id: 7,
     phase: 2,
-    title: "Le reste de pagination",
+    title: "Le routage des requêtes",
     difficulty: "MOYEN",
-    lesson: "<code>%</code> sert en prod à paginer : ce qui ne rentre pas dans la page.",
-    lore: "10 tickets, 3 par page. Combien débordent sur une page incomplète ?",
-    objective: "Range le reste de <code>10 % 3</code> dans <code>reste</code>.",
-    initialCode: `let tickets = 10;\nlet parPage = 3;\n\n// Tickets qui dépassent la dernière page pleine\nlet reste = 0;\n\nreturn reste;`,
-    solutionCode: `let tickets = 10;\nlet parPage = 3;\nlet reste = tickets % parPage;\n\nreturn reste;`,
-    hint: "Écris tickets % parPage (ça vaut 1).",
+    lesson: "<code>%</code> sert à répartir les appels IA : ce qui reste après la division, c'est l'instance qui prend la requête.",
+    lore: "10 requêtes, 3 nœuds du proxy Trust Studio. Laquelle prend la 10e ?",
+    objective: "Range <code>10 % 3</code> dans <code>noeud</code>.",
+    initialCode: `let requetes = 10;\nlet noeuds = 3;\n\n// Index du nœud qui reçoit la requête\nlet noeud = 0;\n\nreturn noeud;`,
+    solutionCode: `let requetes = 10;\nlet noeuds = 3;\nlet noeud = requetes % noeuds;\n\nreturn noeud;`,
+    hint: "Écris requetes % noeuds (ça vaut 1).",
     rewardXP: 16,
-    check: (res, ctx) => res === 1 || ctx.reste === 1
+    check: (res, ctx) => res === 1 || ctx.noeud === 1
   },
   {
     id: 8,
     phase: 3,
-    title: "Le message de bienvenue",
+    title: "Le tampon de conformité",
     difficulty: "MOYEN",
-    lesson: "Une fonction, c'est un helper d'équipe : tu l'appelles, elle te rend toujours le même type de résultat.",
-    lore: "Le bot d'onboarding doit toujours dire la même phrase. Factorise-la, ne la recopie pas partout.",
-    objective: "Fais rendre <code>\"Bienvenue !\"</code> à <code>messageBienvenue()</code>.",
-    initialCode: `function messageBienvenue() {\n  // Phrase du bot\n  return "";\n}\n\nreturn messageBienvenue();`,
-    solutionCode: `function messageBienvenue() {\n  return "Bienvenue !";\n}\n\nreturn messageBienvenue();`,
-    hint: "Met return \"Bienvenue !\"; dans la fonction.",
+    lesson: "Une fonction, c'est un helper du SaaS : La Bonne Réponse l'appelle, elle rend toujours le même verdict.",
+    lore: "Le devis BTP est passé au crible. Le tampon doit sortir <code>CONFORME</code> — pas une phrase recopiée partout.",
+    objective: "Fais rendre <code>\"CONFORME\"</code> à <code>verifierConformite()</code>.",
+    initialCode: `function verifierConformite() {\n  // Verdict La Bonne Réponse\n  return "";\n}\n\nreturn verifierConformite();`,
+    solutionCode: `function verifierConformite() {\n  return "CONFORME";\n}\n\nreturn verifierConformite();`,
+    hint: "Met return \"CONFORME\"; dans la fonction.",
     rewardXP: 16,
-    check: (res) => res === "Bienvenue !"
+    check: (res) => res === "CONFORME"
   },
   {
     id: 9,
     phase: 3,
-    title: "Les heures majorées",
+    title: "L'estimation de tokens",
     difficulty: "MOYEN",
-    lesson: "Un helper avec paramètre, c'est un micro-service : tu verses n'importe quelle dose, la règle reste la même.",
-    lore: "Les heures sup sont payées double. Un seul helper doit servir pour tout le planning.",
-    objective: "<code>heuresSup(x)</code> rend le double de <code>x</code>.",
-    initialCode: `function heuresSup(x) {\n  // Majoration 200%\n  return 0;\n}\n\nreturn heuresSup(21);`,
-    solutionCode: `function heuresSup(x) {\n  return x * 2;\n}\n\nreturn heuresSup(21);`,
+    lesson: "Un helper avec paramètre, c'est un micro-service : tu verses n'importe quel volume, la règle tokens reste la même.",
+    lore: "Trust Studio estime le coût : en gros, 1 mot → 2 tokens. Un seul helper pour tout le workspace.",
+    objective: "<code>estimerTokens(x)</code> rend le double de <code>x</code>.",
+    initialCode: `function estimerTokens(x) {\n  // 1 mot ≈ 2 tokens\n  return 0;\n}\n\nreturn estimerTokens(21);`,
+    solutionCode: `function estimerTokens(x) {\n  return x * 2;\n}\n\nreturn estimerTokens(21);`,
     hint: "Fais return x * 2;",
     rewardXP: 16,
-    check: (res, ctx) => res === 42 || (typeof ctx.heuresSup === 'function' && ctx.heuresSup(10) === 20)
+    check: (res, ctx) => res === 42 || (typeof ctx.estimerTokens === 'function' && ctx.estimerTokens(10) === 20)
   },
   {
     id: 10,
     phase: 3,
-    title: "L'étiquette produit",
+    title: "La ligne du rapport IA",
     difficulty: "MOYEN",
-    lesson: "Deux paramètres, c'est deux champs d'un formulaire : le helper les assemble pour l'étiquette.",
-    lore: "L'entrepôt imprime \"Tee-shirt / M\". Un helper unique pour toutes les tailles.",
-    objective: "<code>etiquette(produit, taille)</code> rend <code>produit + \" / \" + taille</code>.",
-    initialCode: `function etiquette(produit, taille) {\n  // Ex: Tee-shirt / M\n  return "";\n}\n\nreturn etiquette("Tee-shirt", "M");`,
-    solutionCode: `function etiquette(produit, taille) {\n  return produit + " / " + taille;\n}\n\nreturn etiquette("Tee-shirt", "M");`,
-    hint: "Retourne produit + \" / \" + taille.",
+    lesson: "Deux paramètres, c'est deux champs du rapport : le helper les assemble pour le client pro.",
+    lore: "La Bonne Réponse doit sortir <code>Claude-3.5 -> Devis #884</code> dans le PDF envoyé à l'artisan.",
+    objective: "<code>formerRapport(modele, devis)</code> rend <code>modele + \" -> \" + devis</code>.",
+    initialCode: `function formerRapport(modele, devis) {\n  // Ex: Claude-3.5 -> Devis #884\n  return "";\n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
+    solutionCode: `function formerRapport(modele, devis) {\n  return modele + " -> " + devis;\n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
+    hint: "Retourne modele + \" -> \" + devis.",
     rewardXP: 16,
-    check: (res) => res === "Tee-shirt / M"
+    check: (res) => res === "Claude-3.5 -> Devis #884"
   },
   {
     id: 11,
     phase: 4,
-    title: "L'article dans le panier",
+    title: "Le modèle dans le routeur",
     difficulty: "AVANCÉ",
-    lesson: "Un tableau c'est un panier : <code>.push()</code> ajoute une ligne, sans recréer la liste.",
-    lore: "Le client clique \"Ajouter un écran\". La ligne doit atterrir à la fin du panier.",
-    objective: "Ajoute <code>\"Écran\"</code> dans <code>panier</code>.",
-    initialCode: `let panier = ["Souris", "Clavier"];\n\n// Ajoute l'écran\n\nreturn panier;`,
-    solutionCode: `let panier = ["Souris", "Clavier"];\npanier.push("Écran");\n\nreturn panier;`,
-    hint: "Écris panier.push(\"Écran\");",
+    lesson: "Un tableau c'est le catalogue de modèles : <code>.push()</code> ajoute un LLM, sans recréer la liste.",
+    lore: "Le client Pro demande Claude. Il doit atterrir à la fin du routeur à côté de GPT et Gemini.",
+    objective: "Ajoute <code>\"claude-3-5-sonnet\"</code> dans <code>modeles</code>.",
+    initialCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\n\n// Ajoute Claude au routeur\n\nreturn modeles;`,
+    solutionCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\nmodeles.push("claude-3-5-sonnet");\n\nreturn modeles;`,
+    hint: "Écris modeles.push(\"claude-3-5-sonnet\");",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.includes("Écran") && res.length === 3
+    check: (res) => Array.isArray(res) && res.includes("claude-3-5-sonnet") && res.length === 3
   },
   {
     id: 12,
     phase: 4,
-    title: "Les tickets ouverts",
+    title: "La file Energer",
     difficulty: "AVANCÉ",
-    lesson: "<code>.length</code> c'est le compteur du board Jira : pas besoin de compter à la main.",
-    lore: "Le daily demande combien de tickets sont encore ouverts. La liste est déjà là.",
-    objective: "Range le nombre de <code>tickets</code> dans <code>ouverts</code>.",
-    initialCode: `let tickets = ["Login", "Paiement", "Export", "Mentions"];\n\n// Compteur du daily\nlet ouverts = 0;\n\nreturn ouverts;`,
-    solutionCode: `let tickets = ["Login", "Paiement", "Export", "Mentions"];\nlet ouverts = tickets.length;\n\nreturn ouverts;`,
-    hint: "Utilise tickets.length.",
+    lesson: "<code>.length</code> c'est le compteur de la file d'analyse : pas besoin de compter les PDF à la main.",
+    lore: "Le daily demande combien de docs attendent dans Energer. La liste est déjà là.",
+    objective: "Range le nombre de <code>file</code> dans <code>enAttente</code>.",
+    initialCode: `let file = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\n\n// Compteur file Energer\nlet enAttente = 0;\n\nreturn enAttente;`,
+    solutionCode: `let file = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\nlet enAttente = file.length;\n\nreturn enAttente;`,
+    hint: "Utilise file.length.",
     rewardXP: 16,
     check: (res) => res === 4
   },
   {
     id: 13,
     phase: 4,
-    title: "Le ticket en haut de pile",
+    title: "Le document prioritaire",
     difficulty: "AVANCÉ",
-    lesson: "Les listes commencent à <code>0</code> : le premier ticket du backlog c'est <code>backlog[0]</code>.",
-    lore: "Le PO veut le ticket le plus haut du backlog, pas le deuxième.",
-    objective: "Sors le premier ticket dans <code>prioritaire</code>.",
-    initialCode: `let backlog = ["Paiement", "Export", "Mentions"];\n\n// Ticket à prendre maintenant\nlet prioritaire = "";\n\nreturn prioritaire;`,
-    solutionCode: `let backlog = ["Paiement", "Export", "Mentions"];\nlet prioritaire = backlog[0];\n\nreturn prioritaire;`,
-    hint: "Écris backlog[0].",
+    lesson: "Les listes commencent à <code>0</code> : le premier PDF de la file Energer c'est <code>file[0]</code>.",
+    lore: "Le contrôleur veut la facture urgente, pas le devis standard. C'est le haut de pile.",
+    objective: "Sors le premier document dans <code>prioritaire</code>.",
+    initialCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\n\n// Doc à traiter maintenant\nlet prioritaire = "";\n\nreturn prioritaire;`,
+    solutionCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\nlet prioritaire = file[0];\n\nreturn prioritaire;`,
+    hint: "Écris file[0].",
     rewardXP: 16,
-    check: (res) => res === "Paiement"
+    check: (res) => res === "Facture_Urgente.pdf"
   },
   {
     id: 14,
     phase: 4,
-    title: "Le dernier message client",
+    title: "Le dernier log de trace",
     difficulty: "AVANCÉ",
-    lesson: "Le dernier élément est à l'index <code>longueur - 1</code> — ici le 3e message, donc <code>[2]</code>.",
-    lore: "Le support doit citer le dernier message du thread, pas le premier.",
-    objective: "Range le dernier message dans <code>dernier</code>.",
-    initialCode: `let thread = ["Bonjour", "Toujours bloqué", "Merci c'est bon"];\n\n// Dernier message du client\nlet dernier = "";\n\nreturn dernier;`,
-    solutionCode: `let thread = ["Bonjour", "Toujours bloqué", "Merci c'est bon"];\nlet dernier = thread[2];\n\nreturn dernier;`,
-    hint: "Écris thread[2].",
+    lesson: "Le dernier événement Trust Studio est à l'index <code>longueur - 1</code> — ici 3 logs, donc <code>[2]</code>.",
+    lore: "L'audit demande le dernier jalon de la trace LLM, pas le prompt envoyé.",
+    objective: "Range le dernier log dans <code>dernier</code>.",
+    initialCode: `let traces = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\n\n// Dernier jalon Trust Studio\nlet dernier = "";\n\nreturn dernier;`,
+    solutionCode: `let traces = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\nlet dernier = traces[2];\n\nreturn dernier;`,
+    hint: "Écris traces[2].",
     rewardXP: 16,
-    check: (res) => res === "Merci c'est bon"
+    check: (res) => res === "CONFIDENCE_CHECKED"
   },
   {
     id: 15,
     phase: 4,
-    title: "La fiche produit",
+    title: "Le payload de la requête",
     difficulty: "AVANCÉ",
-    lesson: "Un objet <code>{ nom, prix }</code> c'est une fiche produit : chaque champ a un nom, comme en base.",
-    lore: "La card boutique est vide. Remplis le nom et le prix avant la mise en ligne.",
-    objective: "Fiche : nom <code>\"Casque\"</code>, prix <code>100</code>.",
-    initialCode: `// Fiche catalogue\nlet produit = {\n  nom: "",\n  prix: 0\n};\n\nreturn produit;`,
-    solutionCode: `let produit = {\n  nom: "Casque",\n  prix: 100\n};\n\nreturn produit;`,
-    hint: "Met nom: \"Casque\", prix: 100.",
+    lesson: "Un objet <code>{ model, tokens }</code> c'est la ligne qu'on envoie à l'API et qu'on stocke en base.",
+    lore: "Trust Studio doit logger l'appel Gemini avant de facturer le workspace.",
+    objective: "Fiche : model <code>\"gemini-3.6-flash\"</code>, tokens <code>150</code>.",
+    initialCode: `// Payload LLM\nlet payload = {\n  model: "",\n  tokens: 0\n};\n\nreturn payload;`,
+    solutionCode: `let payload = {\n  model: "gemini-3.6-flash",\n  tokens: 150\n};\n\nreturn payload;`,
+    hint: "Met model: \"gemini-3.6-flash\", tokens: 150.",
     rewardXP: 16,
-    check: (res) => typeof res === 'object' && res.nom === "Casque" && res.prix === 100
+    check: (res) => typeof res === 'object' && res.model === "gemini-3.6-flash" && res.tokens === 150
   },
   {
     id: 16,
     phase: 5,
-    title: "Payé ou relance",
+    title: "Revue humaine ou auto",
     difficulty: "AVANCÉ",
-    lesson: "<code>if</code> c'est la règle métier : si le reste à payer est 0, on clôture, sinon on relance.",
-    lore: "Le cron du soir doit taguer les factures. Zéro dû = Payé.",
-    objective: "Si <code>resteAPayer === 0</code>, dis <code>\"Payé\"</code> — sinon <code>\"Relance\"</code>.",
-    initialCode: `let resteAPayer = 0;\n\nfunction statutPaiement(montant) {\n  // if (montant === 0)\n  return "Relance";\n}\n\nreturn statutPaiement(resteAPayer);`,
-    solutionCode: `let resteAPayer = 0;\n\nfunction statutPaiement(montant) {\n  if (montant === 0) {\n    return "Payé";\n  }\n  return "Relance";\n}\n\nreturn statutPaiement(resteAPayer);`,
-    hint: "Si montant === 0 renvoie \"Payé\".",
+    lesson: "<code>if</code> c'est la règle Trust Studio : sous le seuil de confiance, un humain relit.",
+    lore: "Score à 0.55. En dessous de 0.70, on n'envoie pas la réponse toute seule au client pro.",
+    objective: "Si <code>score < 0.70</code>, dis <code>\"HUMAN_REVIEW\"</code> — sinon <code>\"AUTO_APPROVED\"</code>.",
+    initialCode: `let score = 0.55;\n\nfunction routerConfiance(s) {\n  // if (s < 0.70)\n  return "AUTO_APPROVED";\n}\n\nreturn routerConfiance(score);`,
+    solutionCode: `let score = 0.55;\n\nfunction routerConfiance(s) {\n  if (s < 0.70) {\n    return "HUMAN_REVIEW";\n  }\n  return "AUTO_APPROVED";\n}\n\nreturn routerConfiance(score);`,
+    hint: "Si s < 0.70 renvoie \"HUMAN_REVIEW\".",
     rewardXP: 16,
-    check: (res) => res === "Payé"
+    check: (res) => res === "HUMAN_REVIEW"
   },
   {
     id: 17,
     phase: 5,
-    title: "La promo week-end",
+    title: "La majoration d'usage",
     difficulty: "EXPERT",
-    lesson: "<code>.map()</code> applique une règle à chaque ligne d'un export — la liste d'origine reste intacte.",
-    lore: "Marketing double tous les points fidélité le week-end. Un passage, toutes les cartes.",
-    objective: "Double chaque solde, sans toucher à la liste d'origine.",
-    initialCode: `let points = [10, 20, 30];\n\n// Promo x2\nlet bonus = [];\n\nreturn bonus;`,
-    solutionCode: `let points = [10, 20, 30];\nlet bonus = points.map(p => p * 2);\n\nreturn bonus;`,
-    hint: "Écris points.map(p => p * 2).",
+    lesson: "<code>.map()</code> applique une règle à chaque appel — ici x2 sur les batches de tokens, la liste d'origine reste intacte.",
+    lore: "Week-end : l'inférence coûte double. Trust Studio recalcule tous les batches d'un coup.",
+    objective: "Double chaque batch, sans toucher à la liste d'origine.",
+    initialCode: `let batches = [10, 20, 30];\n\n// Majoration week-end\nlet factures = [];\n\nreturn factures;`,
+    solutionCode: `let batches = [10, 20, 30];\nlet factures = batches.map(b => b * 2);\n\nreturn factures;`,
+    hint: "Écris batches.map(b => b * 2).",
     rewardXP: 16,
     check: (res) => Array.isArray(res) && res[0] === 20 && res[1] === 40 && res[2] === 60
   },
   {
     id: 18,
     phase: 5,
-    title: "Les commandes livrables",
+    title: "Les dossiers à risque",
     difficulty: "EXPERT",
-    lesson: "<code>.filter()</code> c'est le tri d'un export : tu ne gardes que les lignes qui passent la règle.",
-    lore: "On ne prépare que les commandes à 50€ et plus. Le reste attend.",
-    objective: "Garde seulement les montants <code>≥ 50</code>.",
-    initialCode: `let commandes = [20, 80, 15, 95, 40, 60];\n\n// Commandes à préparer\nlet livrables = [];\n\nreturn livrables;`,
-    solutionCode: `let commandes = [20, 80, 15, 95, 40, 60];\nlet livrables = commandes.filter(c => c >= 50);\n\nreturn livrables;`,
-    hint: "Écris commandes.filter(c => c >= 50).",
+    lesson: "<code>.filter()</code> c'est le tri Energer : tu ne gardes que les scores de fraude qui passent le seuil.",
+    lore: "On ne sort une alerte que si le risque est à 50 ou plus. Le reste reste en fond.",
+    objective: "Garde seulement les risques <code>≥ 50</code>.",
+    initialCode: `let risques = [20, 80, 15, 95, 40, 60];\n\n// Alertes fraude Energer\nlet alertes = [];\n\nreturn alertes;`,
+    solutionCode: `let risques = [20, 80, 15, 95, 40, 60];\nlet alertes = risques.filter(r => r >= 50);\n\nreturn alertes;`,
+    hint: "Écris risques.filter(r => r >= 50).",
     rewardXP: 16,
     check: (res) => Array.isArray(res) && res.length === 3 && res.every(x => x >= 50)
   },
   {
     id: 19,
     phase: 5,
-    title: "Le chiffre du jour",
+    title: "La conso tokens du mois",
     difficulty: "EXPERT",
-    lesson: "<code>.reduce()</code> écrase un export en un seul chiffre — ici le CA, en partant de <code>0</code>.",
-    lore: "Trois ventes dans la journée. Le dashboard veut un seul total, pas trois lignes.",
-    objective: "Fais le total des ventes dans <code>ca</code>.",
-    initialCode: `let ventes = [10, 20, 30];\n\n// Chiffre d'affaires\nlet ca = 0;\n\nreturn ca;`,
-    solutionCode: `let ventes = [10, 20, 30];\nlet ca = ventes.reduce((a, b) => a + b, 0);\n\nreturn ca;`,
-    hint: "Écris ventes.reduce((a, b) => a + b, 0).",
+    lesson: "<code>.reduce()</code> écrase les appels du mois en un seul chiffre — le total qu'on facture au workspace.",
+    lore: "Trois jobs LLM cette semaine. Billing veut un seul total, pas trois lignes.",
+    objective: "Fais le total des tokens dans <code>conso</code>.",
+    initialCode: `let tokens = [10, 20, 30];\n\n// Facturation mensuelle\nlet conso = 0;\n\nreturn conso;`,
+    solutionCode: `let tokens = [10, 20, 30];\nlet conso = tokens.reduce((a, b) => a + b, 0);\n\nreturn conso;`,
+    hint: "Écris tokens.reduce((a, b) => a + b, 0).",
     rewardXP: 16,
     check: (res) => res === 60
   },
   {
     id: 20,
     phase: 6,
-    title: "File d'attente prioritaire",
+    title: "Auto-valider la réponse",
     difficulty: "EXPERT",
-    lesson: "<code>condition ? oui : non</code> c'est le badge d'un ticket : une ligne pour choisir le statut.",
-    lore: "Plus de 500 tickets ouverts : on passe le board en Prioritaire pour le weekend duty.",
-    objective: "Si <code>ouverts >= 500</code>, c'est <code>\"Prioritaire\"</code> — sinon <code>\"Normal\"</code>.",
-    initialCode: `let ouverts = 600;\n\n// Badge du board\nlet priorite = "";\n\nreturn priorite;`,
-    solutionCode: `let ouverts = 600;\nlet priorite = ouverts >= 500 ? "Prioritaire" : "Normal";\n\nreturn priorite;`,
-    hint: "Utilise ouverts >= 500 ? \"Prioritaire\" : \"Normal\".",
+    lesson: "<code>condition ? oui : non</code> c'est le routing Express : une ligne pour envoyer ou bloquer la réponse IA.",
+    lore: "Confiance à 0.90. À partir de 0.80, Trust Studio laisse passer sans revue.",
+    objective: "Si <code>confiance >= 0.8</code>, c'est <code>\"APPLICABLE\"</code> — sinon <code>\"REJETÉ\"</code>.",
+    initialCode: `let confiance = 0.9;\n\n// Décision API\nlet decision = "";\n\nreturn decision;`,
+    solutionCode: `let confiance = 0.9;\nlet decision = confiance >= 0.8 ? "APPLICABLE" : "REJETÉ";\n\nreturn decision;`,
+    hint: "Utilise confiance >= 0.8 ? \"APPLICABLE\" : \"REJETÉ\".",
     rewardXP: 16,
-    check: (res) => res === "Prioritaire"
+    check: (res) => res === "APPLICABLE"
   },
   {
     id: 21,
     phase: 6,
-    title: "La fusion des deux squads",
+    title: "La vue d'audit unique",
     difficulty: "EXPERT",
-    lesson: "<code>...</code> verse une liste dans une autre : fusion d'équipes, pas une liste dans une liste.",
-    lore: "Frontend et backend passent sur le même board pour le launch. Une seule roster.",
-    objective: "Fusionne les deux squads dans <code>equipe</code>.",
-    initialCode: `let frontend = ["Léa", "Sam"];\nlet backend = ["Noa"];\n\n// Roster unique\nlet equipe = [];\n\nreturn equipe;`,
-    solutionCode: `let frontend = ["Léa", "Sam"];\nlet backend = ["Noa"];\nlet equipe = [...frontend, ...backend];\n\nreturn equipe;`,
-    hint: "Utilise [...frontend, ...backend].",
+    lesson: "<code>...</code> verse une liste dans une autre : logs Energer + Trust Studio, une seule timeline.",
+    lore: "Le RSSI veut une vue unique. Deux flux, un journal.",
+    objective: "Fusionne les deux journaux dans <code>audit</code>.",
+    initialCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\n\n// Timeline unique\nlet audit = [];\n\nreturn audit;`,
+    solutionCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\nlet audit = [...logsEnerger, ...logsTrust];\n\nreturn audit;`,
+    hint: "Utilise [...logsEnerger, ...logsTrust].",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.length === 3 && res.includes("Noa")
+    check: (res) => Array.isArray(res) && res.length === 3 && res.includes("METRICS_SENT")
   },
   {
     id: 22,
     phase: 6,
-    title: "Le livrable de sprint",
+    title: "Le workspace Quantum of Trust",
     difficulty: "EXPERT",
-    lesson: "Un objet de livrable porte plusieurs vérités : un nom, un compteur, un drapeau <code>true</code>.",
-    lore: "La demo client est dans une heure. Signe la release : nom, 22 tickets, prêt.",
-    objective: "Signe : nom <code>Release 1.0</code>, 22 tickets, <code>pret: true</code>.",
-    initialCode: `// Livrable du sprint\nconst release = {\n  nom: "",\n  tickets: 0,\n  pret: false\n};\n\nreturn release;`,
-    solutionCode: `const release = {\n  nom: "Release 1.0",\n  tickets: 22,\n  pret: true\n};\n\nreturn release;`,
-    hint: "Met nom: \"Release 1.0\", tickets: 22, pret: true.",
+    lesson: "Un objet de livrable porte plusieurs vérités : l'entreprise, le produit, la stack, un drapeau <code>true</code>.",
+    lore: "Demo client dans une heure. Signe le workspace : Quantum of Trust, Trust Studio, prêt.",
+    objective: "Signe : entreprise Quantum of Trust, produit Trust Intelligence Studio, <code>pret: true</code>.",
+    initialCode: `// Workspace Pro\nconst workspace = {\n  entreprise: "",\n  produit: "",\n  pret: false\n};\n\nreturn workspace;`,
+    solutionCode: `const workspace = {\n  entreprise: "Quantum of Trust",\n  produit: "Trust Intelligence Studio",\n  pret: true\n};\n\nreturn workspace;`,
+    hint: "Met entreprise: \"Quantum of Trust\", produit: \"Trust Intelligence Studio\", pret: true.",
     rewardXP: 25,
-    check: (res) => typeof res === 'object' && res.nom === "Release 1.0" && res.pret === true
+    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.pret === true
   }
 ];
 
@@ -518,24 +518,25 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
   }
 
   const prevTitle = previousQuest?.title || "aucune";
-  const prompt = `Tu génères une micro-quête JavaScript TRÈS SIMPLE, directement utile au boulot (CRM, facture, panier, ticket, email, stock, badge, sprint).
-INTERDIT : alchimie, plomb, or, creuset, potions, syntaxe gratuite sans cas métier.
+  const prompt = `Tu génères une micro-quête JavaScript TRÈS SIMPLE dans le SaaS IA pro Quantum of Trust.
+Produits : Energer (docs, factures, fraude), Trust Studio (confiance LLM, tokens, traces), La Bonne Réponse (assistant BTP, devis), Pipelines IA (modèles, prompts, API), Analytics (usage, risques), Launch (workspace Pro).
+INTERDIT : alchimie, e-commerce générique, panier, stock magasin, tickets Jira hors produit, syntaxe gratuite.
 INTERDIT : recopier la quête précédente (« ${prevTitle} »).
-RÈGLE : initialCode est un TROU à compléter. Ne mets JAMAIS la solution dedans.
-RÈGLE : "lesson" = UNE phrase mentor : le concept JS + pourquoi on s'en sert en prod.
-RÈGLE : noms de variables parlants (statut, panier, facture, ticket, email, stock, prenom).
+RÈGLE : initialCode est un TROU. Ne mets JAMAIS la solution dedans.
+RÈGLE : "lesson" = UNE phrase : concept JS + pourquoi on s'en sert dans ce SaaS IA.
+RÈGLE : variables parlantes (statut, tokens, confiance, file, modele, payload, sieges, credits).
 "objective" en tutoiement, sans "Déclarez / Complétez / Calculez".
 
 Réponds STRICTEMENT en JSON :
 {
-  "title": "Titre métier (ex: La relance de facture)",
+  "title": "Titre produit (ex: Le quota tokens du workspace)",
   "storyContinuity": "",
-  "lesson": "Une phrase : concept + usage pro (ex: * sert à faire une ligne de facture : prixUnitaire * quantite).",
-  "lore": "1-2 phrases de contexte bureau (équipe, client, ticket), pas un cours.",
-  "objective": "Action courte (ex: Double la quantité pour le réassort week-end.).",
-  "initialCode": "let quantite = 25;\\n\\n// Double la quantité ici\\nlet resultat = 0;\\n\\nreturn resultat;",
-  "solutionCode": "let quantite = 25;\\nlet resultat = quantite * 2;\\nreturn resultat;",
-  "hint": "Utilise quantite * 2."
+  "lesson": "Une phrase : concept + usage dans le SaaS (ex: * double un plafond de tokens : limite * 2).",
+  "lore": "1-2 phrases de contexte produit (workspace Pro, Energer, Trust Studio), pas un cours.",
+  "objective": "Action courte (ex: Double le plafond de tokens dans nouvelleLimite.).",
+  "initialCode": "let limiteTokens = 25;\\n\\n// Double le plafond\\nlet resultat = 0;\\n\\nreturn resultat;",
+  "solutionCode": "let limiteTokens = 25;\\nlet resultat = limiteTokens * 2;\\nreturn resultat;",
+  "hint": "Utilise limiteTokens * 2."
 }`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
@@ -584,10 +585,10 @@ app.post('/api/quests/generate-saga', async (req, res) => {
     const newQuest = {
       id: questId,
       phase: nextPhase,
-      title: geminiData.title || `Ticket #${questId} : cas métier`,
+      title: geminiData.title || `Cas workspace #${questId}`,
       difficulty: "FORGÉE PAR GMI ✨",
-      lesson: geminiData.lesson || "En prod, tu changes une valeur métier, puis tu la rends avec return — c'est le même geste qu'un helper d'équipe.",
-      lore: geminiData.lore || "Un nouveau cas vient d'arriver sur le board.",
+      lesson: geminiData.lesson || "Dans un SaaS IA, tu changes une valeur métier, puis tu la rends avec return — même geste qu'un helper du workspace.",
+      lore: geminiData.lore || "Un nouveau cas arrive sur le workspace Quantum of Trust.",
       objective: geminiData.objective,
       initialCode: geminiData.initialCode,
       solutionCode: geminiData.solutionCode,
@@ -610,14 +611,14 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   const proceduralQuest = {
     id: questId,
     phase: nextPhase,
-    title: `Réassort week-end #${questId}`,
+    title: `Quota tokens #${questId}`,
     difficulty: "AUTOMATIQUE",
-    lesson: "<code>*</code> sert à une ligne de commande : <code>quantite * 2</code> double le réassort sans réécrire le chiffre.",
-    lore: "Le week-end double les ventes. Prépare le réassort avant 18h.",
-    objective: `Double la quantité <code>25</code> dans <code>resultat</code>.`,
-    initialCode: `let quantite = 25;\n\n// Réassort week-end\nlet resultat = 0;\n\nreturn resultat;`,
-    solutionCode: `let quantite = 25;\nlet resultat = quantite * 2;\n\nreturn resultat;`,
-    hint: "Fais quantite * 2.",
+    lesson: "<code>*</code> sert à un plafond SaaS : <code>limiteTokens * 2</code> double le quota du workspace Pro.",
+    lore: "Le plan Pro double le plafond Gemini pour le rush de fin de mois.",
+    objective: `Double le plafond de <code>25</code> tokens dans <code>resultat</code>.`,
+    initialCode: `let limiteTokens = 25;\n\n// Nouveau plafond workspace\nlet resultat = 0;\n\nreturn resultat;`,
+    solutionCode: `let limiteTokens = 25;\nlet resultat = limiteTokens * 2;\n\nreturn resultat;`,
+    hint: "Fais limiteTokens * 2.",
     rewardXP: 20,
     isGenerated: true,
     check: () => true
@@ -628,7 +629,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   res.json({
     success: true,
     quest: sanitized,
-    source: "Cas métier (Saga Continue)"
+    source: "Quantum of Trust (Saga Continue)"
   });
 });
 
@@ -637,8 +638,9 @@ async function callGeminiForOrbitChat({ message, quest, geminiKey }) {
   const apiKey = geminiKey || process.env.GEMINI_API_KEY || process.env.GMI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey) return null;
 
-  const prompt = `Tu es ORBIT, copilote d'une équipe produit. Tu apprends le JS comme on le parle au boulot.
-1 phrase de principe (concept + usage pro), puis l'action. Pas de "exercice / consigne / déclarez". Pas d'alchimie.
+  const prompt = `Tu es ORBIT, copilote du SaaS IA Quantum of Trust (Energer, Trust Studio, La Bonne Réponse).
+Tu apprends le JS comme on le parle dans un produit IA pour les pros.
+1 phrase de principe (concept + usage dans le SaaS), puis l'action. Pas de "exercice / consigne / déclarez". Pas d'alchimie.
 Quête actuelle #${quest?.id || 1} : "${quest?.title || 'Quête'}".
 Micro-cours : "${quest?.lesson || ''}".
 À faire : "${quest?.objective || 'Coder'}".
