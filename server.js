@@ -24,322 +24,322 @@ if (fs.existsSync(distPath)) {
 // PHASES ET QUÊTES ALCHIMIQUES (UTF-8 PROPRE & INTERACTIF)
 // ==========================================================================
 const PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "Types primitifs & Réactifs de base" },
-  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Calculs & Pesées de l'Athanor" },
-  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Incantations & Fonctions magiques" },
-  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Tableaux, Agrégats & Gemmes" },
-  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Filtres, Transformations & Logique" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "La Pierre Philosophale Suprême" }
+  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "CRM, statuts & données brutes" },
+  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Prix, stocks & calculs métier" },
+  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Helpers qu'on réutilise en équipe" },
+  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Paniers, tickets & fiches produit" },
+  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Nettoyer et transformer des données" },
+  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "Décider et livrer" }
 ];
 
 const QUESTS = [
   {
     id: 1,
     phase: 1,
-    title: "La Transmutation du Plomb",
+    title: "Le statut du prospect",
     difficulty: "FACILE",
-    lesson: "Une variable <code>let</code> est une boîte : tu y ranges un texte entre guillemets, puis tu remplaces le contenu.",
-    lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile <code>\"lead\"</code> en métal précieux <code>\"gold\"</code>.",
-    objective: "Le plomb dort dans <code>metal</code> — mets <code>\"gold\"</code> à la place.",
-    initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
-    solutionCode: `let metal = "gold";\n\nreturn metal;`,
-    hint: "Remplace simplement \"lead\" par \"gold\".",
+    lesson: "Au CRM, un statut client c'est une variable texte : tu changes le contenu, la fiche change.",
+    lore: "Léa a signé. Dans Salesforce le statut est encore <code>\"prospect\"</code> — l'équipe attend le bon badge.",
+    objective: "Passe <code>statut</code> de <code>\"prospect\"</code> à <code>\"client\"</code>.",
+    initialCode: `// Fiche CRM du jour\nlet statut = "prospect";\n\nreturn statut;`,
+    solutionCode: `let statut = "client";\n\nreturn statut;`,
+    hint: "Remplace \"prospect\" par \"client\".",
     rewardXP: 16,
-    check: (res, ctx) => res === "gold" || ctx.metal === "gold"
+    check: (res, ctx) => res === "client" || ctx.statut === "client"
   },
   {
     id: 2,
     phase: 1,
-    title: "L'Âge de l'Initié",
+    title: "Le stock à corriger",
     difficulty: "FACILE",
-    lesson: "Un nombre n'a jamais de guillemets : <code>20</code> c'est une quantité, <code>\"20\"</code> ce serait juste du texte.",
-    lore: "Tout alchimiste doit déclarer ses années d'apprentissage pour calibrer le fourneau de l'Athanor.",
-    objective: "L'âge est à <code>0</code> — passe-le à <code>20</code>.",
-    initialCode: `// Calibrez l'âge à 20\nlet age = 0;\n\nreturn age;`,
-    solutionCode: `let age = 20;\n\nreturn age;`,
-    hint: "Remplace 0 par 20 dans let age = 20;",
+    lesson: "Un stock, un prix, un délai : en prod ce sont des nombres, sans guillemets.",
+    lore: "L'inventaire affiche 0 alors que 12 casques sont rentrés ce matin. Corrige avant le brief logistique.",
+    objective: "Le <code>stock</code> est à <code>0</code> — mets-le à <code>12</code>.",
+    initialCode: `// Quantité réelle en entrepôt\nlet stock = 0;\n\nreturn stock;`,
+    solutionCode: `let stock = 12;\n\nreturn stock;`,
+    hint: "Remplace 0 par 12.",
     rewardXP: 16,
-    check: (res, ctx) => res === 20 || ctx.age === 20
+    check: (res, ctx) => res === 12 || ctx.stock === 12
   },
   {
     id: 3,
     phase: 1,
-    title: "L'Élixir d'Immortalité",
+    title: "L'email vérifié",
     difficulty: "FACILE",
-    lesson: "<code>true</code> et <code>false</code> sont les deux seuls interrupteurs du langage : allumé ou éteint, sans guillemets.",
-    lore: "La fiole rouge confère l'immortalité. Activez le sceau de vérité booléenne en passant la variable à vrai.",
-    objective: "L'interrupteur <code>isImmortal</code> est éteint — allume-le.",
-    initialCode: `// Activez le sceau d'immortalité\nlet isImmortal = false;\n\nreturn isImmortal;`,
-    solutionCode: `let isImmortal = true;\n\nreturn isImmortal;`,
-    hint: "Changez false par true.",
+    lesson: "<code>true</code> / <code>false</code> c'est le même interrupteur qu'un feature flag ou qu'un email vérifié.",
+    lore: "Le user a cliqué le lien de confirmation. Le compte reste bloqué tant que le flag est éteint.",
+    objective: "Allume <code>emailVerifie</code>.",
+    initialCode: `// Flag du compte\nlet emailVerifie = false;\n\nreturn emailVerifie;`,
+    solutionCode: `let emailVerifie = true;\n\nreturn emailVerifie;`,
+    hint: "Passe false à true.",
     rewardXP: 16,
-    check: (res, ctx) => res === true || ctx.isImmortal === true
+    check: (res, ctx) => res === true || ctx.emailVerifie === true
   },
   {
     id: 4,
     phase: 1,
-    title: "La Potion Aqua Vitae",
+    title: "Le nom sur le badge",
     difficulty: "FACILE",
-    lesson: "Deux textes se collent avec <code>+</code> : <code>\"Aqua\" + \" \" + \"Vitae\"</code> fabrique une phrase.",
-    lore: "Fusionnez les deux vapeurs sacrées <code>\"Aqua\"</code> et <code>\"Vitae\"</code> séparées par un espace.",
-    objective: "Colle <code>mot1</code> et <code>mot2</code> avec un espace dans <code>potion</code>.",
-    initialCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\n\n// Assemblez mot1 et mot2 avec un espace\nlet potion = "";\n\nreturn potion;`,
-    solutionCode: `let mot1 = "Aqua";\nlet mot2 = "Vitae";\nlet potion = mot1 + " " + mot2;\n\nreturn potion;`,
-    hint: "Utilise mot1 + \" \" + mot2 !",
+    lesson: "Prénom + nom, c'est le même <code>+</code> que pour un email de bienvenue ou un badge Slack.",
+    lore: "Le badge de la new hire est vide. Colle prénom et nom pour le slack-bot d'onboarding.",
+    objective: "Colle <code>prenom</code> et <code>nom</code> avec un espace dans <code>affichage</code>.",
+    initialCode: `let prenom = "Léa";\nlet nom = "Martin";\n\n// Nom affiché sur le badge\nlet affichage = "";\n\nreturn affichage;`,
+    solutionCode: `let prenom = "Léa";\nlet nom = "Martin";\nlet affichage = prenom + " " + nom;\n\nreturn affichage;`,
+    hint: "Utilise prenom + \" \" + nom.",
     rewardXP: 16,
-    check: (res, ctx) => res === "Aqua Vitae" || ctx.potion === "Aqua Vitae"
+    check: (res, ctx) => res === "Léa Martin" || ctx.affichage === "Léa Martin"
   },
   {
     id: 5,
     phase: 2,
-    title: "La Pesée du Soufre et du Sel",
+    title: "Le total de la commande",
     difficulty: "MOYEN",
-    lesson: "Le <code>+</code> entre deux nombres additionne vraiment : <code>soufre + sel</code> calcule, ça ne colle pas du texte.",
-    lore: "Pour stabiliser la réaction, additionnez les 10g de soufre et les 5g de sel dans le réceptacle.",
-    objective: "Verse <code>soufre</code> et <code>sel</code> dans <code>masseTotale</code>.",
-    initialCode: `let soufre = 10;\nlet sel = 5;\n\n// Faites la somme des deux réactifs\nlet masseTotale = 0;\n\nreturn masseTotale;`,
-    solutionCode: `let soufre = 10;\nlet sel = 5;\nlet masseTotale = soufre + sel;\n\nreturn masseTotale;`,
-    hint: "Additionne soufre + sel !",
+    lesson: "En caisse, <code>+</code> entre deux nombres additionne : prix + frais, jamais du texte.",
+    lore: "Le panier affiche 10€ + 5€ de livraison. Le total checkout est encore à 0.",
+    objective: "Verse <code>prix</code> et <code>frais</code> dans <code>total</code>.",
+    initialCode: `let prix = 10;\nlet frais = 5;\n\n// Total à encaisser\nlet total = 0;\n\nreturn total;`,
+    solutionCode: `let prix = 10;\nlet frais = 5;\nlet total = prix + frais;\n\nreturn total;`,
+    hint: "Additionne prix + frais.",
     rewardXP: 16,
-    check: (res, ctx) => res === 15 || ctx.masseTotale === 15
+    check: (res, ctx) => res === 15 || ctx.total === 15
   },
   {
     id: 6,
     phase: 2,
-    title: "L'Ébullition Doublée",
+    title: "La ligne de facture",
     difficulty: "MOYEN",
-    lesson: "<code>*</code> multiplie : si tu as une valeur, <code>temperature * 2</code> la double sans la réécrire à la main.",
-    lore: "Le fourneau est à 50°C. Doublez la température actuelle pour atteindre le point d'ébullition rituel.",
-    objective: "Double <code>temperature</code> dans <code>temperatureFinale</code>.",
-    initialCode: `let temperature = 50;\n\n// Doublez la température (50 * 2)\nlet temperatureFinale = 0;\n\nreturn temperatureFinale;`,
-    solutionCode: `let temperature = 50;\nlet temperatureFinale = temperature * 2;\n\nreturn temperatureFinale;`,
-    hint: "Utilise temperature * 2 !",
+    lesson: "<code>prixUnitaire * quantite</code> c'est la ligne de facture que tu calcules tous les jours.",
+    lore: "Deux licences à 50€. La ligne doit sortir toute seule, sans réécrire 100 à la main.",
+    objective: "Calcule la ligne dans <code>ligne</code>.",
+    initialCode: `let prixUnitaire = 50;\nlet quantite = 2;\n\n// Montant de la ligne\nlet ligne = 0;\n\nreturn ligne;`,
+    solutionCode: `let prixUnitaire = 50;\nlet quantite = 2;\nlet ligne = prixUnitaire * quantite;\n\nreturn ligne;`,
+    hint: "Utilise prixUnitaire * quantite.",
     rewardXP: 16,
-    check: (res, ctx) => res === 100 || ctx.temperatureFinale === 100
+    check: (res, ctx) => res === 100 || ctx.ligne === 100
   },
   {
     id: 7,
     phase: 2,
-    title: "Le Reste Sacré (Modulo)",
+    title: "Le reste de pagination",
     difficulty: "MOYEN",
-    lesson: "<code>%</code> n'est pas un pourcentage : c'est le reste après une division — <code>10 % 3</code> vaut <code>1</code>.",
-    lore: "L'opérateur modulo <code>%</code> extrait le reste d'une division rituelle. Obtenez le reste de 10 divisé par 3.",
-    objective: "Trouve ce qui reste quand tu partages 10 en 3, dans <code>reste</code>.",
-    initialCode: `// Obtenez le reste de 10 divisé par 3\nlet reste = 0;\n\nreturn reste;`,
-    solutionCode: `let reste = 10 % 3;\n\nreturn reste;`,
-    hint: "Écris 10 % 3 (le reste vaut 1).",
+    lesson: "<code>%</code> sert en prod à paginer : ce qui ne rentre pas dans la page.",
+    lore: "10 tickets, 3 par page. Combien débordent sur une page incomplète ?",
+    objective: "Range le reste de <code>10 % 3</code> dans <code>reste</code>.",
+    initialCode: `let tickets = 10;\nlet parPage = 3;\n\n// Tickets qui dépassent la dernière page pleine\nlet reste = 0;\n\nreturn reste;`,
+    solutionCode: `let tickets = 10;\nlet parPage = 3;\nlet reste = tickets % parPage;\n\nreturn reste;`,
+    hint: "Écris tickets % parPage (ça vaut 1).",
     rewardXP: 16,
     check: (res, ctx) => res === 1 || ctx.reste === 1
   },
   {
     id: 8,
     phase: 3,
-    title: "L'Incantation d'Éveil",
+    title: "Le message de bienvenue",
     difficulty: "MOYEN",
-    lesson: "Une fonction est un sort réutilisable : ce que tu <code>return</code> est ce qu'elle te rend quand tu l'appelles.",
-    lore: "Les adeptes réveillent le laboratoire en prononçant le cri magique <code>\"Eureka!\"</code>.",
-    objective: "Fais parler <code>reveiller()</code> : elle doit rendre <code>\"Eureka!\"</code>.",
-    initialCode: `function reveiller() {\n  // Écrivez le retour du cri rituel\n  return "";\n}\n\nreturn reveiller();`,
-    solutionCode: `function reveiller() {\n  return "Eureka!";\n}\n\nreturn reveiller();`,
-    hint: "Met return \"Eureka!\"; dans la fonction.",
+    lesson: "Une fonction, c'est un helper d'équipe : tu l'appelles, elle te rend toujours le même type de résultat.",
+    lore: "Le bot d'onboarding doit toujours dire la même phrase. Factorise-la, ne la recopie pas partout.",
+    objective: "Fais rendre <code>\"Bienvenue !\"</code> à <code>messageBienvenue()</code>.",
+    initialCode: `function messageBienvenue() {\n  // Phrase du bot\n  return "";\n}\n\nreturn messageBienvenue();`,
+    solutionCode: `function messageBienvenue() {\n  return "Bienvenue !";\n}\n\nreturn messageBienvenue();`,
+    hint: "Met return \"Bienvenue !\"; dans la fonction.",
     rewardXP: 16,
-    check: (res) => res === "Eureka!"
+    check: (res) => res === "Bienvenue !"
   },
   {
     id: 9,
     phase: 3,
-    title: "Le Sortilège d'Amplification",
+    title: "Les heures majorées",
     difficulty: "MOYEN",
-    lesson: "Le paramètre <code>x</code> est un trou : tu y verses n'importe quelle dose, et <code>x * 2</code> la transforme.",
-    lore: "Forgez un sortilège universel capable de doubler n'importe quelle dose de poudre d'étoile.",
-    objective: "Le sort <code>doubler(x)</code> doit rendre le double de ce qu'on lui verse.",
-    initialCode: `function doubler(x) {\n  // Retournez le double de x\n  return 0;\n}\n\nreturn doubler(21);`,
-    solutionCode: `function doubler(x) {\n  return x * 2;\n}\n\nreturn doubler(21);`,
-    hint: "Fais return x * 2; dans la fonction.",
+    lesson: "Un helper avec paramètre, c'est un micro-service : tu verses n'importe quelle dose, la règle reste la même.",
+    lore: "Les heures sup sont payées double. Un seul helper doit servir pour tout le planning.",
+    objective: "<code>heuresSup(x)</code> rend le double de <code>x</code>.",
+    initialCode: `function heuresSup(x) {\n  // Majoration 200%\n  return 0;\n}\n\nreturn heuresSup(21);`,
+    solutionCode: `function heuresSup(x) {\n  return x * 2;\n}\n\nreturn heuresSup(21);`,
+    hint: "Fais return x * 2;",
     rewardXP: 16,
-    check: (res, ctx) => res === 42 || (typeof ctx.doubler === 'function' && ctx.doubler(10) === 20)
+    check: (res, ctx) => res === 42 || (typeof ctx.heuresSup === 'function' && ctx.heuresSup(10) === 20)
   },
   {
     id: 10,
     phase: 3,
-    title: "L'Alliance des Deux Éléments",
+    title: "L'étiquette produit",
     difficulty: "MOYEN",
-    lesson: "Deux paramètres, c'est deux trous : <code>allier(a, b)</code> reçoit deux réactifs et les assemble.",
-    lore: "Associez le nom de deux éléments alchimiques avec un symbole d'union <code>\" + \"</code>.",
-    objective: "Le sort <code>allier</code> assemble deux noms avec <code>\" + \"</code> au milieu.",
-    initialCode: `function allier(a, b) {\n  // Associez a et b séparés par " + "\n  return "";\n}\n\nreturn allier("Or", "Argent");`,
-    solutionCode: `function allier(a, b) {\n  return a + " + " + b;\n}\n\nreturn allier("Or", "Argent");`,
-    hint: "Retourne a + \" + \" + b.",
+    lesson: "Deux paramètres, c'est deux champs d'un formulaire : le helper les assemble pour l'étiquette.",
+    lore: "L'entrepôt imprime \"Tee-shirt / M\". Un helper unique pour toutes les tailles.",
+    objective: "<code>etiquette(produit, taille)</code> rend <code>produit + \" / \" + taille</code>.",
+    initialCode: `function etiquette(produit, taille) {\n  // Ex: Tee-shirt / M\n  return "";\n}\n\nreturn etiquette("Tee-shirt", "M");`,
+    solutionCode: `function etiquette(produit, taille) {\n  return produit + " / " + taille;\n}\n\nreturn etiquette("Tee-shirt", "M");`,
+    hint: "Retourne produit + \" / \" + taille.",
     rewardXP: 16,
-    check: (res) => res === "Or + Argent"
+    check: (res) => res === "Tee-shirt / M"
   },
   {
     id: 11,
     phase: 4,
-    title: "La Fiole d'Ingrédients (.push)",
+    title: "L'article dans le panier",
     difficulty: "AVANCÉ",
-    lesson: "Un tableau est une fiole : <code>.push()</code> ajoute un ingrédient à la fin, sans recréer la liste.",
-    lore: "Un précieux grain de <code>\"Rubis\"</code> doit être ajouté à la fiole d'ingrédients existants.",
-    objective: "Ajoute <code>\"Rubis\"</code> dans la fiole.",
-    initialCode: `let fiole = ["Quartz", "Saphir"];\n\n// Ajoutez "Rubis" à la fiole\n\nreturn fiole;`,
-    solutionCode: `let fiole = ["Quartz", "Saphir"];\nfiole.push("Rubis");\n\nreturn fiole;`,
-    hint: "Écris fiole.push(\"Rubis\");",
+    lesson: "Un tableau c'est un panier : <code>.push()</code> ajoute une ligne, sans recréer la liste.",
+    lore: "Le client clique \"Ajouter un écran\". La ligne doit atterrir à la fin du panier.",
+    objective: "Ajoute <code>\"Écran\"</code> dans <code>panier</code>.",
+    initialCode: `let panier = ["Souris", "Clavier"];\n\n// Ajoute l'écran\n\nreturn panier;`,
+    solutionCode: `let panier = ["Souris", "Clavier"];\npanier.push("Écran");\n\nreturn panier;`,
+    hint: "Écris panier.push(\"Écran\");",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.includes("Rubis") && res.length === 3
+    check: (res) => Array.isArray(res) && res.includes("Écran") && res.length === 3
   },
   {
     id: 12,
     phase: 4,
-    title: "Le Dénombrement des Réactifs (.length)",
+    title: "Les tickets ouverts",
     difficulty: "AVANCÉ",
-    lesson: "<code>.length</code> compte les cases d'une liste — pas besoin de les dénombrer à la main.",
-    lore: "Mesurez le nombre exact d'ingrédients présents dans l'athanor à l'aide de la propriété <code>.length</code>.",
-    objective: "Compte ce qu'il y a dans <code>reactifs</code>, et range-le dans <code>compte</code>.",
-    initialCode: `let reactifs = ["Mercure", "Soufre", "Sel", "Or"];\n\n// Comptez le nombre de réactifs\nlet compte = 0;\n\nreturn compte;`,
-    solutionCode: `let reactifs = ["Mercure", "Soufre", "Sel", "Or"];\nlet compte = reactifs.length;\n\nreturn compte;`,
-    hint: "Utilise reactifs.length.",
+    lesson: "<code>.length</code> c'est le compteur du board Jira : pas besoin de compter à la main.",
+    lore: "Le daily demande combien de tickets sont encore ouverts. La liste est déjà là.",
+    objective: "Range le nombre de <code>tickets</code> dans <code>ouverts</code>.",
+    initialCode: `let tickets = ["Login", "Paiement", "Export", "Mentions"];\n\n// Compteur du daily\nlet ouverts = 0;\n\nreturn ouverts;`,
+    solutionCode: `let tickets = ["Login", "Paiement", "Export", "Mentions"];\nlet ouverts = tickets.length;\n\nreturn ouverts;`,
+    hint: "Utilise tickets.length.",
     rewardXP: 16,
     check: (res) => res === 4
   },
   {
     id: 13,
     phase: 4,
-    title: "L'Extraction du Premier Métal",
+    title: "Le ticket en haut de pile",
     difficulty: "AVANCÉ",
-    lesson: "Les listes commencent à <code>0</code> : le premier élément est <code>coffre[0]</code>, pas <code>coffre[1]</code>.",
-    lore: "Extrayez le tout premier élément du coffre alchimique à l'index <code>0</code>.",
-    objective: "Sors le premier métal du coffre dans <code>premier</code>.",
-    initialCode: `let coffre = ["Or", "Argent", "Cuivre"];\n\n// Récupérez l'élément à l'index 0\nlet premier = "";\n\nreturn premier;`,
-    solutionCode: `let coffre = ["Or", "Argent", "Cuivre"];\nlet premier = coffre[0];\n\nreturn premier;`,
-    hint: "Écris coffre[0].",
+    lesson: "Les listes commencent à <code>0</code> : le premier ticket du backlog c'est <code>backlog[0]</code>.",
+    lore: "Le PO veut le ticket le plus haut du backlog, pas le deuxième.",
+    objective: "Sors le premier ticket dans <code>prioritaire</code>.",
+    initialCode: `let backlog = ["Paiement", "Export", "Mentions"];\n\n// Ticket à prendre maintenant\nlet prioritaire = "";\n\nreturn prioritaire;`,
+    solutionCode: `let backlog = ["Paiement", "Export", "Mentions"];\nlet prioritaire = backlog[0];\n\nreturn prioritaire;`,
+    hint: "Écris backlog[0].",
     rewardXP: 16,
-    check: (res) => res === "Or"
+    check: (res) => res === "Paiement"
   },
   {
     id: 14,
     phase: 4,
-    title: "Le Sceau du Dernier Élément",
+    title: "Le dernier message client",
     difficulty: "AVANCÉ",
-    lesson: "Le dernier élément est à l'index <code>longueur - 1</code> — ici <code>elements[2]</code>, car il y a 3 cases.",
-    lore: "Extrayez le dernier élément de la collection <code>[\"Feu\", \"Eau\", \"Air\"]</code> à l'index <code>2</code>.",
-    objective: "Sors le dernier élément de la collection dans <code>dernier</code>.",
-    initialCode: `let elements = ["Feu", "Eau", "Air"];\n\n// Récupérez l'élément à l'index 2\nlet dernier = "";\n\nreturn dernier;`,
-    solutionCode: `let elements = ["Feu", "Eau", "Air"];\nlet dernier = elements[2];\n\nreturn dernier;`,
-    hint: "Écris elements[2].",
+    lesson: "Le dernier élément est à l'index <code>longueur - 1</code> — ici le 3e message, donc <code>[2]</code>.",
+    lore: "Le support doit citer le dernier message du thread, pas le premier.",
+    objective: "Range le dernier message dans <code>dernier</code>.",
+    initialCode: `let thread = ["Bonjour", "Toujours bloqué", "Merci c'est bon"];\n\n// Dernier message du client\nlet dernier = "";\n\nreturn dernier;`,
+    solutionCode: `let thread = ["Bonjour", "Toujours bloqué", "Merci c'est bon"];\nlet dernier = thread[2];\n\nreturn dernier;`,
+    hint: "Écris thread[2].",
     rewardXP: 16,
-    check: (res) => res === "Air"
+    check: (res) => res === "Merci c'est bon"
   },
   {
     id: 15,
     phase: 4,
-    title: "Le Répertoire Alchimique (Objet)",
+    title: "La fiche produit",
     difficulty: "AVANCÉ",
-    lesson: "Un objet <code>{ nom, valeur }</code> est une fiche : chaque propriété a un nom et un contenu.",
-    lore: "Définissez un objet d'artefact avec son nom et sa valeur en carats.",
-    objective: "Remplis la fiche : nom <code>\"Émeraude\"</code>, valeur <code>100</code>.",
-    initialCode: `// Complétez l'objet artefact\nlet artefact = {\n  nom: "",\n  valeur: 0\n};\n\nreturn artefact;`,
-    solutionCode: `let artefact = {\n  nom: "Émeraude",\n  valeur: 100\n};\n\nreturn artefact;`,
-    hint: "Met nom: \"Émeraude\", valeur: 100.",
+    lesson: "Un objet <code>{ nom, prix }</code> c'est une fiche produit : chaque champ a un nom, comme en base.",
+    lore: "La card boutique est vide. Remplis le nom et le prix avant la mise en ligne.",
+    objective: "Fiche : nom <code>\"Casque\"</code>, prix <code>100</code>.",
+    initialCode: `// Fiche catalogue\nlet produit = {\n  nom: "",\n  prix: 0\n};\n\nreturn produit;`,
+    solutionCode: `let produit = {\n  nom: "Casque",\n  prix: 100\n};\n\nreturn produit;`,
+    hint: "Met nom: \"Casque\", prix: 100.",
     rewardXP: 16,
-    check: (res) => typeof res === 'object' && res.nom === "Émeraude" && res.valeur === 100
+    check: (res) => typeof res === 'object' && res.nom === "Casque" && res.prix === 100
   },
   {
     id: 16,
     phase: 5,
-    title: "Le Rituel de Vérification (Condition IF)",
+    title: "Payé ou relance",
     difficulty: "AVANCÉ",
-    lesson: "<code>if</code> pose une question : si c'est vrai tu prends un chemin, sinon tu prends l'autre.",
-    lore: "Si la pureté est égale à 100, la réaction est parfaite.",
-    objective: "Si c'est <code>100</code>, dis <code>\"Succès\"</code> — sinon <code>\"Échec\"</code>.",
-    initialCode: `let purete = 100;\n\nfunction tester(valeur) {\n  // Écrivez le if (valeur === 100)\n  return "Échec";\n}\n\nreturn tester(purete);`,
-    solutionCode: `let purete = 100;\n\nfunction tester(valeur) {\n  if (valeur === 100) {\n    return "Succès";\n  }\n  return "Échec";\n}\n\nreturn tester(purete);`,
-    hint: "Si valeur === 100 renvoie \"Succès\".",
+    lesson: "<code>if</code> c'est la règle métier : si le reste à payer est 0, on clôture, sinon on relance.",
+    lore: "Le cron du soir doit taguer les factures. Zéro dû = Payé.",
+    objective: "Si <code>resteAPayer === 0</code>, dis <code>\"Payé\"</code> — sinon <code>\"Relance\"</code>.",
+    initialCode: `let resteAPayer = 0;\n\nfunction statutPaiement(montant) {\n  // if (montant === 0)\n  return "Relance";\n}\n\nreturn statutPaiement(resteAPayer);`,
+    solutionCode: `let resteAPayer = 0;\n\nfunction statutPaiement(montant) {\n  if (montant === 0) {\n    return "Payé";\n  }\n  return "Relance";\n}\n\nreturn statutPaiement(resteAPayer);`,
+    hint: "Si montant === 0 renvoie \"Payé\".",
     rewardXP: 16,
-    check: (res) => res === "Succès"
+    check: (res) => res === "Payé"
   },
   {
     id: 17,
     phase: 5,
-    title: "La Multiplication des Pépites (.map)",
+    title: "La promo week-end",
     difficulty: "EXPERT",
-    lesson: "<code>.map()</code> passe sur chaque élément et en fabrique un nouveau — la liste d'origine reste intacte.",
-    lore: "La méthode <code>.map()</code> transforme chaque élément d'un tableau.",
-    objective: "Double chaque pépite, sans toucher à la liste d'origine.",
-    initialCode: `let pepites = [10, 20, 30];\n\n// Doublez chaque pépite avec .map(p => p * 2)\nlet enrichies = [];\n\nreturn enrichies;`,
-    solutionCode: `let pepites = [10, 20, 30];\nlet enrichies = pepites.map(p => p * 2);\n\nreturn enrichies;`,
-    hint: "Écris pepites.map(p => p * 2).",
+    lesson: "<code>.map()</code> applique une règle à chaque ligne d'un export — la liste d'origine reste intacte.",
+    lore: "Marketing double tous les points fidélité le week-end. Un passage, toutes les cartes.",
+    objective: "Double chaque solde, sans toucher à la liste d'origine.",
+    initialCode: `let points = [10, 20, 30];\n\n// Promo x2\nlet bonus = [];\n\nreturn bonus;`,
+    solutionCode: `let points = [10, 20, 30];\nlet bonus = points.map(p => p * 2);\n\nreturn bonus;`,
+    hint: "Écris points.map(p => p * 2).",
     rewardXP: 16,
     check: (res) => Array.isArray(res) && res[0] === 20 && res[1] === 40 && res[2] === 60
   },
   {
     id: 18,
     phase: 5,
-    title: "Le Filtrage des Impuretés (.filter)",
+    title: "Les commandes livrables",
     difficulty: "EXPERT",
-    lesson: "<code>.filter()</code> ne garde que ce qui passe le test : le reste disparaît de la nouvelle liste.",
-    lore: "La méthode <code>.filter()</code> ne conserve que les éléments respectant une condition.",
-    objective: "Garde seulement ce qui est assez pur (<code>≥ 50</code>).",
-    initialCode: `let puretes = [20, 80, 15, 95, 40, 60];\n\n// Filtrez pour garder >= 50\nlet nobles = [];\n\nreturn nobles;`,
-    solutionCode: `let puretes = [20, 80, 15, 95, 40, 60];\nlet nobles = puretes.filter(p => p >= 50);\n\nreturn nobles;`,
-    hint: "Écris puretes.filter(p => p >= 50).",
+    lesson: "<code>.filter()</code> c'est le tri d'un export : tu ne gardes que les lignes qui passent la règle.",
+    lore: "On ne prépare que les commandes à 50€ et plus. Le reste attend.",
+    objective: "Garde seulement les montants <code>≥ 50</code>.",
+    initialCode: `let commandes = [20, 80, 15, 95, 40, 60];\n\n// Commandes à préparer\nlet livrables = [];\n\nreturn livrables;`,
+    solutionCode: `let commandes = [20, 80, 15, 95, 40, 60];\nlet livrables = commandes.filter(c => c >= 50);\n\nreturn livrables;`,
+    hint: "Écris commandes.filter(c => c >= 50).",
     rewardXP: 16,
     check: (res) => Array.isArray(res) && res.length === 3 && res.every(x => x >= 50)
   },
   {
     id: 19,
     phase: 5,
-    title: "La Somme des Réactifs (.reduce)",
+    title: "Le chiffre du jour",
     difficulty: "EXPERT",
-    lesson: "<code>.reduce()</code> écrase toute la liste en une seule valeur — ici, une somme qui part de <code>0</code>.",
-    lore: "Additionnez toute la masse des métaux purs <code>[10, 20, 30]</code> pour obtenir la masse totale <code>60</code>.",
-    objective: "Fais fondre toute la liste en une seule somme.",
-    initialCode: `let masses = [10, 20, 30];\n\n// Additionnez les masses\nlet somme = 0;\n\nreturn somme;`,
-    solutionCode: `let masses = [10, 20, 30];\nlet somme = masses.reduce((a, b) => a + b, 0);\n\nreturn somme;`,
-    hint: "Écris masses.reduce((a, b) => a + b, 0).",
+    lesson: "<code>.reduce()</code> écrase un export en un seul chiffre — ici le CA, en partant de <code>0</code>.",
+    lore: "Trois ventes dans la journée. Le dashboard veut un seul total, pas trois lignes.",
+    objective: "Fais le total des ventes dans <code>ca</code>.",
+    initialCode: `let ventes = [10, 20, 30];\n\n// Chiffre d'affaires\nlet ca = 0;\n\nreturn ca;`,
+    solutionCode: `let ventes = [10, 20, 30];\nlet ca = ventes.reduce((a, b) => a + b, 0);\n\nreturn ca;`,
+    hint: "Écris ventes.reduce((a, b) => a + b, 0).",
     rewardXP: 16,
     check: (res) => res === 60
   },
   {
     id: 20,
     phase: 6,
-    title: "La Fusion Thermique (Ternaire)",
+    title: "File d'attente prioritaire",
     difficulty: "EXPERT",
-    lesson: "<code>condition ? oui : non</code> est un <code>if</code> en une ligne : tu choisis une valeur selon un test.",
-    lore: "Si la température est supérieure ou égale à 500, la fusion s'enclenche.",
-    objective: "Si ça dépasse 500°, c'est <code>\"Fusion!\"</code> — sinon on attend.",
-    initialCode: `let degres = 600;\n\n// Écrivez l'expression ternaire (degres >= 500 ? "Fusion!" : "En attente")\nlet etat = "";\n\nreturn etat;`,
-    solutionCode: `let degres = 600;\nlet etat = degres >= 500 ? "Fusion!" : "En attente";\n\nreturn etat;`,
-    hint: "Utilise degres >= 500 ? \"Fusion!\" : \"En attente\".",
+    lesson: "<code>condition ? oui : non</code> c'est le badge d'un ticket : une ligne pour choisir le statut.",
+    lore: "Plus de 500 tickets ouverts : on passe le board en Prioritaire pour le weekend duty.",
+    objective: "Si <code>ouverts >= 500</code>, c'est <code>\"Prioritaire\"</code> — sinon <code>\"Normal\"</code>.",
+    initialCode: `let ouverts = 600;\n\n// Badge du board\nlet priorite = "";\n\nreturn priorite;`,
+    solutionCode: `let ouverts = 600;\nlet priorite = ouverts >= 500 ? "Prioritaire" : "Normal";\n\nreturn priorite;`,
+    hint: "Utilise ouverts >= 500 ? \"Prioritaire\" : \"Normal\".",
     rewardXP: 16,
-    check: (res) => res === "Fusion!"
+    check: (res) => res === "Prioritaire"
   },
   {
     id: 21,
     phase: 6,
-    title: "La Quintessence des Éléments (Spread)",
+    title: "La fusion des deux squads",
     difficulty: "EXPERT",
-    lesson: "<code>...</code> ouvre une liste et verse son contenu dans une autre — c'est une fusion, pas un imbriquement.",
-    lore: "Rassemblez les 3 éléments primordiaux dans un réceptacle unique avec l'opérateur spread <code>...</code>.",
-    objective: "Verse les deux listes dans un seul réceptacle.",
-    initialCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\n\n// Fusionnez les deux tableaux\nlet quintessence = [];\n\nreturn quintessence;`,
-    solutionCode: `let el1 = ["Terre", "Eau"];\nlet el2 = ["Feu"];\nlet quintessence = [...el1, ...el2];\n\nreturn quintessence;`,
-    hint: "Utilise [...el1, ...el2].",
+    lesson: "<code>...</code> verse une liste dans une autre : fusion d'équipes, pas une liste dans une liste.",
+    lore: "Frontend et backend passent sur le même board pour le launch. Une seule roster.",
+    objective: "Fusionne les deux squads dans <code>equipe</code>.",
+    initialCode: `let frontend = ["Léa", "Sam"];\nlet backend = ["Noa"];\n\n// Roster unique\nlet equipe = [];\n\nreturn equipe;`,
+    solutionCode: `let frontend = ["Léa", "Sam"];\nlet backend = ["Noa"];\nlet equipe = [...frontend, ...backend];\n\nreturn equipe;`,
+    hint: "Utilise [...frontend, ...backend].",
     rewardXP: 16,
-    check: (res) => Array.isArray(res) && res.length === 3 && res.includes("Feu")
+    check: (res) => Array.isArray(res) && res.length === 3 && res.includes("Noa")
   },
   {
     id: 22,
     phase: 6,
-    title: "La Pierre Philosophale (Opus Magnum)",
+    title: "Le livrable de sprint",
     difficulty: "EXPERT",
-    lesson: "Un objet peut porter plusieurs vérités à la fois : un nom, un compteur, un drapeau <code>true</code>.",
-    lore: "L'ultime transmutation ! Forgez l'artefact suprême de l'Alchimiste du Code.",
-    objective: "Signe l'artefact : nom Pierre Philosophale, 22 transmutations, accompli.",
-    initialCode: `// Complétez l'Artefact Suprême\nconst OpusMagnum = {\n  nom: "",\n  transmutations: 0,\n  accompli: false\n};\n\nreturn OpusMagnum;`,
-    solutionCode: `const OpusMagnum = {\n  nom: "Pierre Philosophale",\n  transmutations: 22,\n  accompli: true\n};\n\nreturn OpusMagnum;`,
-    hint: "Met nom: \"Pierre Philosophale\", transmutations: 22, accompli: true.",
+    lesson: "Un objet de livrable porte plusieurs vérités : un nom, un compteur, un drapeau <code>true</code>.",
+    lore: "La demo client est dans une heure. Signe la release : nom, 22 tickets, prêt.",
+    objective: "Signe : nom <code>Release 1.0</code>, 22 tickets, <code>pret: true</code>.",
+    initialCode: `// Livrable du sprint\nconst release = {\n  nom: "",\n  tickets: 0,\n  pret: false\n};\n\nreturn release;`,
+    solutionCode: `const release = {\n  nom: "Release 1.0",\n  tickets: 22,\n  pret: true\n};\n\nreturn release;`,
+    hint: "Met nom: \"Release 1.0\", tickets: 22, pret: true.",
     rewardXP: 25,
-    check: (res) => typeof res === 'object' && res.nom === "Pierre Philosophale" && res.accompli === true
+    check: (res) => typeof res === 'object' && res.nom === "Release 1.0" && res.pret === true
   }
 ];
 
@@ -517,21 +517,25 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
     await sleep(MIN_GEMINI_INTERVAL_MS - timeSinceLastCall);
   }
 
-  const prompt = `Génère une micro-quête JavaScript TRÈS SIMPLE à trous sur l'alchimie du code.
-RÈGLE OBLIGATOIRE : initialCode DOIT ÊTRE UN EXERCICE À COMPLÉTER PAR LE JOUEUR (ex: let mercure = 50; return mercure;). Ne mets JAMAIS la solution dans initialCode !
-RÈGLE PÉDAGOGIE : "lesson" est UN micro-cours d'une seule phrase qui enseigne le concept JS AVANT le défi — pas une consigne scolaire, pas un énoncé d'exercice. Ton de mentor : on comprend l'idée, puis on joue.
-"objective" est l'action à faire, en tutoiement, sans "Déclarez / Complétez / Calculez".
+  const prevTitle = previousQuest?.title || "aucune";
+  const prompt = `Tu génères une micro-quête JavaScript TRÈS SIMPLE, directement utile au boulot (CRM, facture, panier, ticket, email, stock, badge, sprint).
+INTERDIT : alchimie, plomb, or, creuset, potions, syntaxe gratuite sans cas métier.
+INTERDIT : recopier la quête précédente (« ${prevTitle} »).
+RÈGLE : initialCode est un TROU à compléter. Ne mets JAMAIS la solution dedans.
+RÈGLE : "lesson" = UNE phrase mentor : le concept JS + pourquoi on s'en sert en prod.
+RÈGLE : noms de variables parlants (statut, panier, facture, ticket, email, stock, prenom).
+"objective" en tutoiement, sans "Déclarez / Complétez / Calculez".
 
 Réponds STRICTEMENT en JSON :
 {
-  "title": "Titre captivant (ex: L'Éveil du Mercure Volatil)",
+  "title": "Titre métier (ex: La relance de facture)",
   "storyContinuity": "",
-  "lesson": "Une seule phrase qui enseigne le concept (ex: * multiplie : temperature * 2 double une valeur sans la réécrire à la main.).",
-  "lore": "Un court récit alchimique captivant et immersif (1-2 phrases).",
-  "objective": "Action courte en tutoiement (ex: Double mercure dans le creuset.).",
-  "initialCode": "let mercure = 50;\\n\\n// Multipliez mercure par 2 ici\\n\\nreturn mercure;",
-  "solutionCode": "let mercure = 50;\\nmercure = mercure * 2;\\nreturn mercure;",
-  "hint": "Utilise * 2 pour doubler la valeur."
+  "lesson": "Une phrase : concept + usage pro (ex: * sert à faire une ligne de facture : prixUnitaire * quantite).",
+  "lore": "1-2 phrases de contexte bureau (équipe, client, ticket), pas un cours.",
+  "objective": "Action courte (ex: Double la quantité pour le réassort week-end.).",
+  "initialCode": "let quantite = 25;\\n\\n// Double la quantité ici\\nlet resultat = 0;\\n\\nreturn resultat;",
+  "solutionCode": "let quantite = 25;\\nlet resultat = quantite * 2;\\nreturn resultat;",
+  "hint": "Utilise quantite * 2."
 }`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
@@ -580,10 +584,10 @@ app.post('/api/quests/generate-saga', async (req, res) => {
     const newQuest = {
       id: questId,
       phase: nextPhase,
-      title: geminiData.title || `Chapitre #${questId} : Les Secrets de l'Athanor`,
+      title: geminiData.title || `Ticket #${questId} : cas métier`,
       difficulty: "FORGÉE PAR GMI ✨",
-      lesson: geminiData.lesson || "En JavaScript, tu changes une valeur, puis tu la rends avec return — c'est ça, une transmutation.",
-      lore: geminiData.lore || "Une nouvelle transmutation alchimique commence.",
+      lesson: geminiData.lesson || "En prod, tu changes une valeur métier, puis tu la rends avec return — c'est le même geste qu'un helper d'équipe.",
+      lore: geminiData.lore || "Un nouveau cas vient d'arriver sur le board.",
       objective: geminiData.objective,
       initialCode: geminiData.initialCode,
       solutionCode: geminiData.solutionCode,
@@ -606,14 +610,14 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   const proceduralQuest = {
     id: questId,
     phase: nextPhase,
-    title: `La Transmutation #${questId}`,
+    title: `Réassort week-end #${questId}`,
     difficulty: "AUTOMATIQUE",
-    lesson: "<code>*</code> multiplie : si tu as une valeur, <code>dose * 2</code> la double sans la réécrire à la main.",
-    lore: "L'Athanor exige une nouvelle pesée d'ingrédients.",
-    objective: `Double la dose de <code>25</code> dans <code>resultat</code>.`,
-    initialCode: `let dose = 25;\n\n// Doublez la dose\nlet resultat = 0;\n\nreturn resultat;`,
-    solutionCode: `let dose = 25;\nlet resultat = dose * 2;\n\nreturn resultat;`,
-    hint: "Fais dose * 2 !",
+    lesson: "<code>*</code> sert à une ligne de commande : <code>quantite * 2</code> double le réassort sans réécrire le chiffre.",
+    lore: "Le week-end double les ventes. Prépare le réassort avant 18h.",
+    objective: `Double la quantité <code>25</code> dans <code>resultat</code>.`,
+    initialCode: `let quantite = 25;\n\n// Réassort week-end\nlet resultat = 0;\n\nreturn resultat;`,
+    solutionCode: `let quantite = 25;\nlet resultat = quantite * 2;\n\nreturn resultat;`,
+    hint: "Fais quantite * 2.",
     rewardXP: 20,
     isGenerated: true,
     check: () => true
@@ -624,7 +628,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   res.json({
     success: true,
     quest: sanitized,
-    source: "Athanor Alchimique (Saga Continue)"
+    source: "Cas métier (Saga Continue)"
   });
 });
 
@@ -633,16 +637,16 @@ async function callGeminiForOrbitChat({ message, quest, geminiKey }) {
   const apiKey = geminiKey || process.env.GEMINI_API_KEY || process.env.GMI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey) return null;
 
-  const prompt = `Tu es ORBIT, l'Homunculus Alchimique et copilote IA de l'alchimiste dans le Grand Œuvre du Code.
-Tu enseignes comme un mentor, jamais comme un prof : 1 phrase de principe, puis l'action. Pas de "exercice / consigne / déclarez".
+  const prompt = `Tu es ORBIT, copilote d'une équipe produit. Tu apprends le JS comme on le parle au boulot.
+1 phrase de principe (concept + usage pro), puis l'action. Pas de "exercice / consigne / déclarez". Pas d'alchimie.
 Quête actuelle #${quest?.id || 1} : "${quest?.title || 'Quête'}".
 Micro-cours : "${quest?.lesson || ''}".
-À faire : "${quest?.objective || 'Transmuter'}".
+À faire : "${quest?.objective || 'Coder'}".
 Indice : "${quest?.hint || 'Vérifie le code'}".
 
-Question de l'alchimiste : "${message}"
+Question : "${message}"
 
-Réponds de manière concise (2 phrases max), bienveillante, mystique et très utile. Commence par le principe si on te demande de l'aide.`;
+Réponds en 2 phrases max, concret, utile. Si on demande de l'aide, commence par le principe.`;
 
   try {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;

@@ -111,12 +111,12 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Calcination", symbol: "🜍" },
-  { id: 2, name: "Distillation", symbol: "🜔" },
-  { id: 3, name: "Formules", symbol: "🜛" },
-  { id: 4, name: "Fioles", symbol: "🜁" },
-  { id: 5, name: "Rituels", symbol: "🜃" },
-  { id: 6, name: "Grand Œuvre", symbol: "🝤" }
+  { id: 1, name: "Calcination", symbol: "🜍", subtitle: "CRM, statuts & données brutes" },
+  { id: 2, name: "Distillation", symbol: "🜔", subtitle: "Prix, stocks & calculs métier" },
+  { id: 3, name: "Formules", symbol: "🜛", subtitle: "Helpers qu'on réutilise en équipe" },
+  { id: 4, name: "Fioles", symbol: "🜁", subtitle: "Paniers, tickets & fiches produit" },
+  { id: 5, name: "Rituels", symbol: "🜃", subtitle: "Nettoyer et transformer des données" },
+  { id: 6, name: "Grand Œuvre", symbol: "🝤", subtitle: "Décider et livrer" }
 ];
 
 const getRankTitle = (xp) => {
@@ -130,14 +130,14 @@ const getRankTitle = (xp) => {
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "La Transmutation du Plomb",
+  title: "Le statut du prospect",
   difficulty: "FACILE",
-  lesson: "Une variable <code>let</code> est une boîte : tu y ranges un texte entre guillemets, puis tu remplaces le contenu.",
-  lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile \"lead\" en métal précieux \"gold\".",
-  objective: "Le plomb dort dans <code>metal</code> — mets <code>\"gold\"</code> à la place.",
-  initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
-  solutionCode: `let metal = "gold";\n\nreturn metal;`,
-  hint: "Remplace simplement \"lead\" par \"gold\".",
+  lesson: "Au CRM, un statut client c'est une variable texte : tu changes le contenu, la fiche change.",
+  lore: "Léa a signé. Dans Salesforce le statut est encore \"prospect\" — l'équipe attend le bon badge.",
+  objective: "Passe <code>statut</code> de <code>\"prospect\"</code> à <code>\"client\"</code>.",
+  initialCode: `// Fiche CRM du jour\nlet statut = "prospect";\n\nreturn statut;`,
+  solutionCode: `let statut = "client";\n\nreturn statut;`,
+  hint: "Remplace \"prospect\" par \"client\".",
   rewardXP: 16
 };
 
@@ -167,8 +167,10 @@ export default function App() {
   // Ergonomie mobile : Récit accordéon, copie et enchaînement
   const [loreOpen, setLoreOpen] = useState(false);
   const [lastSuccess, setLastSuccess] = useState(null);
+  const [readyQuest, setReadyQuest] = useState(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const [phaseFilter, setPhaseFilter] = useState(null);
+  const activeQuestIdRef = useRef(INITIAL_QUEST.id);
 
   // Compte et parcours alchimiste
   const [currentUser, setCurrentUser] = useState(null);
@@ -185,7 +187,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Bienvenue dans l\'Athanor. Je suis ORBIT : je te glisse le principe en une phrase, puis tu transmutes. Lis le micro-cours avant de toucher au creuset.' }
+    { sender: 'bot', text: 'Salut. Je suis ORBIT. On apprend le JS comme on le parle en équipe : un principe, puis un vrai cas (CRM, facture, ticket). Lis le micro-cours, puis code.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -289,10 +291,12 @@ export default function App() {
 
   const selectQuest = (q) => {
     setActiveQuest(q);
+    activeQuestIdRef.current = q.id;
     setCode(q.initialCode);
     setMobileTab(0); // Bascule automatiquement sur l'onglet Éditeur sur mobile
     setLastSuccess(null);
     setLoreOpen(false);
+    setReadyQuest((pending) => (pending && pending.id === q.id ? null : pending));
     addTerminal('sys', `Quête #${q.id} active : ${q.title}`);
     
     setTimeout(() => {
@@ -345,7 +349,7 @@ export default function App() {
     });
 
     // Mots-clés courants alchimiques et JavaScript
-    ['metal', 'lead', 'gold', 'true', 'false', 'age', 'mot1', 'mot2', 'potion', 'soufre', 'sel', 'masseTotale', 'temperature', 'return'].forEach(kw => {
+    ['statut', 'prospect', 'client', 'true', 'false', 'prenom', 'nom', 'panier', 'stock', 'facture', 'ticket', 'return'].forEach(kw => {
       if (rawText.includes(kw)) set.add(kw);
     });
 
@@ -414,9 +418,19 @@ export default function App() {
     }
   };
 
+  const ingestGeneratedQuest = (quest) => {
+    setQuests(prev => {
+      if (prev.some(q => q.id === quest.id)) return prev;
+      return [...prev, quest];
+    });
+    setReadyQuest(quest);
+    addTerminal('ok', `Nouveau défi prêt dans le grimoire : #${quest.id} ${quest.title}`);
+    setSnackbar({ open: true, message: `Nouveau défi prêt : ${quest.title}`, severity: 'info' });
+  };
+
   const triggerSagaGeneration = async (completedId) => {
     setIsForging(true);
-    addTerminal('sys', 'Forge du chapitre suivant...');
+    addTerminal('sys', 'Préparation du prochain cas métier...');
     try {
       const res = await fetch('/api/quests/generate-saga', {
         method: 'POST',
@@ -425,12 +439,7 @@ export default function App() {
       });
       const data = await res.json();
       if (data.success && data.quest) {
-        setQuests(prev => {
-          if (prev.some(q => q.id === data.quest.id)) return prev;
-          return [...prev, data.quest];
-        });
-        addTerminal('ok', `✨ Chapitre #${data.quest.id} forgé : ${data.quest.title}`);
-        selectQuest(data.quest);
+        ingestGeneratedQuest(data.quest);
       }
     } catch (err) {} finally {
       setIsForging(false);
@@ -438,6 +447,7 @@ export default function App() {
   };
 
   const handleManualForge = async () => {
+    const forgedFromId = activeQuest.id;
     setIsForging(true);
     try {
       const res = await fetch('/api/quests/generate-saga', {
@@ -447,9 +457,13 @@ export default function App() {
       });
       const data = await res.json();
       if (data.success && data.quest) {
-        setQuests(prev => [...prev, data.quest]);
-        selectQuest(data.quest);
-        setSnackbar({ open: true, message: 'Nouvelle quête créée !', severity: 'info' });
+        if (activeQuestIdRef.current === forgedFromId) {
+          setQuests(prev => (prev.some(q => q.id === data.quest.id) ? prev : [...prev, data.quest]));
+          selectQuest(data.quest);
+          setSnackbar({ open: true, message: 'Nouveau cas métier ouvert.', severity: 'info' });
+        } else {
+          ingestGeneratedQuest(data.quest);
+        }
       }
     } catch (err) {} finally {
       setIsForging(false);
@@ -823,28 +837,62 @@ export default function App() {
                   <CheckCircle sx={{ color: '#F59E0B', fontSize: 24 }} />
                   <Box>
                     <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", color: '#FBBF24', fontWeight: 700, fontSize: 13 }}>
-                      ✨ Transmutation du Grand Œuvre Réussie ! (+{lastSuccess.rewardXP} XP Or)
+                      Cas validé — +{lastSuccess.rewardXP} XP
                     </Typography>
                     <Typography variant="caption" sx={{ color: '#10B981', fontSize: 11 }}>
-                      La matière a vibré dans le creuset. Formule alchimique validée avec succès.
+                      Cas validé. Tu viens de faire le même geste qu'en prod.
                     </Typography>
                   </Box>
                 </Box>
 
-                {activeQuest.id < quests[quests.length - 1]?.id && (
+                {(readyQuest || activeQuest.id < quests[quests.length - 1]?.id) && (
                   <OpenAIButton
                     color="primary"
                     size="sm"
                     onClick={() => {
+                      if (readyQuest) {
+                        selectQuest(readyQuest);
+                        return;
+                      }
                       const idx = quests.findIndex(q => q.id === activeQuest.id);
                       if (idx < quests.length - 1) {
                         selectQuest(quests[idx + 1]);
                       }
                     }}
                   >
-                    Rituel Suivant <NavigateNext style={{ width: 14, height: 14 }} />
+                    Cas suivant <NavigateNext style={{ width: 14, height: 14 }} />
                   </OpenAIButton>
                 )}
+              </Paper>
+            )}
+
+            {readyQuest && readyQuest.id !== activeQuest.id && (
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 1.3,
+                  mb: 2,
+                  borderRadius: 2,
+                  bgcolor: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
+              >
+                <Box>
+                  <Typography variant="caption" sx={{ color: '#34D399', fontWeight: 700, letterSpacing: '0.06em', display: 'block' }}>
+                    Prêt dans le grimoire — on ne t'a pas interrompu
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontSize: 13, fontWeight: 600 }}>
+                    #{readyQuest.id} {readyQuest.title}
+                  </Typography>
+                </Box>
+                <OpenAIButton color="secondary" size="sm" onClick={() => selectQuest(readyQuest)}>
+                  Ouvrir quand tu veux <NavigateNext style={{ width: 14, height: 14 }} />
+                </OpenAIButton>
               </Paper>
             )}
 
@@ -856,7 +904,7 @@ export default function App() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Science sx={{ fontSize: 15, color: '#F59E0B' }} />
                   <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#CBD5E1', fontSize: 11.5, fontWeight: 600 }}>
-                    creuset.js · Athanor
+                    cas.js · atelier
                   </Typography>
                 </Box>
 
@@ -868,7 +916,7 @@ export default function App() {
                     <Lightbulb style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Indice</Box>
                   </OpenAIButton>
                   <OpenAIButton size="sm" variant="ghost" color="secondary" onClick={() => setCode(activeQuest.solutionCode)}>
-                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Pierre Philosophale</Box>
+                    <VpnKey style={{ width: 12, height: 12 }} /> <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>Solution</Box>
                   </OpenAIButton>
                 </Box>
               </Box>
@@ -1165,7 +1213,9 @@ export default function App() {
                           #{q.id} {q.title}
                         </Typography>
                         <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
-                          Chambre {q.phase} • {q.difficulty || 'FACILE'}
+                          Cas métier • {q.difficulty || 'FACILE'}
+                          {q.isGenerated ? ' • nouveau' : ''}
+                          {readyQuest && readyQuest.id === q.id ? ' • prêt' : ''}
                         </Typography>
                       </Box>
                     </Box>
@@ -1441,8 +1491,8 @@ export default function App() {
                       </ListItemIcon>
                       <ListItemText
                         primary={
-                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 12 }}>
-                            #{q.id} {q.title}
+                          <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : (readyQuest && readyQuest.id === q.id ? '#34D399' : '#F8FAFC'), fontSize: 12 }}>
+                            #{q.id} {q.title}{q.isGenerated ? ' · nouveau' : ''}
                           </Typography>
                         }
                       />

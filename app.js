@@ -842,12 +842,8 @@ class QuantumCockpit {
           this.renderChambers();
           this.renderGrimoire();
 
-          setTimeout(() => {
-            audio.playSuccess();
-            this.selectQuest(data.quest.id);
-            this.writeTerminalLine('line-ok', `📜 Nouveau Chapitre #${data.quest.id} ouvert : "${data.quest.title}" (${data.source})`);
-            this.sayHomunculus(`📖 <strong>L'histoire se poursuit :</strong> <em>${data.quest.title}</em> ! Relève le défi pour continuer l'épopée.`);
-          }, 700);
+          this.writeTerminalLine('line-ok', `Nouveau cas prêt dans le grimoire : #${data.quest.id} "${data.quest.title}" — on ne t'interrompt pas.`);
+          this.sayHomunculus(`Nouveau cas métier prêt : <em>${data.quest.title}</em>. Ouvre-le quand tu veux, on reste sur l'exercice en cours.`);
           return;
         }
       }
