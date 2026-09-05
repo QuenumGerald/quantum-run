@@ -127,6 +127,46 @@ const getRankTitle = (xp) => {
   return "Initié 🜍";
 };
 
+const difficultyTone = (label = '') => {
+  const upper = String(label).toUpperCase();
+  if (upper.includes('MAÎTRE') || upper.includes('MAITRE')) {
+    return { color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.18)', border: 'rgba(245, 158, 11, 0.45)' };
+  }
+  if (upper.includes('EXPERT')) {
+    return { color: '#C084FC', bg: 'rgba(168, 85, 247, 0.16)', border: 'rgba(168, 85, 247, 0.4)' };
+  }
+  if (upper.includes('AVANC')) {
+    return { color: '#FB923C', bg: 'rgba(251, 146, 60, 0.16)', border: 'rgba(251, 146, 60, 0.4)' };
+  }
+  if (upper.includes('MOYEN')) {
+    return { color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.14)', border: 'rgba(251, 191, 36, 0.35)' };
+  }
+  if (upper.includes('FACILE')) {
+    return { color: '#34D399', bg: 'rgba(16, 185, 129, 0.14)', border: 'rgba(16, 185, 129, 0.35)' };
+  }
+  return { color: '#94A3B8', bg: 'rgba(148, 163, 184, 0.12)', border: 'rgba(148, 163, 184, 0.25)' };
+};
+
+const DifficultyChip = ({ label }) => {
+  const tone = difficultyTone(label);
+  return (
+    <Chip
+      size="small"
+      label={label || 'FACILE'}
+      sx={{
+        height: 20,
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: '0.04em',
+        color: tone.color,
+        bgcolor: tone.bg,
+        border: `1px solid ${tone.border}`,
+        '& .MuiChip-label': { px: 0.9 },
+      }}
+    />
+  );
+};
+
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
@@ -502,9 +542,13 @@ export default function App() {
     return "Néophyte";
   };
 
+  const orderedQuests = useMemo(
+    () => [...quests].sort((a, b) => a.id - b.id),
+    [quests]
+  );
   const filteredQuests = phaseFilter
-    ? quests.filter(q => q.phase === phaseFilter)
-    : quests;
+    ? orderedQuests.filter(q => q.phase === phaseFilter)
+    : orderedQuests;
 
   return (
     <Box sx={{ minHeight: '100dvh', pb: { xs: 10, lg: 5 }, bgcolor: '#05070A', color: '#F8FAFC' }}>
@@ -677,10 +721,11 @@ export default function App() {
                 
                 {/* Entête Rituel : Titre Alchimique, XP Or et Navigation */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.2, flexWrap: 'wrap', gap: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                     <Typography variant="h6" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#F8FAFC', fontSize: { xs: 14, sm: 17 } }}>
                       #{activeQuest.id} {activeQuest.title}
                     </Typography>
+                    <DifficultyChip label={activeQuest.difficulty || 'FACILE'} />
                     <OpenAIBadge color="warning">
                       +{activeQuest.rewardXP || 16} XP Or
                     </OpenAIBadge>
@@ -701,8 +746,8 @@ export default function App() {
                       size="small"
                       disabled={activeQuest.id <= 1}
                       onClick={() => {
-                        const idx = quests.findIndex(q => q.id === activeQuest.id);
-                        if (idx > 0) selectQuest(quests[idx - 1]);
+                        const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
+                        if (idx > 0) selectQuest(orderedQuests[idx - 1]);
                       }}
                       sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
@@ -710,10 +755,10 @@ export default function App() {
                     </IconButton>
                     <IconButton
                       size="small"
-                      disabled={activeQuest.id >= quests[quests.length - 1]?.id}
+                      disabled={activeQuest.id >= orderedQuests[orderedQuests.length - 1]?.id}
                       onClick={() => {
-                        const idx = quests.findIndex(q => q.id === activeQuest.id);
-                        if (idx < quests.length - 1) selectQuest(quests[idx + 1]);
+                        const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
+                        if (idx < orderedQuests.length - 1) selectQuest(orderedQuests[idx + 1]);
                       }}
                       sx={{ p: { xs: 0.5, sm: 1 }, color: '#94A3B8' }}
                     >
@@ -1212,11 +1257,14 @@ export default function App() {
                         <Typography variant="body2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: isCurrent ? 700 : 600, color: isCurrent ? '#FBBF24' : '#F8FAFC', fontSize: 13 }}>
                           #{q.id} {q.title}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
-                          {phases.find(p => p.id === q.phase)?.name || 'Produit'} • {q.difficulty || 'FACILE'}
-                          {q.isGenerated ? ' • nouveau' : ''}
-                          {readyQuest && readyQuest.id === q.id ? ' • prêt' : ''}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.7, mt: 0.25, flexWrap: 'wrap' }}>
+                          <Typography variant="caption" sx={{ color: '#94A3B8', fontSize: 11 }}>
+                            {phases.find(p => p.id === q.phase)?.name || 'Produit'}
+                            {q.isGenerated ? ' • nouveau' : ''}
+                            {readyQuest && readyQuest.id === q.id ? ' • prêt' : ''}
+                          </Typography>
+                          <DifficultyChip label={q.difficulty || 'FACILE'} />
+                        </Box>
                       </Box>
                     </Box>
 
@@ -1469,7 +1517,7 @@ export default function App() {
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
-                {quests.map((q) => {
+                {orderedQuests.map((q) => {
                   const isCleared = clearedQuests.includes(q.id);
                   const isCurrent = q.id === activeQuest.id;
                   return (
@@ -1493,6 +1541,11 @@ export default function App() {
                         primary={
                           <Typography variant="body2" sx={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? '#FBBF24' : (readyQuest && readyQuest.id === q.id ? '#34D399' : '#F8FAFC'), fontSize: 12 }}>
                             #{q.id} {q.title}{q.isGenerated ? ' · nouveau' : ''}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography variant="caption" sx={{ color: difficultyTone(q.difficulty).color, fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>
+                            {q.difficulty || 'FACILE'} · +{q.rewardXP || 16} XP
                           </Typography>
                         }
                       />
