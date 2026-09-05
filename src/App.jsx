@@ -59,6 +59,7 @@ import {
   MenuBook as MenuBookIcon,
   Chat as ChatIcon,
   AccountCircle as AccountCircleIcon,
+  AutoStories as AutoStoriesIcon,
 } from '@mui/icons-material';
 
 class AudioSynth {
@@ -131,12 +132,26 @@ const INITIAL_QUEST = {
   phase: 1,
   title: "La Transmutation du Plomb",
   difficulty: "FACILE",
+  lesson: "Une variable <code>let</code> est une boîte : tu y ranges un texte entre guillemets, puis tu remplaces le contenu.",
   lore: "Le vil métal repose au fond du creuset. Pour initier le Grand Œuvre, changez la matière vile \"lead\" en métal précieux \"gold\".",
-  objective: "Changez la valeur de la variable <code>metal</code> pour <code>\"gold\"</code>.",
+  objective: "Le plomb dort dans <code>metal</code> — mets <code>\"gold\"</code> à la place.",
   initialCode: `// Transmutez le plomb en or\nlet metal = "lead";\n\nreturn metal;`,
   solutionCode: `let metal = "gold";\n\nreturn metal;`,
   hint: "Remplace simplement \"lead\" par \"gold\".",
   rewardXP: 16
+};
+
+const codeInlineSx = {
+  '& code': {
+    fontFamily: "'JetBrains Mono', monospace",
+    bgcolor: 'rgba(16, 185, 129, 0.16)',
+    color: '#6EE7B7',
+    px: 0.55,
+    py: '1px',
+    borderRadius: '4px',
+    fontSize: '0.92em',
+    fontWeight: 600,
+  },
 };
 
 export default function App() {
@@ -170,7 +185,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Bienvenue dans l\'Athanor ! Je suis ORBIT, votre Homunculus et Copilote Alchimiste. Posez-moi vos questions sur le Grand Œuvre, vos réactifs ou vos formules de transmutation.' }
+    { sender: 'bot', text: 'Bienvenue dans l\'Athanor. Je suis ORBIT : je te glisse le principe en une phrase, puis tu transmutes. Lis le micro-cours avant de toucher au creuset.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -277,6 +292,7 @@ export default function App() {
     setCode(q.initialCode);
     setMobileTab(0); // Bascule automatiquement sur l'onglet Éditeur sur mobile
     setLastSuccess(null);
+    setLoreOpen(false);
     addTerminal('sys', `Quête #${q.id} active : ${q.title}`);
     
     setTimeout(() => {
@@ -312,7 +328,7 @@ export default function App() {
   // Puces intelligentes extraites automatiquement de la quête active
   const quickTokens = useMemo(() => {
     const set = new Set();
-    const rawText = `${activeQuest.objective || ''} ${activeQuest.solutionCode || ''} ${activeQuest.initialCode || ''}`;
+    const rawText = `${activeQuest.lesson || ''} ${activeQuest.objective || ''} ${activeQuest.solutionCode || ''} ${activeQuest.initialCode || ''}`;
     
     // Extraction des balises <code>...</code>
     const codeMatches = (activeQuest.objective || '').match(/<code>([^<]+)<\/code>/g) || [];
@@ -456,7 +472,7 @@ export default function App() {
       const data = await res.json();
       setChatMessages(prev => [...prev, { sender: 'bot', text: data.reply }]);
     } catch (err) {
-      setChatMessages(prev => [...prev, { sender: 'bot', text: `Indice : ${activeQuest.hint}` }]);
+      setChatMessages(prev => [...prev, { sender: 'bot', text: activeQuest.lesson ? `Le principe : ${activeQuest.lesson.replace(/<\/?code>/g, '')} — ${activeQuest.hint}` : `Indice : ${activeQuest.hint}` }]);
     }
   };
 
@@ -692,6 +708,45 @@ export default function App() {
                   </Box>
                 </Box>
 
+                {/* Micro-cours : le principe AVANT le défi */}
+                {activeQuest.lesson && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: { xs: 1.15, sm: 1.35 },
+                      mb: 1.2,
+                      bgcolor: 'rgba(16, 185, 129, 0.08)',
+                      border: '1px solid rgba(16, 185, 129, 0.35)',
+                      borderLeft: '3px solid #10B981',
+                      borderRadius: 1,
+                      boxShadow: '0 0 18px rgba(16, 185, 129, 0.08)',
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        fontFamily: "'Cinzel', serif",
+                        color: '#34D399',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.6,
+                        mb: 0.45,
+                        fontSize: 11,
+                      }}
+                    >
+                      <AutoStoriesIcon sx={{ fontSize: 14, color: '#34D399' }} />
+                      Le principe
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: '#E2E8F0', fontWeight: 500, fontSize: { xs: 13, sm: 14 }, lineHeight: 1.55, ...codeInlineSx }}
+                      dangerouslySetInnerHTML={{ __html: activeQuest.lesson }}
+                    />
+                  </Paper>
+                )}
+
                 {/* Récit de l'Athanor (Rétractable sur smartphone pour économiser la hauteur d'écran) */}
                 {activeQuest.lore && (
                   <Box sx={{ mb: 1.2 }}>
@@ -712,7 +767,7 @@ export default function App() {
                       }}
                     >
                       <Typography variant="caption" sx={{ color: '#FBBF24', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        📜 Récit de l'Athanor {loreOpen ? '(masquer)' : '(dérouler)'}
+                        📜 L'histoire {loreOpen ? '(masquer)' : '(dérouler)'}
                       </Typography>
                       {loreOpen ? <ExpandLess fontSize="small" sx={{ color: '#FBBF24' }} /> : <ExpandMore fontSize="small" sx={{ color: '#FBBF24' }} />}
                     </Box>
@@ -721,26 +776,26 @@ export default function App() {
                     <Collapse in={loreOpen} sx={{ display: { xs: 'block', sm: 'none' } }}>
                       <Box sx={{ p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
                         <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.5 }}>
-                          📜 {activeQuest.lore}
+                          {activeQuest.lore}
                         </Typography>
                       </Box>
                     </Collapse>
 
                     {/* Visible directement sur tablette & desktop */}
                     <Box sx={{ display: { xs: 'none', sm: 'block' }, p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
-                        📜 {activeQuest.lore}
+                      <Typography variant="body2" sx={{ color: '#94A3B8', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
+                        {activeQuest.lore}
                       </Typography>
                     </Box>
                   </Box>
                 )}
 
-                {/* Objectif Direct du Rituel */}
+                {/* Action à jouer — après le principe */}
                 <Paper elevation={0} sx={{ p: { xs: 1, sm: 1.2 }, bgcolor: '#070A10', borderLeft: '3px solid #F59E0B', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: 1 }}>
-                  <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#F59E0B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', mb: 0.3, fontSize: 11 }}>
-                    🎯 Rituel du Grand Œuvre
+                  <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#F59E0B', fontWeight: 700, letterSpacing: '0.06em', display: 'block', mb: 0.3, fontSize: 11 }}>
+                    À toi
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 } }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
+                  <Typography variant="body2" sx={{ color: '#F8FAFC', fontWeight: 500, fontSize: { xs: 12.5, sm: 13 }, ...codeInlineSx }} dangerouslySetInnerHTML={{ __html: activeQuest.objective }} />
                 </Paper>
 
               </CardContent>
@@ -1183,10 +1238,10 @@ export default function App() {
                 {/* Suggestions Rapides Hermétiques en 1 Tap */}
                 <Box sx={{ display: 'flex', gap: 0.6, overflowX: 'auto', pb: 1, mb: 1, '&::-webkit-scrollbar': { display: 'none' } }}>
                   {[
-                    "⚗️ Comment accomplir ce rituel ?",
-                    "📜 Révèle la formule secrète",
-                    "💡 Donne un indice alchimique",
-                    "🔍 Explique la pierre philosophale",
+                    "Explique-moi le principe",
+                    "Je bloque, aide-moi sans spoiler",
+                    "Montre-moi juste un indice",
+                    "Pourquoi ça marche comme ça ?",
                   ].map((sug, idx) => (
                     <Paper
                       key={idx}
