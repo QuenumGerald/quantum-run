@@ -111,12 +111,12 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Energer", symbol: "📄", subtitle: "Docs, factures & fraude" },
-  { id: 2, name: "Trust Studio", symbol: "🛡️", subtitle: "Confiance, tokens & traces LLM" },
-  { id: 3, name: "Bonne Réponse", symbol: "🏗️", subtitle: "Assistant métier BTP" },
-  { id: 4, name: "Pipelines IA", symbol: "🤖", subtitle: "Modèles, files & payloads" },
-  { id: 5, name: "Analytics", symbol: "📊", subtitle: "Usage, risques & facturation" },
-  { id: 6, name: "Launch", symbol: "🚀", subtitle: "Routing, audit & workspace Pro" }
+  { id: 1, name: "Energer", symbol: "🜍", subtitle: "Calcination · docs, factures & fraude" },
+  { id: 2, name: "Trust Studio", symbol: "🜔", subtitle: "Distillation · confiance, tokens & traces" },
+  { id: 3, name: "Bonne Réponse", symbol: "🜛", subtitle: "Formules · assistant métier BTP" },
+  { id: 4, name: "Pipelines IA", symbol: "🜁", subtitle: "Fioles · modèles, files & payloads" },
+  { id: 5, name: "Analytics", symbol: "🜃", subtitle: "Rituels · usage, risques & facturation" },
+  { id: 6, name: "Launch", symbol: "🝤", subtitle: "Grand Œuvre · routing, audit & workspace" }
 ];
 
 const getRankTitle = (xp) => {
@@ -130,10 +130,10 @@ const getRankTitle = (xp) => {
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "La facture à valider",
+  title: "La transmutation de la facture",
   difficulty: "FACILE",
   lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
-  lore: "Energer vient de lire la facture. Elle est encore \"PENDING\" — le client pro attend le badge vert.",
+  lore: "Le vil \"PENDING\" repose dans le creuset d'Energer. Transmute-le en \"VERIFIED\" — le client pro attend l'or du badge vert.",
   objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
   initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
   solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
@@ -187,7 +187,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Salut. Je suis ORBIT, copilote de Quantum of Trust. On apprend le JS sur le vrai SaaS IA : Energer, Trust Studio, La Bonne Réponse. Lis le principe, puis code.' }
+    { sender: 'bot', text: 'Salut. Je suis ORBIT, Homunculus de Quantum of Trust. On apprend le JS dans le creuset du SaaS IA : Energer, Trust Studio, La Bonne Réponse. Lis le principe, puis transmutes.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -532,7 +532,7 @@ export default function App() {
                   QUANTUM RUN
                 </Typography>
                 <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#94A3B8', fontSize: { xs: 8.5, sm: 9.5 }, letterSpacing: '0.12em', textTransform: 'uppercase', display: { xs: 'none', sm: 'block' } }}>
-                  SaaS IA · pour les pros
+                  Opus Magnum · SaaS IA pour les pros
                 </Typography>
               </Box>
 
@@ -781,7 +781,7 @@ export default function App() {
                       }}
                     >
                       <Typography variant="caption" sx={{ color: '#FBBF24', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.6 }}>
-                        📜 L'histoire {loreOpen ? '(masquer)' : '(dérouler)'}
+                        📜 Récit de l'Athanor {loreOpen ? '(masquer)' : '(dérouler)'}
                       </Typography>
                       {loreOpen ? <ExpandLess fontSize="small" sx={{ color: '#FBBF24' }} /> : <ExpandMore fontSize="small" sx={{ color: '#FBBF24' }} />}
                     </Box>
@@ -904,7 +904,7 @@ export default function App() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Science sx={{ fontSize: 15, color: '#F59E0B' }} />
                   <Typography variant="caption" sx={{ fontFamily: "'JetBrains Mono', monospace", color: '#CBD5E1', fontSize: 11.5, fontWeight: 600 }}>
-                    cas.js · atelier
+                    creuset.js · Athanor
                   </Typography>
                 </Box>
 
@@ -1128,7 +1128,7 @@ export default function App() {
               <CardContent sx={{ p: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                   <Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, color: '#FBBF24' }}>
-                    Progression du workspace
+                    Progression du Grand Œuvre
                   </Typography>
                   <OpenAIBadge color="primary">
                     {clearedQuests.length} / {quests.length} ({Math.round((clearedQuests.length / quests.length) * 100)}%)
@@ -1465,7 +1465,7 @@ export default function App() {
             {/* GRIMOIRE DU GRAND ŒUVRE (DESKTOP) */}
             <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Parcours Quantum of Trust ({clearedQuests.length}/{quests.length})</Typography>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire Quantum of Trust ({clearedQuests.length}/{quests.length})</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
