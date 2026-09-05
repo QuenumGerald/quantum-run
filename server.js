@@ -489,6 +489,8 @@ app.post('/api/auth/login', (req, res) => {
       syncKey: `${inputStr}#${codePin}`,
       clearedQuests: [],
       gold: 0,
+      currentQuestId: 1,
+      userCodes: {},
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -509,19 +511,25 @@ app.post('/api/auth/login', (req, res) => {
 
 // Sauvegarde de progression
 app.post('/api/user/save-progress', (req, res) => {
-  const { username, clearedQuests, gold } = req.body || {};
+  const { username, clearedQuests, gold, currentQuestId, userCodes } = req.body || {};
   if (!username || !username.trim()) {
     return res.status(400).json({ error: "Utilisateur inconnu." });
   }
 
-  const cleanName = username.trim();
+  const inputName = username.trim();
   const users = loadUsersData();
+  const matchedKey = users[inputName]
+    ? inputName
+    : Object.keys(users).find((u) => users[u].syncKey && users[u].syncKey.toLowerCase() === inputName.toLowerCase());
+  const cleanName = matchedKey || inputName;
 
   if (!users[cleanName]) {
     users[cleanName] = {
       username: cleanName,
       clearedQuests: [],
       gold: 0,
+      currentQuestId: 1,
+      userCodes: {},
       createdAt: new Date().toISOString()
     };
   }
@@ -531,6 +539,12 @@ app.post('/api/user/save-progress', (req, res) => {
   }
   if (typeof gold === 'number') {
     users[cleanName].gold = gold;
+  }
+  if (typeof currentQuestId === 'number' && currentQuestId > 0) {
+    users[cleanName].currentQuestId = currentQuestId;
+  }
+  if (userCodes && typeof userCodes === 'object') {
+    users[cleanName].userCodes = { ...(users[cleanName].userCodes || {}), ...userCodes };
   }
   users[cleanName].updatedAt = new Date().toISOString();
 

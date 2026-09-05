@@ -194,13 +194,108 @@ const codeInlineSx = {
   },
 };
 
+const USER_KEY = 'quantum_run_username';
+const EMPTY_PROGRESS = { clearedQuests: [], gold: 0, currentQuestId: 1, userCodes: {} };
+
+const progressStorageKey = (username) => `quantum_run_progress:${username}`;
+
+function getSavedUsername() {
+  try {
+    return localStorage.getItem(USER_KEY);
+  } catch (e) {
+    return null;
+  }
+}
+
+function readLocalProgress(username) {
+  if (!username) return { ...EMPTY_PROGRESS, userCodes: {} };
+  try {
+    const raw = localStorage.getItem(progressStorageKey(username));
+    if (!raw) return { ...EMPTY_PROGRESS, userCodes: {} };
+    const parsed = JSON.parse(raw);
+    return {
+      clearedQuests: Array.isArray(parsed.clearedQuests) ? parsed.clearedQuests : [],
+      gold: typeof parsed.gold === 'number' ? parsed.gold : 0,
+      currentQuestId: Number(parsed.currentQuestId) || 1,
+      userCodes: parsed.userCodes && typeof parsed.userCodes === 'object' ? parsed.userCodes : {},
+      updatedAt: parsed.updatedAt || null,
+    };
+  } catch (e) {
+    return { ...EMPTY_PROGRESS, userCodes: {} };
+  }
+}
+
+function writeLocalProgress(username, data) {
+  if (!username) return;
+  try {
+    const prev = readLocalProgress(username);
+    localStorage.setItem(progressStorageKey(username), JSON.stringify({
+      ...prev,
+      ...data,
+      userCodes: { ...(prev.userCodes || {}), ...(data.userCodes || {}) },
+      updatedAt: new Date().toISOString(),
+    }));
+  } catch (e) {}
+}
+
+function listLocalAccounts() {
+  const accounts = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith('quantum_run_progress:')) continue;
+      const username = key.slice('quantum_run_progress:'.length);
+      const data = readLocalProgress(username);
+      accounts.push({
+        username,
+        gold: data.gold || 0,
+        cleared: (data.clearedQuests || []).length,
+      });
+    }
+  } catch (e) {}
+  return accounts.sort((a, b) => b.gold - a.gold);
+}
+
+function mergeProgress(local, remote) {
+  const cleared = [...new Set([
+    ...(local?.clearedQuests || []),
+    ...(remote?.clearedQuests || []),
+  ])].sort((a, b) => a - b);
+  const localHasTrail = (local?.clearedQuests || []).length > 0 || (local?.gold || 0) > 0 || (local?.currentQuestId || 1) > 1;
+  const remoteHasTrail = (remote?.clearedQuests || []).length > 0 || (remote?.gold || 0) > 0 || (remote?.currentQuestId || 1) > 1;
+  const localTime = local?.updatedAt ? Date.parse(local.updatedAt) : 0;
+  const remoteTime = remote?.updatedAt ? Date.parse(remote.updatedAt) : 0;
+
+  let currentQuestId = 1;
+  if (localHasTrail && !remoteHasTrail) {
+    currentQuestId = local.currentQuestId || 1;
+  } else if (remoteHasTrail && !localHasTrail) {
+    currentQuestId = remote.currentQuestId || 1;
+  } else {
+    currentQuestId = (localTime >= remoteTime ? local : remote)?.currentQuestId
+      || local?.currentQuestId
+      || remote?.currentQuestId
+      || 1;
+  }
+
+  return {
+    clearedQuests: cleared,
+    gold: Math.max(local?.gold || 0, remote?.gold || 0),
+    currentQuestId,
+    userCodes: { ...(remote?.userCodes || {}), ...(local?.userCodes || {}) },
+  };
+}
+
 export default function App() {
+  const savedUsername = getSavedUsername();
+  const initialProgress = readLocalProgress(savedUsername);
+
   const [quests, setQuests] = useState([INITIAL_QUEST]);
   const [phases, setPhases] = useState(DEFAULT_PHASES);
   const [activeQuest, setActiveQuest] = useState(INITIAL_QUEST);
   const [code, setCode] = useState(INITIAL_QUEST.initialCode);
-  const [clearedQuests, setClearedQuests] = useState([]);
-  const [gold, setGold] = useState(0);
+  const [clearedQuests, setClearedQuests] = useState(initialProgress.clearedQuests);
+  const [gold, setGold] = useState(initialProgress.gold);
   // Mobile Tab : 0 = Éditeur, 1 = Quêtes, 2 = Copilote, 3 = Profil
   const [mobileTab, setMobileTab] = useState(0);
 
@@ -213,9 +308,11 @@ export default function App() {
   const activeQuestIdRef = useRef(INITIAL_QUEST.id);
 
   // Compte et parcours alchimiste
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(savedUsername ? { username: savedUsername } : null);
+  const [needsAccount, setNeedsAccount] = useState(!savedUsername);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
-  const [usernameInput, setUsernameInput] = useState('');
+  const [usernameInput, setUsernameInput] = useState(savedUsername || '');
+  const [localAccounts, setLocalAccounts] = useState(() => listLocalAccounts());
 
   const [serverOnline, setServerOnline] = useState(false);
   const [latency, setLatency] = useState(12);
@@ -239,6 +336,8 @@ export default function App() {
   const textareaRef = useRef(null);
   const gutterRef = useRef(null);
   const phaseScrollRef = useRef(null);
+  const resumeQuestIdRef = useRef(initialProgress.currentQuestId);
+  const snapshotRef = useRef({ currentUser: savedUsername ? { username: savedUsername } : null, clearedQuests: initialProgress.clearedQuests, gold: initialProgress.gold, activeQuest: INITIAL_QUEST, code: INITIAL_QUEST.initialCode });
 
   const handleScroll = (e) => {
     if (gutterRef.current) gutterRef.current.scrollTop = e.target.scrollTop;
@@ -252,10 +351,31 @@ export default function App() {
     } catch (e) {}
   };
 
+  snapshotRef.current = { currentUser, clearedQuests, gold, activeQuest, code };
+
   useEffect(() => {
-    const savedName = localStorage.getItem('quantum_run_username') || 'Alchimiste-1';
-    setUsernameInput(savedName);
-    loginUser(savedName);
+    const savedName = getSavedUsername();
+    if (savedName) {
+      loginUser(savedName);
+    } else {
+      fetchServerStatus();
+    }
+  }, []);
+
+  useEffect(() => {
+    const persistOnLeave = () => {
+      const s = snapshotRef.current;
+      const username = s.currentUser?.username || getSavedUsername();
+      if (!username) return;
+      writeLocalProgress(username, {
+        clearedQuests: s.clearedQuests,
+        gold: s.gold,
+        currentQuestId: s.activeQuest?.id || 1,
+        userCodes: { [s.activeQuest?.id]: s.code },
+      });
+    };
+    window.addEventListener('beforeunload', persistOnLeave);
+    return () => window.removeEventListener('beforeunload', persistOnLeave);
   }, []);
 
   useEffect(() => {
@@ -266,9 +386,63 @@ export default function App() {
     if (chatScrollRef.current) chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
   }, [chatMessages]);
 
+  useEffect(() => {
+    const username = currentUser?.username || getSavedUsername();
+    if (!username || !activeQuest) return;
+    const timer = setTimeout(() => {
+      writeLocalProgress(username, {
+        currentQuestId: activeQuest.id,
+        userCodes: { [activeQuest.id]: code },
+      });
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [code, activeQuest.id, currentUser?.username]);
+
+  const applyQuest = (questList, questId) => {
+    if (!questList || questList.length === 0) return;
+    const target = questList.find(q => q.id === questId) || questList[0];
+    setActiveQuest(target);
+    const username = getSavedUsername();
+    const savedCode = username ? readLocalProgress(username).userCodes?.[target.id] : null;
+    setCode(savedCode || target.initialCode);
+    resumeQuestIdRef.current = target.id;
+    activeQuestIdRef.current = target.id;
+  };
+
+  const persistProgress = (overrides = {}) => {
+    const username = currentUser?.username || getSavedUsername();
+    if (!username) return;
+    const payload = {
+      clearedQuests,
+      gold,
+      currentQuestId: activeQuest?.id || 1,
+      userCodes: { [activeQuest?.id]: code },
+      ...overrides,
+    };
+    writeLocalProgress(username, payload);
+    resumeQuestIdRef.current = payload.currentQuestId || resumeQuestIdRef.current;
+    fetch('/api/user/save-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, ...payload }),
+    }).catch(() => {});
+  };
+
   const loginUser = async (nameToLogin) => {
     if (!nameToLogin || !nameToLogin.trim()) return;
     const cleanName = nameToLogin.trim();
+    const local = readLocalProgress(cleanName);
+
+    setCurrentUser(prev => ({ ...(prev || {}), username: cleanName, ...local }));
+    setClearedQuests(local.clearedQuests || []);
+    setGold(local.gold || 0);
+    setUsernameInput(cleanName);
+    setNeedsAccount(false);
+    resumeQuestIdRef.current = local.currentQuestId || 1;
+    try {
+      localStorage.setItem(USER_KEY, cleanName);
+    } catch (e) {}
+
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -277,29 +451,62 @@ export default function App() {
       });
       const data = await res.json();
       if (data.success && data.user) {
-        setCurrentUser(data.user);
-        setClearedQuests(data.user.clearedQuests || []);
-        setGold(data.user.gold || 0);
-        localStorage.setItem('quantum_run_username', cleanName);
-        addTerminal('sys', `Compte actif : ${cleanName}`);
+        const canonicalName = data.user.username || cleanName;
+        const localForAccount = canonicalName === cleanName
+          ? local
+          : mergeProgress(local, readLocalProgress(canonicalName));
+        const merged = mergeProgress(localForAccount, data.user);
+        setCurrentUser({ ...data.user, ...merged, username: canonicalName });
+        setClearedQuests(merged.clearedQuests);
+        setGold(merged.gold);
+        setUsernameInput(canonicalName);
+        writeLocalProgress(canonicalName, merged);
+        if (canonicalName !== cleanName) {
+          try { localStorage.removeItem(progressStorageKey(cleanName)); } catch (e) {}
+        }
+        try { localStorage.setItem(USER_KEY, canonicalName); } catch (e) {}
+        resumeQuestIdRef.current = merged.currentQuestId || 1;
+        fetch('/api/user/save-progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: canonicalName, ...merged }),
+        }).catch(() => {});
+        addTerminal('sys', `Compte actif : ${canonicalName} · ${merged.clearedQuests.length} rituel(s) sauvegardé(s)`);
       }
-    } catch (e) {}
+    } catch (e) {
+      addTerminal('sys', `Compte local : ${cleanName} (hors-ligne)`);
+    }
+    setLocalAccounts(listLocalAccounts());
     fetchServerStatus();
   };
 
-  const saveProgressOnServer = async (updatedCleared, updatedGold) => {
-    if (!currentUser) return;
+  const logoutUser = () => {
+    persistProgress();
     try {
-      await fetch('/api/user/save-progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: currentUser.username,
-          clearedQuests: updatedCleared,
-          gold: updatedGold
-        })
-      });
+      localStorage.removeItem(USER_KEY);
     } catch (e) {}
+    setCurrentUser(null);
+    setClearedQuests([]);
+    setGold(0);
+    setUsernameInput('');
+    setNeedsAccount(true);
+    setAccountModalOpen(false);
+    setLocalAccounts(listLocalAccounts());
+    addTerminal('sys', 'Session fermée. Ta progression reste liée à ton nom.');
+  };
+
+  const enterAccount = () => {
+    const name = usernameInput.trim();
+    if (!name) {
+      setSnackbar({ open: true, message: 'Choisis un nom d\'alchimiste pour sauvegarder ta progression.', severity: 'warning' });
+      return;
+    }
+    if (currentUser?.username && currentUser.username !== name) {
+      persistProgress();
+    }
+    loginUser(name);
+    setAccountModalOpen(false);
+    setSnackbar({ open: true, message: `Bienvenue, ${name} ! Ta progression est sauvegardée.`, severity: 'success' });
   };
 
   const fetchServerStatus = async () => {
@@ -318,8 +525,7 @@ export default function App() {
           const data = await qRes.json();
           if (data.quests && data.quests.length > 0) {
             setQuests(data.quests);
-            setActiveQuest(data.quests[0]);
-            setCode(data.quests[0].initialCode);
+            applyQuest(data.quests, resumeQuestIdRef.current);
           }
           if (data.phases) setPhases(data.phases);
         }
@@ -330,9 +536,12 @@ export default function App() {
   };
 
   const selectQuest = (q) => {
+    persistProgress({ currentQuestId: q.id, userCodes: { [activeQuest.id]: code } });
     setActiveQuest(q);
     activeQuestIdRef.current = q.id;
-    setCode(q.initialCode);
+    const username = getSavedUsername();
+    const savedCode = username ? readLocalProgress(username).userCodes?.[q.id] : null;
+    setCode(savedCode || q.initialCode);
     setMobileTab(0); // Bascule automatiquement sur l'onglet Éditeur sur mobile
     setLastSuccess(null);
     setLoreOpen(false);
@@ -434,7 +643,12 @@ export default function App() {
           setClearedQuests(updatedCleared);
           setGold(updatedGold);
           
-          saveProgressOnServer(updatedCleared, updatedGold);
+          persistProgress({
+            clearedQuests: updatedCleared,
+            gold: updatedGold,
+            currentQuestId: activeQuest.id,
+            userCodes: { [activeQuest.id]: code },
+          });
         }
 
         setLastSuccess({
@@ -1488,14 +1702,38 @@ export default function App() {
                   <OpenAIButton
                     color="primary"
                     size="sm"
-                    onClick={() => {
-                      loginUser(usernameInput);
-                      setSnackbar({ open: true, message: 'Sceau alchimique chargé !', severity: 'success' });
-                    }}
+                    onClick={enterAccount}
                   >
                     Invoquer
                   </OpenAIButton>
                 </Box>
+
+                {localAccounts.length > 0 && (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.6, mb: 2 }}>
+                    {localAccounts.map((acc) => (
+                      <Chip
+                        key={acc.username}
+                        label={`${acc.username} · ${acc.cleared} rituels`}
+                        size="small"
+                        onClick={() => {
+                          persistProgress();
+                          loginUser(acc.username);
+                          setSnackbar({ open: true, message: `Compte ${acc.username} chargé.`, severity: 'success' });
+                        }}
+                        sx={{
+                          bgcolor: acc.username === currentUser?.username ? '#F59E0B' : '#0C101A',
+                          color: acc.username === currentUser?.username ? '#05070A' : '#F8FAFC',
+                          border: '1px solid rgba(245, 158, 11, 0.3)',
+                          fontWeight: 700,
+                        }}
+                      />
+                    ))}
+                  </Box>
+                )}
+
+                <OpenAIButton variant="ghost" color="secondary" size="sm" onClick={logoutUser}>
+                  Changer d'alchimiste
+                </OpenAIButton>
 
                 {/* Statistiques Détaillées */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -1514,8 +1752,8 @@ export default function App() {
                   </Box>
 
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Astrale :</Typography>
-                    <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
+                    <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde :</Typography>
+                    <OpenAIBadge color="success">Compte {currentUser?.username || 'local'}</OpenAIBadge>
                   </Box>
                 </Box>
 
@@ -1743,10 +1981,7 @@ export default function App() {
                 <OpenAIButton
                   color="primary"
                   size="sm"
-                  onClick={() => {
-                    loginUser(usernameInput);
-                    setAccountModalOpen(false);
-                  }}
+                  onClick={enterAccount}
                 >
                   Charger
                 </OpenAIButton>
@@ -1800,17 +2035,86 @@ export default function App() {
               </Box>
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde Astrale :</Typography>
-                <OpenAIBadge color="success">Synchronisé ☁️</OpenAIBadge>
+                <Typography variant="body2" sx={{ color: '#94A3B8' }}>Sauvegarde :</Typography>
+                <OpenAIBadge color="success">Compte {currentUser?.username || 'local'}</OpenAIBadge>
               </Box>
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ pb: 2, px: 3, bgcolor: '#0C101A', borderTop: '1px solid rgba(245, 158, 11, 0.15)' }}>
+        <DialogActions sx={{ pb: 2, px: 3, bgcolor: '#0C101A', borderTop: '1px solid rgba(245, 158, 11, 0.15)', justifyContent: 'space-between' }}>
+          <OpenAIButton variant="ghost" color="secondary" onClick={logoutUser}>
+            Changer d'alchimiste
+          </OpenAIButton>
           <OpenAIButton variant="ghost" color="secondary" onClick={() => setAccountModalOpen(false)}>
             Fermer
           </OpenAIButton>
         </DialogActions>
+      </Dialog>
+
+      {/* ÉCRAN D'ENTRÉE : COMPTE SIMPLE POUR SAUVEGARDER LA PROGRESSION */}
+      <Dialog
+        open={needsAccount}
+        disableEscapeKeyDown
+        maxWidth="xs"
+        fullWidth
+        onClose={() => {}}
+      >
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1, pt: 2.5, bgcolor: '#0C101A' }}>
+          <Avatar sx={{ bgcolor: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', border: '1px solid #F59E0B', width: 32, height: 32 }}>🧙‍♂️</Avatar>
+          <Typography variant="h6" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 16, color: '#FBBF24' }}>
+            Ton compte d'alchimiste
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1, bgcolor: '#0C101A' }}>
+          <Typography variant="body2" sx={{ color: '#CBD5E1', mb: 2, lineHeight: 1.55 }}>
+            Choisis un nom. Ta progression (rituels, or, quête en cours) sera sauvegardée sur cet appareil, même si tu recharges la page.
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              enterAccount();
+            }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}
+          >
+            <TextField
+              autoFocus
+              fullWidth
+              size="small"
+              label="Nom d'alchimiste"
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+              placeholder="Ex: Paracelse"
+              sx={{ bgcolor: '#05070A', borderRadius: 1, '& input': { fontSize: '16px', py: 1, color: '#F8FAFC' } }}
+            />
+            {localAccounts.length > 0 && (
+              <Box>
+                <Typography variant="caption" sx={{ color: '#94A3B8', display: 'block', mb: 0.8 }}>
+                  Comptes déjà présents sur cet appareil :
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.6 }}>
+                  {localAccounts.map((acc) => (
+                    <Chip
+                      key={acc.username}
+                      label={`${acc.username} · ${acc.cleared} rituels · ${acc.gold} XP`}
+                      size="small"
+                      onClick={() => loginUser(acc.username)}
+                      sx={{
+                        bgcolor: '#0C101A',
+                        color: '#F8FAFC',
+                        border: '1px solid rgba(245, 158, 11, 0.3)',
+                        fontWeight: 700,
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+            <OpenAIButton color="primary" size="md" fullWidth type="submit">
+              Entrer dans l'Athanor
+            </OpenAIButton>
+          </Box>
+        </DialogContent>
       </Dialog>
 
       {/* SNACKBAR DE NOTIFICATION */}
