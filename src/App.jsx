@@ -744,6 +744,7 @@ export default function App() {
                     </OpenAIButton>
                     <IconButton
                       size="small"
+                      aria-label="Quête précédente"
                       disabled={activeQuest.id <= 1}
                       onClick={() => {
                         const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
@@ -755,6 +756,7 @@ export default function App() {
                     </IconButton>
                     <IconButton
                       size="small"
+                      aria-label="Quête suivante"
                       disabled={activeQuest.id >= orderedQuests[orderedQuests.length - 1]?.id}
                       onClick={() => {
                         const idx = orderedQuests.findIndex(q => q.id === activeQuest.id);
@@ -1053,9 +1055,23 @@ export default function App() {
               </Box>
 
               {/* Workspace Code (Anti-Zoom iOS Safari & Clavier Tactile) */}
-              <Box sx={{ display: 'flex', minHeight: { xs: 170, sm: 200 }, maxHeight: { xs: 260, sm: 320 }, bgcolor: '#05070A' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  minHeight: { xs: 170, sm: 200 },
+                  maxHeight: { xs: 260, sm: 320 },
+                  bgcolor: '#05070A',
+                  transition: 'box-shadow 0.2s ease, outline 0.2s ease',
+                  '&:focus-within': {
+                    outline: '2px solid #3B82F6',
+                    outlineOffset: '-2px',
+                    boxShadow: '0 0 12px rgba(59, 130, 246, 0.4)',
+                  },
+                }}
+              >
                 <Box
                   ref={gutterRef}
+                  aria-hidden="true"
                   sx={{
                     width: { xs: 28, sm: 36 },
                     py: 1.2,
@@ -1074,6 +1090,8 @@ export default function App() {
                 </Box>
                 <textarea
                   ref={textareaRef}
+                  id="code-editor-textarea"
+                  aria-label="Éditeur de code creuset.js"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   onScroll={handleScroll}
