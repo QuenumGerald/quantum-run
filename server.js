@@ -8,6 +8,22 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+function makeSolutionCheck(solutionCode) {
+  return (res) => {
+    if (!solutionCode || typeof solutionCode !== 'string') return false;
+    try {
+      const expectedCtx = vm.createContext({
+        console: { log() {}, error() {}, warn() {} },
+        Math, String, Number, Array, Object, Boolean, parseInt, parseFloat, Date
+      });
+      const expected = new vm.Script(`(function() {\n${solutionCode}\n})()`).runInContext(expectedCtx, { timeout: 500 });
+      return JSON.stringify(res) === JSON.stringify(expected);
+    } catch (e) {
+      return false;
+    }
+  };
+}
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
 app.use(cors());
@@ -68,10 +84,10 @@ function fallbackQuestForPhase(phase, questId) {
       title: `Le score TrustID #${questId}`,
       lesson: "<code>*</code> sert à un score KYC : <code>note * 2</code> double un sous-score TrustID.",
       lore: "L'évaluation entreprise est trop timide. Double la note pour le second passage KYC.",
-      objective: "Double le score de <code>25</code> dans <code>resultat</code>.",
-      initialCode: `let limiteTokens = 25;\n\nlet resultat = 0;\n\nreturn resultat;`,
-      solutionCode: `let limiteTokens = 25;\nlet resultat = limiteTokens * 2;\n\nreturn resultat;`,
-      hint: "Fais limiteTokens * 2."
+      objective: "Double <code>noteKyc</code> dans <code>resultat</code>.",
+      initialCode: `let noteKyc = 25;\n\nlet resultat = 0;\n\nreturn resultat;`,
+      solutionCode: `let noteKyc = 25;\nlet resultat = noteKyc * 2;\n\nreturn resultat;`,
+      hint: "Fais noteKyc * 2."
     },
     3: {
       title: `Le helper LBR #${questId}`,
@@ -86,28 +102,28 @@ function fallbackQuestForPhase(phase, questId) {
       title: `Le service Fargate #${questId}`,
       lesson: "Un tableau c'est la liste des repos ECR Terraform : <code>.push()</code> ajoute un service Fargate.",
       lore: "LBR-Infra a déjà lbr-api. Ajoute connector-api — voir fargate_services dans prod/main.tf.",
-      objective: "Ajoute <code>\"connector-api\"</code> à <code>modeles</code> avec <code>.push()</code>.",
-      initialCode: `let modeles = ["lbr-api", "energer-api"];\n\nreturn modeles;`,
-      solutionCode: `let modeles = ["lbr-api", "energer-api"];\nmodeles.push("connector-api");\n\nreturn modeles;`,
-      hint: "modeles.push(\"connector-api\");"
+      objective: "Ajoute <code>\"connector-api\"</code> à <code>reposEcr</code> avec <code>.push()</code>.",
+      initialCode: `let reposEcr = ["lbr-api", "energer-api"];\n\nreturn reposEcr;`,
+      solutionCode: `let reposEcr = ["lbr-api", "energer-api"];\nreposEcr.push("connector-api");\n\nreturn reposEcr;`,
+      hint: "reposEcr.push(\"connector-api\");"
     },
     5: {
       title: `Le filtrage CloudFront #${questId}`,
       lesson: "<code>.filter()</code> cumule deux règles : assez chaud pour CloudFront, pas déjà en RDS.",
       lore: "file-distribution (S3 privé AES256 + OAC, ACM us-east-1). Ne publie que dans la fenêtre de score.",
       objective: "Garde les scores <code>>= 40</code> et <code>< 85</code>.",
-      initialCode: `let risques = [10, 55, 90, 42, 20];\n\nlet alertes = [];\n\nreturn alertes;`,
-      solutionCode: `let risques = [10, 55, 90, 42, 20];\nlet alertes = risques.filter(r => r >= 40 && r < 85);\n\nreturn alertes;`,
+      initialCode: `let scores = [10, 55, 90, 42, 20];\n\nlet publies = [];\n\nreturn publies;`,
+      solutionCode: `let scores = [10, 55, 90, 42, 20];\nlet publies = scores.filter(r => r >= 40 && r < 85);\n\nreturn publies;`,
       hint: "filter(r => r >= 40 && r < 85)"
     },
     6: {
       title: `L'env Terraform scellé #${questId}`,
       lesson: "Un livrable assemble plusieurs vérités tfvars : tu copies des variables, et tu calcules un drapeau.",
       lore: "environnements/prod n'est prêt que si assez de modules (ecs, lb, rds, s3, waf) sont câblés.",
-      objective: "Objet <code>workspace</code> : <code>sieges</code>, et <code>pret</code> via <code>sieges >= 10</code>.",
-      initialCode: `const sieges = 12;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
-      solutionCode: `const sieges = 12;\n\nconst workspace = {\n  sieges,\n  pret: sieges >= 10\n};\n\nreturn workspace;`,
-      hint: "workspace = { sieges, pret: sieges >= 10 }"
+      objective: "Objet <code>workspace</code> : <code>modulesTf</code>, et <code>pret</code> via <code>modulesTf >= 10</code>.",
+      initialCode: `const modulesTf = 12;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
+      solutionCode: `const modulesTf = 12;\n\nconst workspace = {\n  modulesTf,\n  pret: modulesTf >= 10\n};\n\nreturn workspace;`,
+      hint: "workspace = { modulesTf, pret: modulesTf >= 10 }"
     }
   };
   const t = templates[Number(phase)] || templates[3];
@@ -124,7 +140,7 @@ function fallbackQuestForPhase(phase, questId) {
     hint: t.hint,
     rewardXP: meta.rewardXP,
     isGenerated: true,
-    check: () => true
+    check: makeSolutionCheck(t.solutionCode)
   };
 }
 
@@ -150,12 +166,12 @@ const QUESTS = [
     difficulty: "FACILE",
     lesson: "Un compteur de modules (users, operations, storage, gemini…) c'est un nombre, sans guillemets.",
     lore: "Energer-Scan-Api compose une dizaine de modules dans app.module.ts. Mets le compteur à 12.",
-    objective: "Les <code>sieges</code> sont à <code>0</code> — mets-les à <code>12</code>.",
-    initialCode: `// Nombre de modules Nest chargés\nlet sieges = 0;\n\nreturn sieges;`,
-    solutionCode: `let sieges = 12;\n\nreturn sieges;`,
+    objective: "Les <code>nbModules</code> sont à <code>0</code> — mets-les à <code>12</code>.",
+    initialCode: `// Nombre de modules Nest chargés\nlet nbModules = 0;\n\nreturn nbModules;`,
+    solutionCode: `let nbModules = 12;\n\nreturn nbModules;`,
     hint: "Remplace 0 par 12.",
     rewardXP: 16,
-    check: (res, ctx) => res === 12 || ctx.sieges === 12
+    check: (res, ctx) => res === 12 || ctx.nbModules === 12
   },
   {
     id: 3,
@@ -192,26 +208,26 @@ const QUESTS = [
     difficulty: "MOYEN",
     lesson: "TrustID additionne deux notes KYC avec <code>+</code> : documents entreprise + identité, jamais du texte.",
     lore: "company-assessment : 50 docs, 45 identité. Allie-les pour viser VERIFIED.",
-    objective: "Verse <code>pertinence</code> et <code>securite</code> dans <code>confiance</code>.",
-    initialCode: `let pertinence = 50;\nlet securite = 45;\n\nlet confiance = 0;\n\nreturn confiance;`,
-    solutionCode: `let pertinence = 50;\nlet securite = 45;\nlet confiance = pertinence + securite;\n\nreturn confiance;`,
-    hint: "Additionne pertinence + securite.",
+    objective: "Verse <code>noteDocs</code> et <code>noteIdentite</code> dans <code>scoreKyc</code>.",
+    initialCode: `let noteDocs = 50;\nlet noteIdentite = 45;\n\nlet scoreKyc = 0;\n\nreturn scoreKyc;`,
+    solutionCode: `let noteDocs = 50;\nlet noteIdentite = 45;\nlet scoreKyc = noteDocs + noteIdentite;\n\nreturn scoreKyc;`,
+    hint: "Additionne noteDocs + noteIdentite.",
     rewardXP: 20,
-    check: (res, ctx) => res === 95 || ctx.confiance === 95
+    check: (res, ctx) => res === 95 || ctx.scoreKyc === 95
   },
   {
     id: 6,
     phase: 2,
     title: "La durée du JWT",
     difficulty: "MOYEN",
-    lesson: "<code>limite * 2</code> double expiresIn du JWT TrustID / Energer, sans réécrire le chiffre.",
+    lesson: "<code>dureeJwt * 2</code> double expiresIn du JWT TrustID, sans réécrire le chiffre.",
     lore: "Le access token expire trop vite en assessment. Double 1000 → 2000.",
-    objective: "Double <code>limiteTokens</code> dans <code>nouvelleLimite</code>.",
-    initialCode: `let limiteTokens = 1000;\n\nlet nouvelleLimite = 0;\n\nreturn nouvelleLimite;`,
-    solutionCode: `let limiteTokens = 1000;\nlet nouvelleLimite = limiteTokens * 2;\n\nreturn nouvelleLimite;`,
-    hint: "Utilise limiteTokens * 2.",
+    objective: "Double <code>dureeJwt</code> dans <code>nouvelleDuree</code>.",
+    initialCode: `let dureeJwt = 1000;\n\nlet nouvelleDuree = 0;\n\nreturn nouvelleDuree;`,
+    solutionCode: `let dureeJwt = 1000;\nlet nouvelleDuree = dureeJwt * 2;\n\nreturn nouvelleDuree;`,
+    hint: "Utilise dureeJwt * 2.",
     rewardXP: 20,
-    check: (res, ctx) => res === 2000 || ctx.nouvelleLimite === 2000
+    check: (res, ctx) => res === 2000 || ctx.nouvelleDuree === 2000
   },
   {
     id: 7,
@@ -276,10 +292,10 @@ const QUESTS = [
     difficulty: "AVANCÉ",
     lesson: "Un tableau c'est la liste des repos ECR Terraform (<code>aws_ecr_repository</code>) : <code>.push()</code> ajoute un service, sans recréer la liste.",
     lore: "LBR-Infra a déjà lbr-api et energer-api. Ajoute <code>connector-api</code> — c'est le service Fargate du main.tf prod.",
-    objective: "Ajoute <code>\"connector-api\"</code> à <code>modeles</code> avec <code>.push()</code>.",
-    initialCode: `let modeles = ["lbr-api", "energer-api"];\n\nreturn modeles;`,
-    solutionCode: `let modeles = ["lbr-api", "energer-api"];\nmodeles.push("connector-api");\n\nreturn modeles;`,
-    hint: "modeles.push(\"connector-api\");",
+    objective: "Ajoute <code>\"connector-api\"</code> à <code>reposEcr</code> avec <code>.push()</code>.",
+    initialCode: `let reposEcr = ["lbr-api", "energer-api"];\n\nreturn reposEcr;`,
+    solutionCode: `let reposEcr = ["lbr-api", "energer-api"];\nreposEcr.push("connector-api");\n\nreturn reposEcr;`,
+    hint: "reposEcr.push(\"connector-api\");",
     rewardXP: 26,
     check: (res) => Array.isArray(res) && res.includes("connector-api") && res.length === 3
   },
@@ -302,14 +318,14 @@ const QUESTS = [
     phase: 4,
     title: "La tâche ECS prioritaire",
     difficulty: "AVANCÉ",
-    lesson: "Les listes commencent à <code>0</code> : le premier service ECS (target group ALB) c'est <code>file[0]</code>.",
+    lesson: "Les listes commencent à <code>0</code> : le premier service ECS (target group ALB) c'est <code>services[0]</code>.",
     lore: "server_prefixes Terraform : l'API d'abord, pas le front. Elle trône à l'index 0 du launch template.",
-    objective: "Sors le premier document dans <code>prioritaire</code>.",
-    initialCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\n\nlet prioritaire;\n\nreturn prioritaire;`,
-    solutionCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\nlet prioritaire = file[0];\n\nreturn prioritaire;`,
-    hint: "prioritaire = file[0];",
+    objective: "Sors le premier service dans <code>prioritaire</code>.",
+    initialCode: `let services = ["api", "front", "crawler"];\n\nlet prioritaire;\n\nreturn prioritaire;`,
+    solutionCode: `let services = ["api", "front", "crawler"];\nlet prioritaire = services[0];\n\nreturn prioritaire;`,
+    hint: "prioritaire = services[0];",
     rewardXP: 28,
-    check: (res) => res === "Facture_Urgente.pdf"
+    check: (res) => res === "api"
   },
   {
     id: 14,
@@ -330,14 +346,14 @@ const QUESTS = [
     phase: 4,
     title: "La task definition",
     difficulty: "AVANCÉ",
-    lesson: "Un objet <code>{ region, cpu }</code> c'est un bout de task definition ECS / Fargate, stocké comme le payload Gemini.",
+    lesson: "Un objet <code>{ region, cpu }</code> c'est un bout de task definition ECS / Fargate.",
     lore: "LBR-Infra tourne en <code>eu-west-3</code> (Paris). Grave région et cpu avant le terraform apply.",
-    objective: "Crée <code>payload</code> : <code>model: \"gemini-3.6-flash\"</code>, <code>tokens: 150</code>.",
+    objective: "Crée <code>payload</code> : <code>region: \"eu-west-3\"</code>, <code>cpu: 256</code>.",
     initialCode: `let payload = {};\n\nreturn payload;`,
-    solutionCode: `let payload = {\n  model: "gemini-3.6-flash",\n  tokens: 150\n};\n\nreturn payload;`,
-    hint: "payload.model = \"gemini-3.6-flash\"; payload.tokens = 150;",
+    solutionCode: `let payload = {\n  region: "eu-west-3",\n  cpu: 256\n};\n\nreturn payload;`,
+    hint: "payload.region = \"eu-west-3\"; payload.cpu = 256;",
     rewardXP: 30,
-    check: (res) => typeof res === 'object' && res.model === "gemini-3.6-flash" && res.tokens === 150
+    check: (res) => typeof res === 'object' && res.region === "eu-west-3" && res.cpu === 256
   },
   {
     id: 16,
@@ -359,11 +375,11 @@ const QUESTS = [
     title: "Le scaling des AZ",
     difficulty: "EXPERT",
     lesson: "<code>.map()</code> applique une règle à chaque AZ. Ici double + 10 — comme capacity ECS par zone a/b.",
-    lore: "VPC LBR : deux AZ (eu-west-3a / 3b), subnets privés /23. Un seul <code>.map()</code> pour les trois batches.",
-    objective: "Pour chaque batch : <code>b * 2 + 10</code>. <code>[10, 20, 30]</code> devient <code>[30, 50, 70]</code>.",
-    initialCode: `let batches = [10, 20, 30];\n\nlet factures = [];\n\nreturn factures;`,
-    solutionCode: `let batches = [10, 20, 30];\nlet factures = batches.map(b => b * 2 + 10);\n\nreturn factures;`,
-    hint: "batches.map(b => b * 2 + 10)",
+    lore: "VPC LBR : charges par AZ. Un seul <code>.map()</code> : double + 10 de marge ECS.",
+    objective: "Pour chaque charge : <code>b * 2 + 10</code>. <code>[10, 20, 30]</code> devient <code>[30, 50, 70]</code>.",
+    initialCode: `let chargesAz = [10, 20, 30];\n\nlet capacites = [];\n\nreturn capacites;`,
+    solutionCode: `let chargesAz = [10, 20, 30];\nlet capacites = chargesAz.map(b => b * 2 + 10);\n\nreturn capacites;`,
+    hint: "chargesAz.map(b => b * 2 + 10)",
     rewardXP: 34,
     check: (res) => Array.isArray(res) && res[0] === 30 && res[1] === 50 && res[2] === 70
   },
@@ -374,9 +390,9 @@ const QUESTS = [
     difficulty: "EXPERT",
     lesson: "<code>.filter()</code> cumule deux règles : assez chaud pour CloudFront, pas déjà en RDS.",
     lore: "file-distribution : bucket privé AES256 + OAC. On ne publie via CloudFront que les scores >= 50 et < 90.",
-    objective: "Garde les risques <code>>= 50</code> et <code>< 90</code>.",
-    initialCode: `let risques = [20, 80, 15, 95, 40, 60];\n\nlet alertes = [];\n\nreturn alertes;`,
-    solutionCode: `let risques = [20, 80, 15, 95, 40, 60];\nlet alertes = risques.filter(r => r >= 50 && r < 90);\n\nreturn alertes;`,
+    objective: "Garde les scores <code>>= 50</code> et <code>< 90</code>.",
+    initialCode: `let scores = [20, 80, 15, 95, 40, 60];\n\nlet publies = [];\n\nreturn publies;`,
+    solutionCode: `let scores = [20, 80, 15, 95, 40, 60];\nlet publies = scores.filter(r => r >= 50 && r < 90);\n\nreturn publies;`,
     hint: "filter(r => r >= 50 && r < 90) — 80 et 60 restent.",
     rewardXP: 36,
     check: (res) => Array.isArray(res) && res.length === 2 && res.includes(80) && res.includes(60) && !res.includes(95)
@@ -388,10 +404,10 @@ const QUESTS = [
     difficulty: "EXPERT",
     lesson: "<code>.reduce()</code> écrase les métriques CloudWatch en un chiffre. L'accumulateur part de <code>0</code>.",
     lore: "modules/cloudwatch : quatre points (CPU ECS). Distille-les — c'est l'alarme du mois.",
-    objective: "Somme de <code>[10, 20, 30, 15]</code> dans <code>conso</code> avec <code>.reduce</code>.",
-    initialCode: `let tokens = [10, 20, 30, 15];\n\nlet conso;\n\nreturn conso;`,
-    solutionCode: `let tokens = [10, 20, 30, 15];\nlet conso = tokens.reduce((a, b) => a + b, 0);\n\nreturn conso;`,
-    hint: "tokens.reduce((a, b) => a + b, 0) — le 0 est le départ.",
+    objective: "Somme de <code>[10, 20, 30, 15]</code> dans <code>sommeCpu</code> avec <code>.reduce</code>.",
+    initialCode: `let metriques = [10, 20, 30, 15];\n\nlet sommeCpu;\n\nreturn sommeCpu;`,
+    solutionCode: `let metriques = [10, 20, 30, 15];\nlet sommeCpu = metriques.reduce((a, b) => a + b, 0);\n\nreturn sommeCpu;`,
+    hint: "metriques.reduce((a, b) => a + b, 0) — le 0 est le départ.",
     rewardXP: 38,
     check: (res) => res === 75
   },
@@ -416,12 +432,12 @@ const QUESTS = [
     difficulty: "MAÎTRE",
     lesson: "<code>...</code> verse une liste dans une autre. Comme assembler ecs + rds + s3 dans main.tf.",
     lore: "shared puis prod : VPC, RDS privé, puis <code>\"AUDIT_SEALED\"</code>. Une seule cornue Terraform.",
-    objective: "Fusionne les deux journaux puis ajoute <code>\"AUDIT_SEALED\"</code> dans <code>audit</code>.",
-    initialCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\n\nlet audit = [];\n\nreturn audit;`,
-    solutionCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\nlet audit = [...logsEnerger, ...logsTrust, "AUDIT_SEALED"];\n\nreturn audit;`,
-    hint: "[...logsEnerger, ...logsTrust, \"AUDIT_SEALED\"]",
+    objective: "Fusionne <code>modulesShared</code> et <code>modulesProd</code> puis ajoute <code>\"AUDIT_SEALED\"</code> dans <code>audit</code>.",
+    initialCode: `let modulesShared = ["vpc"];\nlet modulesProd = ["ecs", "rds"];\n\nlet audit = [];\n\nreturn audit;`,
+    solutionCode: `let modulesShared = ["vpc"];\nlet modulesProd = ["ecs", "rds"];\nlet audit = [...modulesShared, ...modulesProd, "AUDIT_SEALED"];\n\nreturn audit;`,
+    hint: "[...modulesShared, ...modulesProd, \"AUDIT_SEALED\"]",
     rewardXP: 45,
-    check: (res) => Array.isArray(res) && res.length === 4 && res[0] === "FRAUD_CHECK_OK" && res[3] === "AUDIT_SEALED"
+    check: (res) => Array.isArray(res) && res.length === 4 && res[0] === "vpc" && res[3] === "AUDIT_SEALED"
   },
   {
     id: 22,
@@ -429,13 +445,13 @@ const QUESTS = [
     title: "Le workspace Terraform prod",
     difficulty: "MAÎTRE",
     lesson: "Un livrable assemble plusieurs vérités : tu copies des variables tfvars, et tu calcules un drapeau.",
-    lore: "Signe l'env prod LBR-Infra : entreprise Quantum, produit Energer Scan, 22 ressources, <code>pret</code> si <code>tickets >= 20</code>.",
-    objective: "Objet : <code>entreprise</code>, <code>produit</code>, <code>tickets: 22</code>, <code>pret</code> calculé via <code>tickets >= 20</code>.",
-    initialCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst tickets = 22;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
-    solutionCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst tickets = 22;\n\nconst workspace = {\n  entreprise,\n  produit,\n  tickets,\n  pret: tickets >= 20\n};\n\nreturn workspace;`,
-    hint: "workspace = { entreprise, produit, tickets, pret: tickets >= 20 }",
+    lore: "Signe l'env prod LBR-Infra : entreprise Quantum, produit Energer Scan, 22 ressources Terraform, <code>pret</code> si <code>ressources >= 20</code>.",
+    objective: "Objet : <code>entreprise</code>, <code>produit</code>, <code>ressources: 22</code>, <code>pret</code> calculé via <code>ressources >= 20</code>.",
+    initialCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst ressources = 22;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
+    solutionCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst ressources = 22;\n\nconst workspace = {\n  entreprise,\n  produit,\n  ressources,\n  pret: ressources >= 20\n};\n\nreturn workspace;`,
+    hint: "workspace = { entreprise, produit, ressources, pret: ressources >= 20 }",
     rewardXP: 50,
-    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.produit === "Energer Scan" && res.tickets === 22 && res.pret === true
+    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.produit === "Energer Scan" && res.ressources === 22 && res.pret === true
   }
 ];
 
@@ -649,13 +665,13 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
       hint: "Remplace DRAFT par VERIFIED."
     },
     2: {
-      title: "La flamme des tokens",
-      lesson: "* double un plafond de tokens : limite * 2.",
-      lore: "Le fourneau LLM est trop timide. Double la flamme du plan Pro.",
-      objective: "Double le plafond de tokens dans nouvelleLimite.",
-      initialCode: "let limiteTokens = 25;\\n\\nlet resultat = 0;\\n\\nreturn resultat;",
-      solutionCode: "let limiteTokens = 25;\\nlet resultat = limiteTokens * 2;\\nreturn resultat;",
-      hint: "Utilise limiteTokens * 2."
+      title: "Le double du score KYC",
+      lesson: "* double une note TrustID : noteKyc * 2.",
+      lore: "Le second passage KYC est trop timide. Double la note.",
+      objective: "Double noteKyc dans resultat.",
+      initialCode: "let noteKyc = 25;\\n\\nlet resultat = 0;\\n\\nreturn resultat;",
+      solutionCode: "let noteKyc = 25;\\nlet resultat = noteKyc * 2;\\nreturn resultat;",
+      hint: "Utilise noteKyc * 2."
     },
     3: {
       title: "Le sceau de conformité",
@@ -667,7 +683,7 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
       hint: "return \\\"CONFORME\\\";"
     },
     4: {
-      title: "Le dernier sceau de trace",
+      title: "Le dernier event ECS",
       lesson: "Le dernier élément est à liste.length - 1 — ça marche même si la file change.",
       lore: "L'audit veut le dernier sceau de la trace. Ne compte pas à la main.",
       objective: "Range le dernier log dans dernier avec traces[traces.length - 1].",
@@ -678,25 +694,27 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
     5: {
       title: "Le filtrage des impuretés",
       lesson: ".filter() peut cumuler deux règles : assez risqué, mais pas déjà tranché.",
-      lore: "Energer n'alerte que dans une fenêtre de risque.",
-      objective: "Garde les risques >= 50 et < 90.",
-      initialCode: "let risques = [20, 80, 15, 95];\\n\\nlet alertes = [];\\n\\nreturn alertes;",
-      solutionCode: "let risques = [20, 80, 15, 95];\\nlet alertes = risques.filter(r => r >= 50 && r < 90);\\nreturn alertes;",
+      lore: "CloudFront ne publie que dans une fenêtre de score.",
+      objective: "Garde les scores >= 50 et < 90.",
+      initialCode: "let scores = [20, 80, 15, 95];\\n\\nlet publies = [];\\n\\nreturn publies;",
+      solutionCode: "let scores = [20, 80, 15, 95];\\nlet publies = scores.filter(r => r >= 50 && r < 90);\\nreturn publies;",
       hint: "filter(r => r >= 50 && r < 90)"
     },
     6: {
       title: "Le workspace scellé",
       lesson: "Un livrable assemble plusieurs vérités : tu copies des variables, et tu calcules un drapeau.",
-      lore: "Signe l'athanor : pret seulement si les sièges suffisent.",
-      objective: "Objet workspace : sieges, et pret via sieges >= 10.",
-      initialCode: "const sieges = 12;\\n\\nconst workspace = {\\n  \\n};\\n\\nreturn workspace;",
-      solutionCode: "const sieges = 12;\\nconst workspace = { sieges, pret: sieges >= 10 };\\nreturn workspace;",
-      hint: "{ sieges, pret: sieges >= 10 }"
+      lore: "Signe l'env Terraform : pret seulement si assez de modules.",
+      objective: "Objet workspace : modulesTf, et pret via modulesTf >= 10.",
+      initialCode: "const modulesTf = 12;\\n\\nconst workspace = {\\n  \\n};\\n\\nreturn workspace;",
+      solutionCode: "const modulesTf = 12;\\nconst workspace = { modulesTf, pret: modulesTf >= 10 };\\nreturn workspace;",
+      hint: "{ modulesTf, pret: modulesTf >= 10 }"
     }
   };
   const example = exampleByPhase[phase] || exampleByPhase[3];
 
+  const phaseName = (PHASES.find(p => p.id === Number(phase)) || {}).name || `phase ${phase}`;
   const prompt = `Tu génères une micro-quête JavaScript dans les vrais produits Quantum of Trust, avec UNE TOUCHE d'alchimie (creuset, athanor, sceau) — jamais à la place du cas métier.
+THÈME OBLIGATOIRE : rester dans « ${phaseName} » (phase ${phase}), le MÊME thème que la quête précédente « ${prevTitle} ». Interdit de changer de produit (pas de TrustID si on est en Terraform, pas d'Energer Scan si on est en AWS compute).
 DIFFICULTÉ OBLIGATOIRE (phase ${phase}) : ${phaseDiff}
 La difficulté DOIT augmenter avec la phase. Interdit de générer un "change la string" si phase >= 3. Interdit un simple * 2 si phase >= 4.
 Produits RÉELS uniquement, d'après le code Mac :
@@ -709,7 +727,7 @@ INTERDIT : recopier la quête précédente (« ${prevTitle} »).
 RÈGLE : initialCode est un TROU. Ne mets JAMAIS la solution dedans. Moins de commentaires spoilers si phase >= 4.
 RÈGLE : "lesson" = UNE phrase concrète : concept JS + usage dans le SaaS (pas de métaphore à la place de l'explication).
 RÈGLE : "lore" = 1-2 phrases produit + une image alchimique légère.
-RÈGLE : variables parlantes (statut, tokens, confiance, file, modele, payload, sieges, credits).
+RÈGLE : variables parlantes alignées sur le thème (statut, noteKyc, dureeJwt, reposEcr, services, payload, modulesTf, scores). Le nom dans objective DOIT être le même que dans initialCode.
 "objective" en tutoiement, sans "Déclarez / Complétez / Calculez".
 
 Réponds STRICTEMENT en JSON :
@@ -758,7 +776,9 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   const { previousQuestId, phase, userGeminiKey } = req.body || {};
   const prevQuest = QUESTS.find(q => q.id === Number(previousQuestId)) || generatedQuests.get(Number(previousQuestId));
   const questId = QUESTS.length + generatedQuests.size + 1;
-  const nextPhase = phase || (prevQuest ? Math.min(6, prevQuest.phase + (questId % 3 === 0 ? 1 : 0)) : 1);
+  let nextPhase = Number(phase) || prevQuest?.phase || 1;
+  if (!Number.isFinite(nextPhase) || nextPhase < 1) nextPhase = 1;
+  if (nextPhase > 6) nextPhase = 6;
 
   const geminiData = await callGeminiForSaga({
     previousQuest: prevQuest,
@@ -766,7 +786,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
     geminiKey: userGeminiKey
   });
 
-  if (geminiData) {
+  if (geminiData && geminiData.initialCode && geminiData.objective) {
     const meta = difficultyMeta(nextPhase);
     const newQuest = {
       id: questId,
@@ -781,7 +801,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
       hint: geminiData.hint,
       rewardXP: meta.rewardXP,
       isGenerated: true,
-      check: () => true
+      check: makeSolutionCheck(geminiData.solutionCode)
     };
 
     generatedQuests.set(newQuest.id, newQuest);
