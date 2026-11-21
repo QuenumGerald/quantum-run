@@ -21,15 +21,19 @@ if (fs.existsSync(distPath)) {
 }
 
 // ==========================================================================
-// PHASES ET QUÊTES QUANTUM OF TRUST (SAAS IA POUR LES PROS)
+// ARCHI RÉELLE (code Mac) — Energer-Scan-Api, TrustID, LBR-*, LBR-Infra
+// NestJS + MySQL/TypeORM + S3 eu-west-3
+// Terraform LBR-Infra : VPC 10.0.0.0/20, ECS/EC2, ALB, RDS privé, ECR,
+// Fargate (crawler, plan-analyzer, connector-api), S3, CloudFront OAC,
+// ACM us-east-1, WAF, Route53, envs test / preprod / prod / shared
 // ==========================================================================
 const PHASES = [
-  { id: 1, name: "Energer", symbol: "🜍", subtitle: "Calcination · docs, factures & fraude" },
-  { id: 2, name: "Trust Studio", symbol: "🜔", subtitle: "Distillation · confiance, tokens & traces" },
-  { id: 3, name: "Bonne Réponse", symbol: "🜛", subtitle: "Formules · assistant métier BTP" },
-  { id: 4, name: "Pipelines IA", symbol: "🜁", subtitle: "Fioles · modèles, files & payloads" },
-  { id: 5, name: "Analytics", symbol: "🜃", subtitle: "Rituels · usage, risques & facturation" },
-  { id: 6, name: "Launch", symbol: "🝤", subtitle: "Grand Œuvre · routing, audit & workspace" }
+  { id: 1, name: "Energer Scan", symbol: "🜍", subtitle: "NestJS · opérations CEE · TypeORM" },
+  { id: 2, name: "TrustID", symbol: "🜔", subtitle: "KYC · JWT · assessment VERIFIED" },
+  { id: 3, name: "La Bonne Réponse", symbol: "🜛", subtitle: "Widget · tenants · RAGFlow" },
+  { id: 4, name: "AWS compute", symbol: "🜁", subtitle: "ECR · ECS/EC2 · ALB · Fargate" },
+  { id: 5, name: "AWS data", symbol: "🜃", subtitle: "VPC · RDS · S3 · CloudFront · WAF" },
+  { id: 6, name: "Terraform", symbol: "🝤", subtitle: "modules LBR-Infra · test/preprod/prod" }
 ];
 
 // Rampe de difficulté (id croissant) :
@@ -52,54 +56,54 @@ function fallbackQuestForPhase(phase, questId) {
   const meta = difficultyMeta(phase);
   const templates = {
     1: {
-      title: `Le sceau de la facture #${questId}`,
-      lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
-      lore: "Une nouvelle facture repose dans le creuset. Transmute son statut — le client pro attend le badge.",
+      title: `Le cycle de vie du dossier #${questId}`,
+      lesson: "Dans Energer Scan, le lifeCycleStatus d'une opération c'est une variable texte : tu changes le code, le portail change.",
+      lore: "Un dossier CEE est encore DRAFT. Passe-le à VERIFIED — le producteur attend le badge du portail.",
       objective: "Passe <code>statut</code> de <code>\"DRAFT\"</code> à <code>\"VERIFIED\"</code>.",
       initialCode: `let statut = "DRAFT";\n\nreturn statut;`,
       solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
       hint: "Remplace \"DRAFT\" par \"VERIFIED\"."
     },
     2: {
-      title: `La flamme des tokens #${questId}`,
-      lesson: "<code>*</code> sert à un plafond SaaS : <code>limiteTokens * 2</code> double le quota du workspace Pro.",
-      lore: "Le fourneau LLM est trop timide. Le plan Pro double la flamme pour le rush de fin de mois.",
-      objective: "Double le plafond de <code>25</code> tokens dans <code>resultat</code>.",
+      title: `Le score TrustID #${questId}`,
+      lesson: "<code>*</code> sert à un score KYC : <code>note * 2</code> double un sous-score TrustID.",
+      lore: "L'évaluation entreprise est trop timide. Double la note pour le second passage KYC.",
+      objective: "Double le score de <code>25</code> dans <code>resultat</code>.",
       initialCode: `let limiteTokens = 25;\n\nlet resultat = 0;\n\nreturn resultat;`,
       solutionCode: `let limiteTokens = 25;\nlet resultat = limiteTokens * 2;\n\nreturn resultat;`,
       hint: "Fais limiteTokens * 2."
     },
     3: {
-      title: `Le helper de conformité #${questId}`,
-      lesson: "Une fonction, c'est un helper du SaaS : La Bonne Réponse l'appelle, elle rend toujours le même verdict.",
-      lore: "Le devis a passé le crible. Il faut un sort, pas une phrase recopiée.",
+      title: `Le helper LBR #${questId}`,
+      lesson: "Une fonction, c'est un helper du widget LBR : le portail l'appelle, elle rend toujours le même verdict devis.",
+      lore: "Le devis BTP a passé le crible. Il faut un helper, pas une phrase recopiée.",
       objective: "Fais rendre <code>\"CONFORME\"</code> à <code>verifierDossier()</code>.",
       initialCode: `function verifierDossier() {\n  \n}\n\nreturn verifierDossier();`,
       solutionCode: `function verifierDossier() {\n  return "CONFORME";\n}\n\nreturn verifierDossier();`,
       hint: "Dans la fonction : return \"CONFORME\";"
     },
     4: {
-      title: `Le modèle dans la fiole #${questId}`,
-      lesson: "Un tableau c'est le catalogue de modèles : <code>.push()</code> ajoute un LLM, sans recréer la liste.",
-      lore: "Le routeur manque un modèle. Verse-le dans la fiole, à côté des autres.",
-      objective: "Ajoute <code>\"mistral-large\"</code> à <code>modeles</code> avec <code>.push()</code>.",
-      initialCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\n\nreturn modeles;`,
-      solutionCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\nmodeles.push("mistral-large");\n\nreturn modeles;`,
-      hint: "modeles.push(\"mistral-large\");"
+      title: `Le service Fargate #${questId}`,
+      lesson: "Un tableau c'est la liste des repos ECR Terraform : <code>.push()</code> ajoute un service Fargate.",
+      lore: "LBR-Infra a déjà lbr-api. Ajoute connector-api — voir fargate_services dans prod/main.tf.",
+      objective: "Ajoute <code>\"connector-api\"</code> à <code>modeles</code> avec <code>.push()</code>.",
+      initialCode: `let modeles = ["lbr-api", "energer-api"];\n\nreturn modeles;`,
+      solutionCode: `let modeles = ["lbr-api", "energer-api"];\nmodeles.push("connector-api");\n\nreturn modeles;`,
+      hint: "modeles.push(\"connector-api\");"
     },
     5: {
-      title: `Le filtrage des risques #${questId}`,
-      lesson: "<code>.filter()</code> peut cumuler deux règles : assez risqué, mais pas déjà tranché.",
-      lore: "Energer ne sort une alerte que dans une fenêtre de risque. Trop bas : fond du creuset. Trop haut : déjà escaladé.",
-      objective: "Garde les risques <code>>= 40</code> et <code>< 85</code>.",
+      title: `Le filtrage CloudFront #${questId}`,
+      lesson: "<code>.filter()</code> cumule deux règles : assez chaud pour CloudFront, pas déjà en RDS.",
+      lore: "file-distribution (S3 privé AES256 + OAC, ACM us-east-1). Ne publie que dans la fenêtre de score.",
+      objective: "Garde les scores <code>>= 40</code> et <code>< 85</code>.",
       initialCode: `let risques = [10, 55, 90, 42, 20];\n\nlet alertes = [];\n\nreturn alertes;`,
       solutionCode: `let risques = [10, 55, 90, 42, 20];\nlet alertes = risques.filter(r => r >= 40 && r < 85);\n\nreturn alertes;`,
       hint: "filter(r => r >= 40 && r < 85)"
     },
     6: {
-      title: `Le workspace scellé #${questId}`,
-      lesson: "Un livrable assemble plusieurs vérités : tu copies des variables, et tu calcules un drapeau.",
-      lore: "Signe l'athanor : le workspace n'est prêt que si les sièges suffisent au Grand Œuvre.",
+      title: `L'env Terraform scellé #${questId}`,
+      lesson: "Un livrable assemble plusieurs vérités tfvars : tu copies des variables, et tu calcules un drapeau.",
+      lore: "environnements/prod n'est prêt que si assez de modules (ecs, lb, rds, s3, waf) sont câblés.",
       objective: "Objet <code>workspace</code> : <code>sieges</code>, et <code>pret</code> via <code>sieges >= 10</code>.",
       initialCode: `const sieges = 12;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
       solutionCode: `const sieges = 12;\n\nconst workspace = {\n  sieges,\n  pret: sieges >= 10\n};\n\nreturn workspace;`,
@@ -128,12 +132,12 @@ const QUESTS = [
   {
     id: 1,
     phase: 1,
-    title: "La transmutation de la facture",
+    title: "Le lifeCycleStatus du dossier",
     difficulty: "FACILE",
-    lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
-    lore: "Le vil <code>\"PENDING\"</code> repose dans le creuset d'Energer. Transmute-le en <code>\"VERIFIED\"</code> — le client pro attend l'or du badge vert.",
+    lesson: "Dans Energer-Scan-Api (NestJS), le lifeCycleStatus d'une operation TypeORM c'est une string : tu changes le code, le portail React change.",
+    lore: "Le dossier CEE est encore <code>\"PENDING\"</code> dans MySQL. Passe-le à <code>\"VERIFIED\"</code> — même geste que TrustID sur une assessment.",
     objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
-    initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
+    initialCode: `// operations.entity — Energer Scan\nlet statut = "PENDING";\n\nreturn statut;`,
     solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
     hint: "Remplace \"PENDING\" par \"VERIFIED\".",
     rewardXP: 16,
@@ -142,12 +146,12 @@ const QUESTS = [
   {
     id: 2,
     phase: 1,
-    title: "Les sièges de l'athanor",
+    title: "Les modules NestJS",
     difficulty: "FACILE",
-    lesson: "Un quota SaaS (sièges, crédits, tokens) c'est un nombre, sans guillemets.",
-    lore: "L'athanor du workspace affiche 0 siège. Douze adeptes attendent d'entrer sur le plan Pro.",
+    lesson: "Un compteur de modules (users, operations, storage, gemini…) c'est un nombre, sans guillemets.",
+    lore: "Energer-Scan-Api compose une dizaine de modules dans app.module.ts. Mets le compteur à 12.",
     objective: "Les <code>sieges</code> sont à <code>0</code> — mets-les à <code>12</code>.",
-    initialCode: `// Sièges du workspace Pro\nlet sieges = 0;\n\nreturn sieges;`,
+    initialCode: `// Nombre de modules Nest chargés\nlet sieges = 0;\n\nreturn sieges;`,
     solutionCode: `let sieges = 12;\n\nreturn sieges;`,
     hint: "Remplace 0 par 12.",
     rewardXP: 16,
@@ -156,12 +160,12 @@ const QUESTS = [
   {
     id: 3,
     phase: 1,
-    title: "Le sceau de fraude",
+    title: "Le flag de conformité CEE",
     difficulty: "FACILE",
-    lesson: "<code>true</code> / <code>false</code> c'est le même interrupteur qu'une alerte IA ou qu'un flag de revue humaine.",
-    lore: "Energer a senti l'impureté entre devis et facture. Le sceau d'alerte est encore froid — allume-le.",
+    lesson: "<code>true</code> / <code>false</code> c'est le même interrupteur qu'un operation-conformity-status dans Energer Scan.",
+    lore: "L'extraction Gemini a vu un écart de ruleset CEE. Allume <code>anomalieDetectee</code>.",
     objective: "Allume <code>anomalieDetectee</code>.",
-    initialCode: `// Flag fraude Energer\nlet anomalieDetectee = false;\n\nreturn anomalieDetectee;`,
+    initialCode: `// operation-conformity-status\nlet anomalieDetectee = false;\n\nreturn anomalieDetectee;`,
     solutionCode: `let anomalieDetectee = true;\n\nreturn anomalieDetectee;`,
     hint: "Passe false à true.",
     rewardXP: 16,
@@ -170,10 +174,10 @@ const QUESTS = [
   {
     id: 4,
     phase: 1,
-    title: "Le sceau documentaire",
+    title: "La référence d'opération",
     difficulty: "FACILE",
-    lesson: "Coller un préfixe et une année avec <code>+</code>, c'est l'ID qu'Energer pose sur chaque justificatif.",
-    lore: "Forge le sceau <code>DOC-2024</code> : préfixe et année fusionnent dans le coffre d'Energer.",
+    lesson: "Coller un préfixe et une année avec <code>+</code>, c'est la reference du dossier CEE (colonne snake_case en MySQL).",
+    lore: "Forge <code>DOC-2024</code> : c'est ce que le portail affiche dans details-header.",
     objective: "Colle <code>prefixe</code> et <code>annee</code> dans <code>refDocument</code>.",
     initialCode: `let prefixe = "DOC-";\nlet annee = 2024;\n\nlet refDocument = "";\n\nreturn refDocument;`,
     solutionCode: `let prefixe = "DOC-";\nlet annee = 2024;\nlet refDocument = prefixe + annee;\n\nreturn refDocument;`,
@@ -184,10 +188,10 @@ const QUESTS = [
   {
     id: 5,
     phase: 2,
-    title: "L'alliage de confiance",
+    title: "Le score TrustID",
     difficulty: "MOYEN",
-    lesson: "Dans Trust Studio, <code>+</code> additionne deux notes IA : pertinence + sécurité, jamais du texte.",
-    lore: "Deux poudres dans l'athanor de Trust Studio : 50 de pertinence, 45 de sécurité. Allie-les pour le badge.",
+    lesson: "TrustID additionne deux notes KYC avec <code>+</code> : documents entreprise + identité, jamais du texte.",
+    lore: "company-assessment : 50 docs, 45 identité. Allie-les pour viser VERIFIED.",
     objective: "Verse <code>pertinence</code> et <code>securite</code> dans <code>confiance</code>.",
     initialCode: `let pertinence = 50;\nlet securite = 45;\n\nlet confiance = 0;\n\nreturn confiance;`,
     solutionCode: `let pertinence = 50;\nlet securite = 45;\nlet confiance = pertinence + securite;\n\nreturn confiance;`,
@@ -198,10 +202,10 @@ const QUESTS = [
   {
     id: 6,
     phase: 2,
-    title: "La flamme des tokens",
+    title: "La durée du JWT",
     difficulty: "MOYEN",
-    lesson: "<code>limite * 2</code> c'est le geste du plan Pro : tu doubles le quota sans réécrire le chiffre.",
-    lore: "Le fourneau LLM est trop timide. Double la flamme : 1000 tokens deviennent 2000 pour le plan Pro.",
+    lesson: "<code>limite * 2</code> double expiresIn du JWT TrustID / Energer, sans réécrire le chiffre.",
+    lore: "Le access token expire trop vite en assessment. Double 1000 → 2000.",
     objective: "Double <code>limiteTokens</code> dans <code>nouvelleLimite</code>.",
     initialCode: `let limiteTokens = 1000;\n\nlet nouvelleLimite = 0;\n\nreturn nouvelleLimite;`,
     solutionCode: `let limiteTokens = 1000;\nlet nouvelleLimite = limiteTokens * 2;\n\nreturn nouvelleLimite;`,
@@ -212,10 +216,10 @@ const QUESTS = [
   {
     id: 7,
     phase: 2,
-    title: "Le reste du fourneau",
+    title: "Le worker TrustID",
     difficulty: "MOYEN",
-    lesson: "<code>%</code> sert à répartir les appels IA : ce qui reste après la division, c'est l'instance qui prend la requête.",
-    lore: "Dix gouttes, trois cornues. Trust Studio verse le reste dans le nœud qui doit recevoir la 10e requête.",
+    lesson: "<code>%</code> répartit les appels KYC : le reste désigne l'instance qui prend l'assessment.",
+    lore: "Dix évaluations, trois workers TrustID. Le reste de 10 % 3 vaut 1.",
     objective: "Trouve le nœud avec <code>requetes % noeuds</code>.",
     initialCode: `let requetes = 10;\nlet noeuds = 3;\n\nlet noeud = 0;\n\nreturn noeud;`,
     solutionCode: `let requetes = 10;\nlet noeuds = 3;\nlet noeud = requetes % noeuds;\n\nreturn noeud;`,
@@ -226,10 +230,10 @@ const QUESTS = [
   {
     id: 8,
     phase: 3,
-    title: "Le sceau de conformité",
+    title: "Le verdict du widget LBR",
     difficulty: "MOYEN",
-    lesson: "Une fonction, c'est un helper du SaaS : La Bonne Réponse l'appelle, elle rend toujours le même verdict.",
-    lore: "Le devis a passé le crible. La Bonne Réponse doit apposer le sceau <code>CONFORME</code> — un sort, pas une phrase recopiée.",
+    lesson: "Une fonction, c'est un helper du widget (lbr-widget.iife.js) : le portail l'appelle, elle rend le même verdict.",
+    lore: "Le devis BTP a passé RAGFlow. Renvoie <code>CONFORME</code> depuis le helper.",
     objective: "Fais rendre <code>\"CONFORME\"</code> à <code>verifierConformite()</code>.",
     initialCode: `function verifierConformite() {\n  \n}\n\nreturn verifierConformite();`,
     solutionCode: `function verifierConformite() {\n  return "CONFORME";\n}\n\nreturn verifierConformite();`,
@@ -240,10 +244,10 @@ const QUESTS = [
   {
     id: 9,
     phase: 3,
-    title: "Le doubleur d'essence",
+    title: "Les tokens RAGFlow",
     difficulty: "MOYEN",
-    lesson: "Un helper avec paramètre, c'est un micro-service : tu verses n'importe quel volume, la règle tokens reste la même.",
-    lore: "Un mot verse deux tokens d'essence. Trust Studio veut un seul sortilège pour tout l'athanor.",
+    lesson: "Un helper avec paramètre, c'est LBR-Api : tu verses n'importe quel devis, la règle tokens reste la même.",
+    lore: "Un mot de consigne BTP ≈ 2 tokens côté widget. Un seul helper.",
     objective: "<code>estimerTokens(x)</code> rend le double de ce qu'on lui verse.",
     initialCode: `function estimerTokens(x) {\n  \n}\n\nreturn estimerTokens(21);`,
     solutionCode: `function estimerTokens(x) {\n  return x * 2;\n}\n\nreturn estimerTokens(21);`,
@@ -254,10 +258,10 @@ const QUESTS = [
   {
     id: 10,
     phase: 3,
-    title: "L'alliance du rapport",
+    title: "Le libellé du widget",
     difficulty: "MOYEN",
-    lesson: "Deux paramètres, c'est deux champs du rapport : le helper les assemble pour le client pro.",
-    lore: "Allie le modèle et le devis : <code>Claude-3.5 -> Devis #884</code> — le grimoire que l'artisan recevra.",
+    lesson: "Deux paramètres, c'est deux champs du widget : moteur RAGFlow + référence devis.",
+    lore: "Allie le modèle et le devis : <code>Claude-3.5 -> Devis #884</code> — ce que PresentationPage affiche.",
     objective: "<code>formerRapport(modele, devis)</code> assemble les deux avec <code>\" -> \"</code> au milieu.",
     initialCode: `function formerRapport(modele, devis) {\n  \n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
     solutionCode: `function formerRapport(modele, devis) {\n  return modele + " -> " + devis;\n}\n\nreturn formerRapport("Claude-3.5", "Devis #884");`,
@@ -268,24 +272,24 @@ const QUESTS = [
   {
     id: 11,
     phase: 4,
-    title: "Claude dans la fiole",
+    title: "Le dépôt ECR Fargate",
     difficulty: "AVANCÉ",
-    lesson: "Un tableau c'est le catalogue de modèles : <code>.push()</code> ajoute un LLM, sans recréer la liste.",
-    lore: "Le client Pro réclame Claude. Verse-le dans la fiole du routeur, à côté de GPT et Gemini.",
-    objective: "Ajoute <code>\"claude-3-5-sonnet\"</code> à <code>modeles</code> avec <code>.push()</code>.",
-    initialCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\n\nreturn modeles;`,
-    solutionCode: `let modeles = ["gpt-4o", "gemini-3.6-flash"];\nmodeles.push("claude-3-5-sonnet");\n\nreturn modeles;`,
-    hint: "modeles.push(\"claude-3-5-sonnet\");",
+    lesson: "Un tableau c'est la liste des repos ECR Terraform (<code>aws_ecr_repository</code>) : <code>.push()</code> ajoute un service, sans recréer la liste.",
+    lore: "LBR-Infra a déjà lbr-api et energer-api. Ajoute <code>connector-api</code> — c'est le service Fargate du main.tf prod.",
+    objective: "Ajoute <code>\"connector-api\"</code> à <code>modeles</code> avec <code>.push()</code>.",
+    initialCode: `let modeles = ["lbr-api", "energer-api"];\n\nreturn modeles;`,
+    solutionCode: `let modeles = ["lbr-api", "energer-api"];\nmodeles.push("connector-api");\n\nreturn modeles;`,
+    hint: "modeles.push(\"connector-api\");",
     rewardXP: 26,
-    check: (res) => Array.isArray(res) && res.includes("claude-3-5-sonnet") && res.length === 3
+    check: (res) => Array.isArray(res) && res.includes("connector-api") && res.length === 3
   },
   {
     id: 12,
     phase: 4,
-    title: "Le compte des fioles",
+    title: "Les objets du bucket S3",
     difficulty: "AVANCÉ",
-    lesson: "<code>.length</code> c'est le compteur de la file d'analyse : pas besoin de compter les PDF à la main.",
-    lore: "Combien de fioles PDF dorment dans la file d'Energer ? L'athanor sait déjà compter.",
+    lesson: "<code>.length</code> compte les clés S3 du module storage Energer (AWS_S3_COMMON_PRIVATE_BUCKET_NAME, eu-west-3).",
+    lore: "Quatre PDF dans le bucket privé. StorageService n'a pas besoin de les compter à la main.",
     objective: "Range <code>file.length</code> dans <code>enAttente</code>.",
     initialCode: `let file = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\n\nlet enAttente;\n\nreturn enAttente;`,
     solutionCode: `let file = ["Devis_01.pdf", "Facture_88.pdf", "Justificatif_03.pdf", "Attestation.pdf"];\nlet enAttente = file.length;\n\nreturn enAttente;`,
@@ -296,10 +300,10 @@ const QUESTS = [
   {
     id: 13,
     phase: 4,
-    title: "L'essence urgente",
+    title: "La tâche ECS prioritaire",
     difficulty: "AVANCÉ",
-    lesson: "Les listes commencent à <code>0</code> : le premier PDF de la file Energer c'est <code>file[0]</code>.",
-    lore: "L'essence primaire de la file : la facture urgente, pas le devis. Elle trône à l'index 0 du creuset.",
+    lesson: "Les listes commencent à <code>0</code> : le premier service ECS (target group ALB) c'est <code>file[0]</code>.",
+    lore: "server_prefixes Terraform : l'API d'abord, pas le front. Elle trône à l'index 0 du launch template.",
     objective: "Sors le premier document dans <code>prioritaire</code>.",
     initialCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\n\nlet prioritaire;\n\nreturn prioritaire;`,
     solutionCode: `let file = ["Facture_Urgente.pdf", "Devis_Standard.pdf", "Avoir.pdf"];\nlet prioritaire = file[0];\n\nreturn prioritaire;`,
@@ -310,24 +314,24 @@ const QUESTS = [
   {
     id: 14,
     phase: 4,
-    title: "Le dernier sceau de trace",
+    title: "Le dernier event ECS",
     difficulty: "AVANCÉ",
-    lesson: "Le dernier élément est à <code>liste.length - 1</code> — ça marche même si la file change de taille.",
-    lore: "L'audit veut le dernier sceau de la trace. Ne compte pas à la main : la file peut s'allonger demain.",
+    lesson: "Le dernier élément est à <code>liste.length - 1</code> — comme le dernier event CloudWatch du service ECS.",
+    lore: "Le déploiement Fargate : pull image, start task, service stable. Prends le dernier, pas un index en dur.",
     objective: "Range le dernier log dans <code>dernier</code> avec <code>traces[traces.length - 1]</code>.",
-    initialCode: `let traces = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\n\nlet dernier;\n\nreturn dernier;`,
-    solutionCode: `let traces = ["PROMPT_SENT", "RESPONSE_RECEIVED", "CONFIDENCE_CHECKED"];\nlet dernier = traces[traces.length - 1];\n\nreturn dernier;`,
+    initialCode: `let traces = ["IMAGE_PULLED", "TASK_STARTED", "SERVICE_STABLE"];\n\nlet dernier;\n\nreturn dernier;`,
+    solutionCode: `let traces = ["IMAGE_PULLED", "TASK_STARTED", "SERVICE_STABLE"];\nlet dernier = traces[traces.length - 1];\n\nreturn dernier;`,
     hint: "traces[traces.length - 1], pas traces[2].",
     rewardXP: 28,
-    check: (res) => res === "CONFIDENCE_CHECKED"
+    check: (res) => res === "SERVICE_STABLE"
   },
   {
     id: 15,
     phase: 4,
-    title: "La fiche du Grand Appel",
+    title: "La task definition",
     difficulty: "AVANCÉ",
-    lesson: "Un objet <code>{ model, tokens }</code> c'est la ligne qu'on envoie à l'API et qu'on stocke en base.",
-    lore: "Avant de taxer l'athanor, Trust Studio grave la fiche : quel modèle, combien d'essence.",
+    lesson: "Un objet <code>{ region, cpu }</code> c'est un bout de task definition ECS / Fargate, stocké comme le payload Gemini.",
+    lore: "LBR-Infra tourne en <code>eu-west-3</code> (Paris). Grave région et cpu avant le terraform apply.",
     objective: "Crée <code>payload</code> : <code>model: \"gemini-3.6-flash\"</code>, <code>tokens: 150</code>.",
     initialCode: `let payload = {};\n\nreturn payload;`,
     solutionCode: `let payload = {\n  model: "gemini-3.6-flash",\n  tokens: 150\n};\n\nreturn payload;`,
@@ -338,10 +342,10 @@ const QUESTS = [
   {
     id: 16,
     phase: 5,
-    title: "Le rite de revue",
+    title: "La règle WAF",
     difficulty: "AVANCÉ",
-    lesson: "<code>if</code> doit gérer les deux chemins : sous le seuil on relit, au-dessus on laisse passer.",
-    lore: "La matière à 0.55 exige un œil humain. À 0.90, l'athanor transmutes tout seul. Le rite doit marcher pour les deux.",
+    lesson: "<code>if</code> doit gérer les deux chemins : sous le seuil le WAF bloque vers revue, au-dessus l'ALB laisse passer.",
+    lore: "modules/waf attache l'ALB public. Score 0.55 → HUMAN_REVIEW. 0.90 → AUTO_APPROVED. Les deux cas sont testés.",
     objective: "Écris <code>routerConfiance(s)</code> : si <code>s < 0.70</code> → <code>\"HUMAN_REVIEW\"</code>, sinon <code>\"AUTO_APPROVED\"</code>. On teste les deux scores.",
     initialCode: `function routerConfiance(s) {\n  \n}\n\nreturn [routerConfiance(0.55), routerConfiance(0.90)];`,
     solutionCode: `function routerConfiance(s) {\n  if (s < 0.70) {\n    return "HUMAN_REVIEW";\n  }\n  return "AUTO_APPROVED";\n}\n\nreturn [routerConfiance(0.55), routerConfiance(0.90)];`,
@@ -352,10 +356,10 @@ const QUESTS = [
   {
     id: 17,
     phase: 5,
-    title: "La multiplication des pépites",
+    title: "Le scaling des AZ",
     difficulty: "EXPERT",
-    lesson: "<code>.map()</code> applique une règle à chaque appel. Ici : double + 10 de frais fixes — la liste d'origine reste intacte.",
-    lore: "Week-end : chaque pépite double, puis l'athanor prélève 10 tokens de rite. Un seul <code>.map()</code>.",
+    lesson: "<code>.map()</code> applique une règle à chaque AZ. Ici double + 10 — comme capacity ECS par zone a/b.",
+    lore: "VPC LBR : deux AZ (eu-west-3a / 3b), subnets privés /23. Un seul <code>.map()</code> pour les trois batches.",
     objective: "Pour chaque batch : <code>b * 2 + 10</code>. <code>[10, 20, 30]</code> devient <code>[30, 50, 70]</code>.",
     initialCode: `let batches = [10, 20, 30];\n\nlet factures = [];\n\nreturn factures;`,
     solutionCode: `let batches = [10, 20, 30];\nlet factures = batches.map(b => b * 2 + 10);\n\nreturn factures;`,
@@ -366,10 +370,10 @@ const QUESTS = [
   {
     id: 18,
     phase: 5,
-    title: "Le filtrage des impuretés",
+    title: "Le filtrage S3 / CloudFront",
     difficulty: "EXPERT",
-    lesson: "<code>.filter()</code> peut cumuler deux règles : assez risqué, mais pas déjà tranché.",
-    lore: "Energer ne sort une alerte que si le risque est entre 50 inclus et 90 exclu. Trop bas : fond du creuset. Trop haut : déjà escaladé.",
+    lesson: "<code>.filter()</code> cumule deux règles : assez chaud pour CloudFront, pas déjà en RDS.",
+    lore: "file-distribution : bucket privé AES256 + OAC. On ne publie via CloudFront que les scores >= 50 et < 90.",
     objective: "Garde les risques <code>>= 50</code> et <code>< 90</code>.",
     initialCode: `let risques = [20, 80, 15, 95, 40, 60];\n\nlet alertes = [];\n\nreturn alertes;`,
     solutionCode: `let risques = [20, 80, 15, 95, 40, 60];\nlet alertes = risques.filter(r => r >= 50 && r < 90);\n\nreturn alertes;`,
@@ -380,10 +384,10 @@ const QUESTS = [
   {
     id: 19,
     phase: 5,
-    title: "La distillation du mois",
+    title: "La somme CloudWatch",
     difficulty: "EXPERT",
-    lesson: "<code>.reduce()</code> écrase toute la coulée en un chiffre. Pense à l'accumulateur qui part de <code>0</code>.",
-    lore: "Quatre coulées cette semaine. Distille-les en une seule essence — c'est ce que billing verse.",
+    lesson: "<code>.reduce()</code> écrase les métriques CloudWatch en un chiffre. L'accumulateur part de <code>0</code>.",
+    lore: "modules/cloudwatch : quatre points (CPU ECS). Distille-les — c'est l'alarme du mois.",
     objective: "Somme de <code>[10, 20, 30, 15]</code> dans <code>conso</code> avec <code>.reduce</code>.",
     initialCode: `let tokens = [10, 20, 30, 15];\n\nlet conso;\n\nreturn conso;`,
     solutionCode: `let tokens = [10, 20, 30, 15];\nlet conso = tokens.reduce((a, b) => a + b, 0);\n\nreturn conso;`,
@@ -394,10 +398,10 @@ const QUESTS = [
   {
     id: 20,
     phase: 6,
-    title: "La fusion automatique",
+    title: "Le plan Terraform",
     difficulty: "EXPERT",
-    lesson: "<code>condition ? oui : non</code> est un if en une ligne. Le helper doit marcher pour les deux scores.",
-    lore: "À 0.90 l'athanor fusionne. À 0.40 on retient le Grand Œuvre. Une seule formule, deux verdicts.",
+    lesson: "<code>condition ? oui : non</code> est un if en une ligne. Comme un apply : env prod seulement si le plan est sain.",
+    lore: "environnements/prod vs test. Score 0.9 → APPLICABLE. 0.4 → REJETÉ. Une formule, deux verdicts.",
     objective: "<code>decider(c)</code> : <code>c >= 0.8</code> → <code>\"APPLICABLE\"</code>, sinon <code>\"REJETÉ\"</code>. On teste 0.9 et 0.4.",
     initialCode: `function decider(c) {\n  \n}\n\nreturn [decider(0.9), decider(0.4)];`,
     solutionCode: `function decider(c) {\n  return c >= 0.8 ? "APPLICABLE" : "REJETÉ";\n}\n\nreturn [decider(0.9), decider(0.4)];`,
@@ -408,10 +412,10 @@ const QUESTS = [
   {
     id: 21,
     phase: 6,
-    title: "L'alliage des deux grimoires",
+    title: "L'alliage des modules Terraform",
     difficulty: "MAÎTRE",
-    lesson: "<code>...</code> verse une liste dans une autre. Tu peux enchaîner et sceller à la fin.",
-    lore: "Deux grimoires, puis le sceau d'audit. Une seule cornue : Energer, Trust Studio, et <code>\"AUDIT_SEALED\"</code>.",
+    lesson: "<code>...</code> verse une liste dans une autre. Comme assembler ecs + rds + s3 dans main.tf.",
+    lore: "shared puis prod : VPC, RDS privé, puis <code>\"AUDIT_SEALED\"</code>. Une seule cornue Terraform.",
     objective: "Fusionne les deux journaux puis ajoute <code>\"AUDIT_SEALED\"</code> dans <code>audit</code>.",
     initialCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\n\nlet audit = [];\n\nreturn audit;`,
     solutionCode: `let logsEnerger = ["FRAUD_CHECK_OK"];\nlet logsTrust = ["TRACE_STORED", "METRICS_SENT"];\nlet audit = [...logsEnerger, ...logsTrust, "AUDIT_SEALED"];\n\nreturn audit;`,
@@ -422,16 +426,16 @@ const QUESTS = [
   {
     id: 22,
     phase: 6,
-    title: "Le Grand Œuvre Quantum of Trust",
+    title: "Le workspace Terraform prod",
     difficulty: "MAÎTRE",
-    lesson: "Un livrable assemble plusieurs vérités : tu copies des variables, et tu calcules un drapeau.",
-    lore: "L'heure du Grand Œuvre. Signe l'athanor avec l'entreprise, le produit, les 22 transmutations, et <code>pret</code> si <code>tickets >= 20</code>.",
+    lesson: "Un livrable assemble plusieurs vérités : tu copies des variables tfvars, et tu calcules un drapeau.",
+    lore: "Signe l'env prod LBR-Infra : entreprise Quantum, produit Energer Scan, 22 ressources, <code>pret</code> si <code>tickets >= 20</code>.",
     objective: "Objet : <code>entreprise</code>, <code>produit</code>, <code>tickets: 22</code>, <code>pret</code> calculé via <code>tickets >= 20</code>.",
-    initialCode: `const entreprise = "Quantum of Trust";\nconst produit = "Trust Intelligence Studio";\nconst tickets = 22;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
-    solutionCode: `const entreprise = "Quantum of Trust";\nconst produit = "Trust Intelligence Studio";\nconst tickets = 22;\n\nconst workspace = {\n  entreprise,\n  produit,\n  tickets,\n  pret: tickets >= 20\n};\n\nreturn workspace;`,
+    initialCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst tickets = 22;\n\nconst workspace = {\n  \n};\n\nreturn workspace;`,
+    solutionCode: `const entreprise = "Quantum of Trust";\nconst produit = "Energer Scan";\nconst tickets = 22;\n\nconst workspace = {\n  entreprise,\n  produit,\n  tickets,\n  pret: tickets >= 20\n};\n\nreturn workspace;`,
     hint: "workspace = { entreprise, produit, tickets, pret: tickets >= 20 }",
     rewardXP: 50,
-    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.produit === "Trust Intelligence Studio" && res.tickets === 22 && res.pret === true
+    check: (res) => typeof res === 'object' && res.entreprise === "Quantum of Trust" && res.produit === "Energer Scan" && res.tickets === 22 && res.pret === true
   }
 ];
 
@@ -678,11 +682,15 @@ async function callGeminiForSaga({ previousQuest, phase, geminiKey }) {
   };
   const example = exampleByPhase[phase] || exampleByPhase[3];
 
-  const prompt = `Tu génères une micro-quête JavaScript dans le SaaS IA pro Quantum of Trust, avec UNE TOUCHE d'alchimie (creuset, athanor, sceau, transmutation, fiole) — jamais de l'alchimie à la place du cas métier.
+  const prompt = `Tu génères une micro-quête JavaScript dans les vrais produits Quantum of Trust, avec UNE TOUCHE d'alchimie (creuset, athanor, sceau) — jamais à la place du cas métier.
 DIFFICULTÉ OBLIGATOIRE (phase ${phase}) : ${phaseDiff}
 La difficulté DOIT augmenter avec la phase. Interdit de générer un "change la string" si phase >= 3. Interdit un simple * 2 si phase >= 4.
-Produits : Energer (docs, factures, fraude), Trust Studio (confiance LLM, tokens, traces), La Bonne Réponse (assistant BTP, devis), Pipelines IA (modèles, prompts, API), Analytics (usage, risques), Launch (workspace Pro).
-INTERDIT : e-commerce générique, panier, stock magasin, tickets Jira hors produit, syntaxe gratuite, alchimie sans produit.
+Produits RÉELS uniquement, d'après le code Mac :
+- Energer-Scan-Api : NestJS, TypeORM/MySQL, modules operations/storage/gemini, S3 eu-west-3
+- Energer-TrustID-Api : KYC, JWT, VERIFIED
+- LBR-Api / LBR-Portal / LBR-Widget / LBR-BO : widget, tenants, RAGFlow
+- LBR-Infra Terraform : VPC 10.0.0.0/20, ECS+EC2+ASG, ALB, RDS privately_accessible=false, ECR, Fargate (crawler, plan-analyzer, connector-api), S3, CloudFront OAC, ACM us-east-1, WAF, Route53, envs shared/test/preprod/prod, région eu-west-3
+INTERDIT : QTIS UX, Trust Studio, Pipelines IA génériques, e-commerce, panier, tickets Jira, syntaxe gratuite, alchimie sans produit. Inventer un service AWS qui n'est pas dans LBR-Infra est interdit.
 INTERDIT : recopier la quête précédente (« ${prevTitle} »).
 RÈGLE : initialCode est un TROU. Ne mets JAMAIS la solution dedans. Moins de commentaires spoilers si phase >= 4.
 RÈGLE : "lesson" = UNE phrase concrète : concept JS + usage dans le SaaS (pas de métaphore à la place de l'explication).
@@ -752,7 +760,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
       title: geminiData.title || `Cas workspace #${questId}`,
       difficulty: meta.difficulty,
       lesson: geminiData.lesson || "Dans un SaaS IA, tu changes une valeur métier, puis tu la rends avec return — même geste qu'un helper du workspace.",
-      lore: geminiData.lore || "Un nouveau cas arrive sur le workspace Quantum of Trust.",
+      lore: geminiData.lore || "Un nouveau cas arrive sur Energer Scan, TrustID ou La Bonne Réponse.",
       objective: geminiData.objective,
       initialCode: geminiData.initialCode,
       solutionCode: geminiData.solutionCode,
@@ -779,7 +787,7 @@ app.post('/api/quests/generate-saga', async (req, res) => {
   res.json({
     success: true,
     quest: sanitized,
-    source: "Quantum of Trust (Saga Continue)"
+    source: "Quantum (Energer · TrustID · LBR)"
   });
 });
 
@@ -788,8 +796,8 @@ async function callGeminiForOrbitChat({ message, quest, geminiKey }) {
   const apiKey = geminiKey || process.env.GEMINI_API_KEY || process.env.GMI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey) return null;
 
-  const prompt = `Tu es ORBIT, Homunculus et copilote du SaaS IA Quantum of Trust (Energer, Trust Studio, La Bonne Réponse).
-Tu parles comme un mentor produit, avec une touche d'alchimie (creuset, athanor, sceau) — jamais à la place du geste métier.
+  const prompt = `Tu es ORBIT, copilote de l'archi Quantum réelle : Energer Scan (NestJS), TrustID, LBR, Terraform LBR-Infra (VPC, ECS, ALB, RDS, S3, CloudFront, Fargate, WAF, eu-west-3).
+Tu parles comme un mentor code/infra. Touche d'alchimie légère, jamais à la place du vrai nom de module AWS/Terraform. INTERDIT : inventer Trust Studio, QTIS UX, ou un service AWS absent du repo LBR-Infra.
 1 phrase de principe (concept JS + usage SaaS), puis l'action. Pas de "exercice / consigne / déclarez".
 Quête actuelle #${quest?.id || 1} : "${quest?.title || 'Quête'}".
 Micro-cours : "${quest?.lesson || ''}".

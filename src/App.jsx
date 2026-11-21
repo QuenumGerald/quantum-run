@@ -111,12 +111,12 @@ class AudioSynth {
 const synth = new AudioSynth();
 
 const DEFAULT_PHASES = [
-  { id: 1, name: "Energer", symbol: "🜍", subtitle: "Calcination · docs, factures & fraude" },
-  { id: 2, name: "Trust Studio", symbol: "🜔", subtitle: "Distillation · confiance, tokens & traces" },
-  { id: 3, name: "Bonne Réponse", symbol: "🜛", subtitle: "Formules · assistant métier BTP" },
-  { id: 4, name: "Pipelines IA", symbol: "🜁", subtitle: "Fioles · modèles, files & payloads" },
-  { id: 5, name: "Analytics", symbol: "🜃", subtitle: "Rituels · usage, risques & facturation" },
-  { id: 6, name: "Launch", symbol: "🝤", subtitle: "Grand Œuvre · routing, audit & workspace" }
+  { id: 1, name: "Energer Scan", symbol: "🜍", subtitle: "NestJS · opérations CEE · TypeORM" },
+  { id: 2, name: "TrustID", symbol: "🜔", subtitle: "KYC · JWT · assessment VERIFIED" },
+  { id: 3, name: "La Bonne Réponse", symbol: "🜛", subtitle: "Widget · tenants · RAGFlow" },
+  { id: 4, name: "AWS compute", symbol: "🜁", subtitle: "ECR · ECS/EC2 · ALB · Fargate" },
+  { id: 5, name: "AWS data", symbol: "🜃", subtitle: "VPC · RDS · S3 · CloudFront · WAF" },
+  { id: 6, name: "Terraform", symbol: "🝤", subtitle: "modules LBR-Infra · test/preprod/prod" }
 ];
 
 const getRankTitle = (xp) => {
@@ -170,12 +170,12 @@ const DifficultyChip = ({ label }) => {
 const INITIAL_QUEST = {
   id: 1,
   phase: 1,
-  title: "La transmutation de la facture",
+  title: "Le lifeCycleStatus du dossier",
   difficulty: "FACILE",
-  lesson: "Dans Energer, le statut d'un document c'est une variable texte : tu changes le contenu, le dashboard change.",
-  lore: "Le vil \"PENDING\" repose dans le creuset d'Energer. Transmute-le en \"VERIFIED\" — le client pro attend l'or du badge vert.",
+  lesson: "Dans Energer-Scan-Api (NestJS), le lifeCycleStatus d'une operation TypeORM c'est une string : tu changes le code, le portail React change.",
+  lore: "Le dossier CEE est encore \"PENDING\" dans MySQL. Passe-le à \"VERIFIED\" — même geste que TrustID sur une assessment.",
   objective: "Passe <code>statut</code> de <code>\"PENDING\"</code> à <code>\"VERIFIED\"</code>.",
-  initialCode: `// File Energer — facture du jour\nlet statut = "PENDING";\n\nreturn statut;`,
+  initialCode: `// operations.entity — Energer Scan\nlet statut = "PENDING";\n\nreturn statut;`,
   solutionCode: `let statut = "VERIFIED";\n\nreturn statut;`,
   hint: "Remplace \"PENDING\" par \"VERIFIED\".",
   rewardXP: 16
@@ -227,7 +227,7 @@ export default function App() {
   const [execTime, setExecTime] = useState('');
 
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'bot', text: 'Salut. Je suis ORBIT, Homunculus de Quantum of Trust. On apprend le JS dans le creuset du SaaS IA : Energer, Trust Studio, La Bonne Réponse. Lis le principe, puis transmutes.' }
+    { sender: 'bot', text: 'Salut. Je suis ORBIT. On apprend le JS sur l’archi réelle : Energer Scan (NestJS), TrustID, LBR, puis AWS/Terraform (ECS, RDS, S3, CloudFront, Fargate). Lis le principe, puis transmutes.' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isForging, setIsForging] = useState(false);
@@ -576,7 +576,7 @@ export default function App() {
                   QUANTUM RUN
                 </Typography>
                 <Typography variant="caption" sx={{ fontFamily: "'Cinzel', serif", color: '#94A3B8', fontSize: { xs: 8.5, sm: 9.5 }, letterSpacing: '0.12em', textTransform: 'uppercase', display: { xs: 'none', sm: 'block' } }}>
-                  Opus Magnum · SaaS IA pour les pros
+                  NestJS · ECS · RDS · Terraform
                 </Typography>
               </Box>
 
@@ -1513,7 +1513,7 @@ export default function App() {
             {/* GRIMOIRE DU GRAND ŒUVRE (DESKTOP) */}
             <Card sx={{ mb: 2, bgcolor: '#0C101A', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
               <CardHeader
-                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire Quantum of Trust ({clearedQuests.length}/{quests.length})</Typography>}
+                title={<Typography variant="subtitle2" sx={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 13, color: '#FBBF24' }}>Grimoire Quantum ({clearedQuests.length}/{quests.length})</Typography>}
                 sx={{ p: 1.5, pb: 1, borderBottom: '1px solid rgba(245, 158, 11, 0.15)' }}
               />
               <List sx={{ maxHeight: 220, overflowY: 'auto', p: 0.5 }}>
