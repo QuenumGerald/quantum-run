@@ -306,6 +306,7 @@ export default function App() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [phaseFilter, setPhaseFilter] = useState(null);
   const activeQuestIdRef = useRef(INITIAL_QUEST.id);
+  const forgeGenRef = useRef(0);
 
   // Compte et parcours alchimiste
   const [currentUser, setCurrentUser] = useState(savedUsername ? { username: savedUsername } : null);
@@ -598,7 +599,7 @@ export default function App() {
     });
 
     // Mots-clés courants alchimiques et JavaScript
-    ['statut', 'PENDING', 'VERIFIED', 'true', 'false', 'tokens', 'confiance', 'modeles', 'file', 'sieges', 'return'].forEach(kw => {
+    ['statut', 'PENDING', 'VERIFIED', 'true', 'false', 'noteKyc', 'dureeJwt', 'scoreKyc', 'reposEcr', 'services', 'payload', 'modulesTf', 'return'].forEach(kw => {
       if (rawText.includes(kw)) set.add(kw);
     });
 
@@ -658,7 +659,7 @@ export default function App() {
         });
 
         setSnackbar({ open: true, message: '✨ Transmutation réussie !', severity: 'success' });
-        triggerSagaGeneration(activeQuest.id);
+        triggerSagaGeneration(activeQuest.id, activeQuest.phase);
       } else {
         synth.playError();
         triggerHaptic([80, 40, 80]);
@@ -682,27 +683,35 @@ export default function App() {
     setSnackbar({ open: true, message: `Nouveau défi prêt : ${quest.title}`, severity: 'info' });
   };
 
-  const triggerSagaGeneration = async (completedId) => {
+  const triggerSagaGeneration = async (completedId, completedPhase) => {
+    const gen = ++forgeGenRef.current;
     setIsForging(true);
-    addTerminal('sys', 'Préparation du prochain cas métier...');
+    setReadyQuest(null);
+    addTerminal('sys', 'Préparation du prochain cas métier (même thème)...');
     try {
       const res = await fetch('/api/quests/generate-saga', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ previousQuestId: completedId })
+        body: JSON.stringify({
+          previousQuestId: completedId,
+          phase: completedPhase,
+        })
       });
       const data = await res.json();
+      if (gen !== forgeGenRef.current) return;
       if (data.success && data.quest) {
         ingestGeneratedQuest(data.quest);
       }
     } catch (err) {} finally {
-      setIsForging(false);
+      if (gen === forgeGenRef.current) setIsForging(false);
     }
   };
 
   const handleManualForge = async () => {
     const forgedFromId = activeQuest.id;
+    const gen = ++forgeGenRef.current;
     setIsForging(true);
+    setReadyQuest(null);
     try {
       const res = await fetch('/api/quests/generate-saga', {
         method: 'POST',
@@ -710,6 +719,7 @@ export default function App() {
         body: JSON.stringify({ previousQuestId: activeQuest.id, phase: activeQuest.phase })
       });
       const data = await res.json();
+      if (gen !== forgeGenRef.current) return;
       if (data.success && data.quest) {
         if (activeQuestIdRef.current === forgedFromId) {
           setQuests(prev => (prev.some(q => q.id === data.quest.id) ? prev : [...prev, data.quest]));
@@ -720,7 +730,7 @@ export default function App() {
         }
       }
     } catch (err) {} finally {
-      setIsForging(false);
+      if (gen === forgeGenRef.current) setIsForging(false);
     }
   };
 
@@ -1050,17 +1060,13 @@ export default function App() {
                     {/* Contenu rétractable sur mobile */}
                     <Collapse in={loreOpen} sx={{ display: { xs: 'block', sm: 'none' } }}>
                       <Box sx={{ p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                        <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.5 }}>
-                          {activeQuest.lore}
-                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#CBD5E1', fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.5, ...codeInlineSx }} dangerouslySetInnerHTML={{ __html: activeQuest.lore }} />
                       </Box>
                     </Collapse>
 
                     {/* Visible directement sur tablette & desktop */}
                     <Box sx={{ display: { xs: 'none', sm: 'block' }, p: 1.2, bgcolor: 'rgba(245, 158, 11, 0.06)', borderRadius: 1, border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                      <Typography variant="body2" sx={{ color: '#94A3B8', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55 }}>
-                        {activeQuest.lore}
-                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#94A3B8', fontStyle: 'italic', fontSize: 13, lineHeight: 1.55, ...codeInlineSx }} dangerouslySetInnerHTML={{ __html: activeQuest.lore }} />
                     </Box>
                   </Box>
                 )}
@@ -1106,20 +1112,17 @@ export default function App() {
                   </Box>
                 </Box>
 
-                {(readyQuest || activeQuest.id < quests[quests.length - 1]?.id) && (
+                {isForging && (
+                  <OpenAIButton color="primary" size="sm" disabled>
+                    <CircularProgress size={12} sx={{ color: '#F59E0B', mr: 0.8 }} />
+                    Même thème en cours…
+                  </OpenAIButton>
+                )}
+                {readyQuest && !isForging && (
                   <OpenAIButton
                     color="primary"
                     size="sm"
-                    onClick={() => {
-                      if (readyQuest) {
-                        selectQuest(readyQuest);
-                        return;
-                      }
-                      const idx = quests.findIndex(q => q.id === activeQuest.id);
-                      if (idx < quests.length - 1) {
-                        selectQuest(quests[idx + 1]);
-                      }
-                    }}
+                    onClick={() => selectQuest(readyQuest)}
                   >
                     Cas suivant <NavigateNext style={{ width: 14, height: 14 }} />
                   </OpenAIButton>
